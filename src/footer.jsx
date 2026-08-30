@@ -1,0 +1,76 @@
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+
+function Footer() {
+  return (
+    <footer className="bg-dark text-white py-5 mt-5">
+      <Container>
+        <Row>
+
+          {/* À propos */}
+          <Col md={4} className="mb-4">
+            <h5>MonShop</h5>
+            <p className="text-light">
+              Votre boutique en ligne en Algérie.
+              Découvrez nos meilleurs produits au meilleur prix.
+            </p>
+          </Col>
+
+          {/* Liens */}
+          <Col md={4} className="mb-4">
+            <h5>Liens utiles</h5>
+
+            <ul className="list-unstyled">
+              <li>
+                <a href="/" className="text-white text-decoration-none">
+                  Accueil
+                </a>
+              </li>
+
+              <li>
+                <a href="/products" className="text-white text-decoration-none">
+                  Produits
+                </a>
+              </li>
+
+              <li>
+                <a href="/about" className="text-white text-decoration-none">
+                  À propos
+                </a>
+              </li>
+
+              <li>
+                <a href="/contact" className="text-white text-decoration-none">
+                  Contact
+                </a>
+              </li>
+            </ul>
+          </Col>
+
+          {/* Contact */}
+          <Col md={4} className="mb-4">
+            <h5>Contact</h5>
+
+            <p className="mb-2">📍 Algérie</p>
+            <p className="mb-2">📞 0550 00 00 00</p>
+            <p className="mb-2">✉️ contact@monshop.com</p>
+          </Col>
+
+        </Row>
+
+        <hr />
+
+        {/* Copyright */}
+        <div className="text-center">
+          <p className="mb-0">
+            © 2026 MonShop. Tous droits réservés.
+          </p>
+        </div>
+
+      </Container>
+    </footer>
+  );
+}
+
+export default Footer;
