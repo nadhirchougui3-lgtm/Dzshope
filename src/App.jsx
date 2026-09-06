@@ -6,14 +6,15 @@ import './App.css'
 import Navbar from './navbar'
 import LandingPage from './LandingPage'
 import Footer from './footer'
-function App() {
+
+function App() { 
   
 
   return (
     <>
     <Navbar />
     <LandingPage />
-    <Footer/>
+    <Footer />
     </>
   )
 }
