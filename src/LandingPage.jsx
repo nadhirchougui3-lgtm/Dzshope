@@ -51,7 +51,7 @@ function LandingPage() {
               <div className="fs-3 mb-2">🚚</div>
 
               <h6 className="fw-bold mb-1">
-                Livraison 58 wilayas
+                Livraison 69 wilayas
               </h6>
 
               <small className="text-secondary">
