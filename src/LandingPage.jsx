@@ -23,6 +23,7 @@ function LandingPage() {
           Découvrez nos produits sélectionnés avec soin,
           profitez de prix avantageux et faites-vous livrer
           directement chez vous.
+          
         </p>
 
         {/* BOUTONS */}

@@ -1,12 +1,28 @@
+import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { products } from
- './data/products';
+import { apiFetch } from './api';
 import { useCart } from './CartContext';
 
 function ProductDetailPage() {
   const { id } = useParams();
   const { addToCart } = useCart();
-  const produit = products.find(function (p) { return p.id === Number(id); });
+  const [produit, setProduit] = useState(null);
+  const [chargement, setChargement] = useState(true);
+
+  // On demande CE produit au serveur
+  useEffect(function () {
+    apiFetch('/api/products/' + id)
+      .then(function (res) { return res.ok ? res.json() : null; })
+      .then(function (data) {
+        setProduit(data);
+        setChargement(false);
+      })
+      .catch(function () { setChargement(false); });
+  }, [id]);
+
+  if (chargement) {
+    return <p className="container py-5">Chargement...</p>;
+  }
 
   if (!produit) {
     return (
