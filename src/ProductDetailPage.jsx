@@ -1,5 +1,6 @@
 import { useParams, Link } from 'react-router-dom';
-import { products } from './data/products';
+import { products } from
+ './data/products';
 import { useCart } from './CartContext';
 
 function ProductDetailPage() {

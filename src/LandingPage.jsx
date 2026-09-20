@@ -117,7 +117,7 @@ function LandingPage() {
                   </div>
 
                   <small className="text-secondary">
-                    58 wilayas 🇩🇿
+                    69 wilayas 🇩🇿
                   </small>
                 </div>
               </div>

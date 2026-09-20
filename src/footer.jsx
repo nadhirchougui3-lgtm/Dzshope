@@ -53,7 +53,7 @@ function Footer() {
             <h5>Contact</h5>
 
             <p className="mb-2">📍 Algérie</p>
-            <p className="mb-2">📞 0550 00 00 00</p>
+            <p className="mb-2">📞 0562 99 72 37</p>
             <p className="mb-2">✉️ contact@monshop.com</p>
           </Col>
 
