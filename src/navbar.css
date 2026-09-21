@@ -1,0 +1,177 @@
+.dz-navbar {
+  background: #080f19;
+  border-bottom: 1px solid #1d2937;
+  min-height: 88px;
+  display: flex;
+  align-items: center;
+}
+
+.dz-navbar-container {
+  width: 100%;
+  padding: 0 5%;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* LOGO */
+
+.dz-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.dz-logo-mark {
+  width: 50px;
+  height: 50px;
+
+  border-radius: 14px;
+
+  background: #c62828;
+  color: white;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 1.25rem;
+  font-weight: 900;
+
+  box-shadow: 0 6px 18px rgba(198, 40, 40, 0.25);
+}
+
+.dz-logo-text {
+  line-height: 1;
+}
+
+.dz-shop-name {
+  color: white;
+
+  font-size: 1.8rem;
+  font-weight: 800;
+
+  letter-spacing: -1px;
+}
+
+.dz-shop-name span {
+  color: #c62828;
+}
+
+.dz-tagline {
+  margin-top: 6px;
+
+  color: #8290a3;
+
+  font-size: 0.58rem;
+  letter-spacing: 2px;
+}
+
+/* NAVIGATION */
+
+.dz-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.dz-nav-link {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 32px 0 27px;
+
+  color: #e9edf2;
+  text-decoration: none;
+
+  font-size: 0.95rem;
+  font-weight: 500;
+
+  transition: 0.2s ease;
+}
+
+.dz-nav-link svg {
+  font-size: 1.1rem;
+}
+
+.dz-nav-link:hover,
+.dz-nav-link.active {
+  color: #c62828;
+}
+
+.dz-nav-link.active::after {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  right: 0;
+  bottom: 11px;
+
+  height: 3px;
+
+  border-radius: 10px;
+
+  background: #c62828;
+}
+
+/* CART */
+
+.cart-icon-wrapper {
+  position: relative;
+  display: flex;
+}
+
+.cart-badge {
+  position: absolute;
+
+  top: -10px;
+  right: -12px;
+
+  min-width: 19px;
+  height: 19px;
+
+  padding: 0 5px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #c62828;
+  color: white;
+
+  font-size: 0.65rem;
+  font-weight: 700;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 900px) {
+
+  .dz-navbar-container {
+    flex-direction: column;
+    gap: 10px;
+    padding: 15px;
+  }
+
+  .dz-nav-links {
+    gap: 18px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .dz-nav-link {
+    padding: 8px 0;
+  }
+
+  .dz-nav-link.active::after {
+    bottom: 0;
+  }
+}

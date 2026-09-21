@@ -1,153 +1,220 @@
+import { Link } from 'react-router-dom'
+import './LandingPage.css'
 
 function LandingPage() {
-  return(
+  return (
     <>
+      {/* HERO */}
+      <section className="dz-hero">
+        <div className="container py-5">
+          <div className="row align-items-center g-5 py-lg-4">
 
-<section className="py-5 bg-light">
-  <div className="container py-5">
-    <div className="row align-items-center g-5">
+            <div className="col-lg-6">
 
-      {/* CONTENU */}
-      <div className="col-lg-6">
+              <span className="dz-collection-badge">
+                ✨ Découvrez notre collection
+              </span>
 
-        <span className="badge bg-primary-subtle text-primary rounded-pill px-3 py-2 mb-3">
-          ✨ Découvrez notre collection
-        </span>
+              <h1 className="dz-hero-title">
+                Trouvez ce qu'il vous faut,
+                <span> simplement.</span>
+              </h1>
 
-        <h1 className="display-3 fw-bold lh-1 mb-4">
-          Trouvez ce qu'il vous faut,
-          <span className="text-primary"> simplement.</span>
-        </h1>
+              <p className="dz-hero-text">
+                Découvrez nos produits sélectionnés avec soin,
+                profitez de prix avantageux et faites-vous livrer
+                directement chez vous.
+              </p>
 
-        <p className="lead text-secondary mb-4">
-          Découvrez nos produits sélectionnés avec soin,
-          profitez de prix avantageux et faites-vous livrer
-          directement chez vous.
-          
-        </p>
+              <div className="d-flex flex-wrap gap-3 mb-5">
 
-        {/* BOUTONS */}
-        <div className="d-flex flex-wrap gap-3 mb-5">
-          <a
-            href="#produits"
-            className="btn btn-primary btn-lg px-4 py-3 rounded-pill fw-semibold"
-          >
-            🛍️ Nos produits
-          </a>
+                <Link to="/produits" className="dz-main-button">
+                  🛍️ Nos produits
+                </Link>
 
-          <a
-            href="#categories"
-            className="btn btn-outline-dark btn-lg px-4 py-3 rounded-pill"
-          >
-            Voir les catégories
-          </a>
-        </div>
+                <a href="#categories" className="dz-outline-button">
+                  Voir les catégories
+                </a>
 
-        {/* AVANTAGES */}
-        <div className="row g-3">
+              </div>
 
-          {/* Livraison */}
-          <div className="col-md-4">
-            <div className="bg-white rounded-4 p-3 h-100 shadow-sm">
-              <div className="fs-3 mb-2">🚚</div>
+              <div className="row g-3">
 
-              <h6 className="fw-bold mb-1">
-                Livraison 69 wilayas
-              </h6>
+                <div className="col-md-4">
+                  <div className="dz-feature-card">
+                    <div className="dz-feature-icon">🚚</div>
 
-              <small className="text-secondary">
-                Recevez votre commande partout en Algérie.
-              </small>
+                    <h6>Livraison 69 wilayas</h6>
+
+                    <small>
+                      Recevez votre commande partout en Algérie.
+                    </small>
+                  </div>
+                </div>
+
+                <div className="col-md-4">
+                  <div className="dz-feature-card">
+                    <div className="dz-feature-icon">💵</div>
+
+                    <h6>Paiement à la livraison</h6>
+
+                    <small>
+                      Vous payez uniquement à la réception.
+                    </small>
+                  </div>
+                </div>
+
+                <div className="col-md-4">
+                  <div className="dz-feature-card">
+                    <div className="dz-feature-icon">↩️</div>
+
+                    <h6>Retour sous 7 jours</h6>
+
+                    <small>
+                      Retournez votre commande sous 7 jours.
+                    </small>
+                  </div>
+                </div>
+
+              </div>
             </div>
-          </div>
 
-          {/* Paiement */}
-          <div className="col-md-4">
-            <div className="bg-white rounded-4 p-3 h-100 shadow-sm">
-              <div className="fs-3 mb-2">💵</div>
+            <div className="col-lg-6">
 
-              <h6 className="fw-bold mb-1">
-                Paiement à la livraison
-              </h6>
+              <div className="dz-image-wrapper">
 
-              <small className="text-secondary">
-                Vous payez uniquement à la réception.
-              </small>
-            </div>
-          </div>
+                <img
+                  src="https://images.unsplash.com/photo-1607082349566-187342175e2f?auto=format&fit=crop&w=1000&q=80"
+                  className="dz-hero-image"
+                  alt="Nos produits"
+                />
 
-          {/* Retour */}
-          <div className="col-md-4">
-            <div className="bg-white rounded-4 p-3 h-100 shadow-sm">
-              <div className="fs-3 mb-2">↩️</div>
+                <div className="dz-delivery-badge">
 
-              <h6 className="fw-bold mb-1">
-                Retour sous 7 jours
-              </h6>
-
-              <small className="text-secondary">
-                Retournez votre commande sous 7 jours.
-              </small>
-            </div>
-          </div>
-
-        </div>
-
-      </div>
-
-      {/* IMAGE */}
-      <div className="col-lg-6">
-        <div className="position-relative">
-
-          <img
-            src="https://images.unsplash.com/photo-1607082349566-187342175e2f?auto=format&fit=crop&w=1000&q=80"
-            className="img-fluid rounded-5 shadow-lg"
-            alt="Nos produits"
-          />
-
-          {/* Badge livraison */}
-          <div className="position-absolute bottom-0 start-0 translate-middle-y ms-3">
-            <div className="bg-white rounded-4 shadow p-3">
-
-              <div className="d-flex align-items-center gap-3">
-                <div className="fs-2">🚚</div>
-
-                <div>
-                  <div className="fw-bold">
-                    Livraison partout
+                  <div className="dz-delivery-icon">
+                    🚚
                   </div>
 
-                  <small className="text-secondary">
-                    69 wilayas 🇩🇿
-                  </small>
+                  <div>
+                    <strong>Livraison partout</strong>
+
+                    <small>
+                      69 wilayas 🇩🇿
+                    </small>
+                  </div>
+
                 </div>
+
+                <div className="dz-secure-badge">
+                  ✓ Achat sécurisé
+                </div>
+
               </div>
 
             </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* CATEGORIES */}
+      <section id="categories" className="dz-categories">
+
+        <div className="container">
+
+          <div className="text-center mb-5">
+
+            <h2 className="dz-section-title">
+              Nos catégories
+            </h2>
+
+            <p className="dz-section-text">
+              Découvrez nos différentes catégories de produits.
+            </p>
+
           </div>
 
-          {/* Badge confiance */}
-          <div className="position-absolute top-0 end-0 me-3 mt-3">
-            <div className="bg-dark text-white rounded-4 shadow px-3 py-2">
-              <span className="fw-semibold">
-                ✓ Achat sécurisé
-              </span>
+          <div className="row g-4">
+
+            <div className="col-md-4">
+              <Link to="/produits" className="dz-category-link">
+
+                <div className="dz-category-card">
+
+                  <div className="dz-category-emoji">
+                    📱
+                  </div>
+
+                  <h5>Téléphones</h5>
+
+                  <p>
+                    Découvrez nos smartphones.
+                  </p>
+
+                  <div className="dz-arrow">
+                    →
+                  </div>
+
+                </div>
+
+              </Link>
             </div>
+
+            <div className="col-md-4">
+              <Link to="/produits" className="dz-category-link">
+
+                <div className="dz-category-card">
+
+                  <div className="dz-category-emoji">
+                    🎧
+                  </div>
+
+                  <h5>Audio</h5>
+
+                  <p>
+                    Casques et accessoires audio.
+                  </p>
+
+                  <div className="dz-arrow">
+                    →
+                  </div>
+
+                </div>
+
+              </Link>
+            </div>
+
+            <div className="col-md-4">
+              <Link to="/produits" className="dz-category-link">
+
+                <div className="dz-category-card">
+
+                  <div className="dz-category-emoji">
+                    ⌨️
+                  </div>
+
+                  <h5>Accessoires</h5>
+
+                  <p>
+                    Découvrez nos accessoires.
+                  </p>
+
+                  <div className="dz-arrow">
+                    →
+                  </div>
+
+                </div>
+
+              </Link>
+            </div>
+
           </div>
 
         </div>
-      </div>
 
-    </div>
-  </div>
-</section>
-
+      </section>
     </>
   )
 }
-export default LandingPage;
 
-
-
-
-
+export default LandingPage

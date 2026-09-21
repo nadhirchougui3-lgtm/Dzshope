@@ -4,37 +4,38 @@ import Col from "react-bootstrap/Col";
 
 function Footer() {
   return (
-    <footer className="bg-dark text-white py-5 mt-5">
-      <Container>
-        <Row>
+    <footer className="bg-dark text-white mt-5">
+      <Container className="py-5">
+        <Row className="g-5">
 
           {/* À propos */}
-          <Col md={4} className="mb-4">
-            <h5>MonShop</h5>
-            <p className="text-light">
+          <Col md={5}>
+            <h5 className="fw-bold mb-3">MonShop</h5>
+
+            <p className="text-light mb-0" style={{ maxWidth: "420px" }}>
               Votre boutique en ligne en Algérie.
               Découvrez nos meilleurs produits au meilleur prix.
             </p>
           </Col>
 
           {/* Liens */}
-          <Col md={4} className="mb-4">
-            <h5>Liens utiles</h5>
+          <Col md={3}>
+            <h5 className="fw-bold mb-3">Liens utiles</h5>
 
-            <ul className="list-unstyled">
-              <li>
+            <ul className="list-unstyled mb-0">
+              <li className="mb-2">
                 <a href="/" className="text-white text-decoration-none">
                   Accueil
                 </a>
               </li>
 
-              <li>
+              <li className="mb-2">
                 <a href="/products" className="text-white text-decoration-none">
                   Produits
                 </a>
               </li>
 
-              <li>
+              <li className="mb-2">
                 <a href="/about" className="text-white text-decoration-none">
                   À propos
                 </a>
@@ -49,28 +50,27 @@ function Footer() {
           </Col>
 
           {/* Contact */}
-          <Col md={4} className="mb-4">
-            <h5>Contact</h5>
+          <Col md={4}>
+            <h5 className="fw-bold mb-3">Contact</h5>
 
             <p className="mb-2">📍 Algérie</p>
             <p className="mb-2">📞 0562 99 72 37</p>
-            <p className="mb-2">✉️ contact@monshop.com</p>
+            <p className="mb-0">✉️ contact@monshop.com</p>
           </Col>
 
         </Row>
 
-        <hr />
+        <hr className="border-secondary my-4" />
 
-        {/* Copyright */}
         <div className="text-center">
-          <p className="mb-0">
+          <p className="mb-0 text-light">
             © 2026 MonShop. Tous droits réservés.
           </p>
         </div>
-
       </Container>
     </footer>
   );
 }
 
 export default Footer;
+
