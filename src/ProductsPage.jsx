@@ -55,12 +55,12 @@ function ProductsPage() {
         </div>
 
         {/* PRODUCTS */}
-        <div className="row g-4 pb-5">
+        <div className="dz-products-grid">
 
           {products.map(function (p) {
             return (
               <div
-                className="col-md-6 col-lg-4"
+                className="dz-product-item"
                 key={p._id}
               >
 

@@ -11,10 +11,12 @@ function ProductDetailPage() {
   const [produit, setProduit] = useState(null)
   const [chargement, setChargement] = useState(true)
   const [quantity, setQuantity] = useState(1)
+  const [couleur, setCouleur] = useState(null)
 
   useEffect(function () {
     setChargement(true)
     setQuantity(1)
+    setCouleur(null)
 
     apiFetch('/api/products/' + id)
       .then(function (res) {
@@ -22,6 +24,11 @@ function ProductDetailPage() {
       })
       .then(function (data) {
         setProduit(data)
+
+        if (data && data.couleurs && data.couleurs.length > 0) {
+          setCouleur(data.couleurs[0])
+        }
+
         setChargement(false)
       })
       .catch(function () {
@@ -41,7 +48,6 @@ function ProductDetailPage() {
   if (!produit) {
     return (
       <div className="dz-not-found">
-
         <div className="dz-not-found-icon">
           🛍️
         </div>
@@ -58,7 +64,6 @@ function ProductDetailPage() {
         >
           ← Retour aux produits
         </Link>
-
       </div>
     )
   }
@@ -76,15 +81,13 @@ function ProductDetailPage() {
   }
 
   function handleAddToCart() {
-    addToCart(produit, quantity)
+    addToCart(produit, quantity, couleur)
   }
 
   return (
     <div className="dz-detail-page">
 
       <div className="container">
-
-        {/* BREADCRUMB */}
 
         <div className="dz-breadcrumb">
           <Link to="/">
@@ -102,17 +105,13 @@ function ProductDetailPage() {
           <span>{produit.nom}</span>
         </div>
 
-        {/* PRODUCT */}
-
         <div className="dz-detail-card">
-
-          {/* IMAGE */}
 
           <div className="dz-detail-image">
 
             {produit.image ? (
               <img
-                src={produit.image}
+                src={couleur?.image || produit.image}
                 alt={produit.nom}
               />
             ) : (
@@ -128,8 +127,6 @@ function ProductDetailPage() {
             )}
 
           </div>
-
-          {/* INFO */}
 
           <div className="dz-detail-info">
 
@@ -191,7 +188,40 @@ function ProductDetailPage() {
 
             </div>
 
-            {/* ADD TO CART */}
+            {/* COLOR */}
+
+            {produit.couleurs && produit.couleurs.length > 0 && (
+              <div className="dz-color-section">
+
+                <span>
+                  Couleur
+                </span>
+
+                <div className="dz-colors">
+
+                  {produit.couleurs.map(function (color) {
+                    return (
+                      <button
+                        type="button"
+                        key={color._id}
+                        className={
+                          couleur?._id === color._id
+                            ? 'dz-color active'
+                            : 'dz-color'
+                        }
+                        onClick={function () {
+                          setCouleur(color)
+                        }}
+                      >
+                        {color.nom}
+                      </button>
+                    )
+                  })}
+
+                </div>
+
+              </div>
+            )}
 
             <button
               className="dz-add-cart"
