@@ -9,7 +9,7 @@ dotenv.config()
 const app = express()
 const PORT = process.env.PORT || 5000
 
-app.use(cors({ origin: 'http://localhost:5176' }))
+app.use(cors({ origin: 'http://localhost:5178' }))
 app.use(express.json())
 
 app.use('/api/products', productRoutes)

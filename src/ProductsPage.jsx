@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { apiFetch, lireJson } from './api'
 import './ProductsPage.css'
 
 function ProductsPage() {
   const [products, setProducts] = useState([])
   const [chargement, setChargement] = useState(true)
+
+  const [searchParams] = useSearchParams()
+  const categorie = searchParams.get('categorie')
 
   useEffect(function () {
     apiFetch('/api/products')
@@ -30,6 +33,12 @@ function ProductsPage() {
     )
   }
 
+  const produitsFiltres = categorie
+    ? products.filter(function (p) {
+        return p.categorie === categorie
+      })
+    : products
+
   return (
     <div className="dz-products-page">
 
@@ -44,11 +53,13 @@ function ProductsPage() {
             </span>
 
             <h1>
-              Nos <span>produits</span>
+              {categorie ? categorie : 'Nos'} <span>produits</span>
             </h1>
 
             <p>
-              Découvrez notre sélection de produits.
+              {categorie
+                ? `Découvrez nos produits de la catégorie ${categorie}.`
+                : 'Découvrez notre sélection de produits.'}
             </p>
           </div>
 
@@ -57,7 +68,7 @@ function ProductsPage() {
         {/* PRODUCTS */}
         <div className="dz-products-grid">
 
-          {products.map(function (p) {
+          {produitsFiltres.map(function (p) {
             return (
               <div
                 className="dz-product-item"
@@ -124,6 +135,12 @@ function ProductsPage() {
           })}
 
         </div>
+
+        {produitsFiltres.length === 0 && (
+          <div className="text-center py-5">
+            <h3>Aucun produit trouvé</h3>
+          </div>
+        )}
 
       </div>
 

@@ -2,9 +2,83 @@ import { Link } from 'react-router-dom'
 import './LandingPage.css'
 
 function LandingPage() {
+  const categories = [
+    {
+      nom: 'Vêtements',
+      label: 'Clothing',
+      emoji: '👕',
+      description: 'Discover our clothing collection.'
+    },
+    {
+      nom: 'Chaussures',
+      label: 'Shoes',
+      emoji: '👟',
+      description: 'Discover our shoe collection.'
+    },
+    {
+      nom: 'Sacs',
+      label: 'Bags',
+      emoji: '🎒',
+      description: 'Discover our bags collection.'
+    },
+    {
+      nom: 'Montres',
+      label: 'Watches',
+      emoji: '⌚',
+      description: 'Discover our watches collection.'
+    },
+    {
+      nom: 'Téléphones',
+      label: 'Phones',
+      emoji: '📱',
+      description: 'Discover our phones collection.'
+    },
+    {
+      nom: 'Audio',
+      label: 'Audio',
+      emoji: '🎧',
+      description: 'Discover our audio products.'
+    },
+    {
+      nom: 'Ordinateurs',
+      label: 'Computers',
+      emoji: '💻',
+      description: 'Discover our computers collection.'
+    },
+    {
+      nom: 'Gaming',
+      label: 'Gaming',
+      emoji: '🎮',
+      description: 'Discover our gaming products.'
+    },
+    {
+      nom: 'Soins personnels',
+      label: 'Personal Care',
+      emoji: '🧴',
+      description: 'Discover our personal care products.'
+    },
+    {
+      nom: 'Accessoires',
+      label: 'Accessories',
+      emoji: '🕶️',
+      description: 'Discover our accessories collection.'
+    },
+    {
+      nom: 'Sport',
+      label: 'Sports',
+      emoji: '⚽',
+      description: 'Discover our sports products.'
+    },
+    {
+      nom: 'Maquillage',
+      label: 'Makeup',
+      emoji: '💄',
+      description: 'Discover our makeup collection.'
+    }
+  ]
+
   return (
     <>
-      {/* HERO */}
       <section className="dz-hero">
         <div className="container py-5">
           <div className="row align-items-center g-5 py-lg-4">
@@ -12,28 +86,28 @@ function LandingPage() {
             <div className="col-lg-6">
 
               <span className="dz-collection-badge">
-                ✨ Découvrez notre collection
+                ✨ Discover our collection
               </span>
 
               <h1 className="dz-hero-title">
-                Trouvez ce qu'il vous faut,
-                <span> simplement.</span>
+                Find what you need,
+                <span> simply.</span>
               </h1>
 
               <p className="dz-hero-text">
-                Découvrez nos produits sélectionnés avec soin,
-                profitez de prix avantageux et faites-vous livrer
-                directement chez vous.
+                Discover our carefully selected products,
+                enjoy great prices and get your order delivered
+                directly to your home.
               </p>
 
               <div className="d-flex flex-wrap gap-3 mb-5">
 
                 <Link to="/produits" className="dz-main-button">
-                  🛍️ Nos produits
+                  🛍️ Our Products
                 </Link>
 
                 <a href="#categories" className="dz-outline-button">
-                  Voir les catégories
+                  View Categories
                 </a>
 
               </div>
@@ -43,11 +117,9 @@ function LandingPage() {
                 <div className="col-md-4">
                   <div className="dz-feature-card">
                     <div className="dz-feature-icon">🚚</div>
-
-                    <h6>Livraison 69 wilayas</h6>
-
+                    <h6>Delivery to 69 wilayas</h6>
                     <small>
-                      Recevez votre commande partout en Algérie.
+                      Receive your order anywhere in Algeria.
                     </small>
                   </div>
                 </div>
@@ -55,11 +127,9 @@ function LandingPage() {
                 <div className="col-md-4">
                   <div className="dz-feature-card">
                     <div className="dz-feature-icon">💵</div>
-
-                    <h6>Paiement à la livraison</h6>
-
+                    <h6>Cash on delivery</h6>
                     <small>
-                      Vous payez uniquement à la réception.
+                      Pay only when you receive your order.
                     </small>
                   </div>
                 </div>
@@ -67,11 +137,9 @@ function LandingPage() {
                 <div className="col-md-4">
                   <div className="dz-feature-card">
                     <div className="dz-feature-icon">↩️</div>
-
-                    <h6>Retour sous 7 jours</h6>
-
+                    <h6>7-day returns</h6>
                     <small>
-                      Retournez votre commande sous 7 jours.
+                      Return your order within 7 days.
                     </small>
                   </div>
                 </div>
@@ -86,7 +154,7 @@ function LandingPage() {
                 <img
                   src="https://images.unsplash.com/photo-1607082349566-187342175e2f?auto=format&fit=crop&w=1000&q=80"
                   className="dz-hero-image"
-                  alt="Nos produits"
+                  alt="Our products"
                 />
 
                 <div className="dz-delivery-badge">
@@ -96,8 +164,7 @@ function LandingPage() {
                   </div>
 
                   <div>
-                    <strong>Livraison partout</strong>
-
+                    <strong>Delivery everywhere</strong>
                     <small>
                       69 wilayas 🇩🇿
                     </small>
@@ -106,7 +173,7 @@ function LandingPage() {
                 </div>
 
                 <div className="dz-secure-badge">
-                  ✓ Achat sécurisé
+                  ✓ Secure Shopping
                 </div>
 
               </div>
@@ -117,7 +184,6 @@ function LandingPage() {
         </div>
       </section>
 
-      {/* CATEGORIES */}
       <section id="categories" className="dz-categories">
 
         <div className="container">
@@ -125,88 +191,54 @@ function LandingPage() {
           <div className="text-center mb-5">
 
             <h2 className="dz-section-title">
-              Nos catégories
+              Our Categories
             </h2>
 
             <p className="dz-section-text">
-              Découvrez nos différentes catégories de produits.
+              Explore our different product categories.
             </p>
 
           </div>
 
           <div className="row g-4">
 
-            <div className="col-md-4">
-              <Link to="/produits" className="dz-category-link">
+            {categories.map(function (categorie) {
+              return (
+                <div
+                  className="col-md-6 col-lg-4"
+                  key={categorie.nom}
+                >
 
-                <div className="dz-category-card">
+                  <Link
+                    to={'/produits?categorie=' + encodeURIComponent(categorie.nom)}
+                    className="dz-category-link"
+                  >
 
-                  <div className="dz-category-emoji">
-                    📱
-                  </div>
+                    <div className="dz-category-card">
 
-                  <h5>Téléphones</h5>
+                      <div className="dz-category-emoji">
+                        {categorie.emoji}
+                      </div>
 
-                  <p>
-                    Découvrez nos smartphones.
-                  </p>
+                      <h5>
+                        {categorie.label}
+                      </h5>
 
-                  <div className="dz-arrow">
-                    →
-                  </div>
+                      <p>
+                        {categorie.description}
+                      </p>
 
-                </div>
+                      <div className="dz-arrow">
+                        →
+                      </div>
 
-              </Link>
-            </div>
+                    </div>
 
-            <div className="col-md-4">
-              <Link to="/produits" className="dz-category-link">
-
-                <div className="dz-category-card">
-
-                  <div className="dz-category-emoji">
-                    🎧
-                  </div>
-
-                  <h5>Audio</h5>
-
-                  <p>
-                    Casques et accessoires audio.
-                  </p>
-
-                  <div className="dz-arrow">
-                    →
-                  </div>
+                  </Link>
 
                 </div>
-
-              </Link>
-            </div>
-
-            <div className="col-md-4">
-              <Link to="/produits" className="dz-category-link">
-
-                <div className="dz-category-card">
-
-                  <div className="dz-category-emoji">
-                    ⌨️
-                  </div>
-
-                  <h5>Accessoires</h5>
-
-                  <p>
-                    Découvrez nos accessoires.
-                  </p>
-
-                  <div className="dz-arrow">
-                    →
-                  </div>
-
-                </div>
-
-              </Link>
-            </div>
+              )
+            })}
 
           </div>
 
@@ -217,4 +249,4 @@ function LandingPage() {
   )
 }
 
-export default LandingPage
+export default LandingPage;

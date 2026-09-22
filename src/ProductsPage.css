@@ -1,21 +1,40 @@
 .dz-products-grid {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 20px;
+  gap: 22px;
+  align-items: stretch;
 }
 
 .dz-product-item {
   min-width: 0;
+  display: flex;
 }
 
+.dz-product-card {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dz-product-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+/* IMAGE */
 .dz-product-image {
   position: relative;
-  height: 230px;
-  background: #f1f5f9;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: #f8f8f8;
   overflow: hidden;
+  flex-shrink: 0;
 }
 
 .dz-product-image img {
@@ -26,72 +45,108 @@
 }
 
 .dz-no-image {
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  height: 100%;
-  font-size: 4rem;
+  font-size: 2rem;
+  color: #9ca3af;
 }
 
-@media (max-width: 1200px) {
-  .dz-products-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
+/* CATEGORY */
+.dz-category {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  padding: 4px 7px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 500;
+  color: #333;
 }
 
-@media (max-width: 992px) {
-  .dz-products-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 768px) {
-  .dz-products-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 576px) {
-  .dz-products-grid {
-    grid-template-columns: 1fr;
-  }
-}.dz-products-grid {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 20px;
-}
-
-.dz-product-item {
-  min-width: 0;
-}
-
-.dz-product-image {
-  position: relative;
-  height: 230px;
-  background: #f1f5f9;
+/* CONTENT */
+.dz-product-content {
   display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 12px;
+}
+
+/* PRODUCT NAME */
+.dz-product-content h3 {
+  margin: 0 0 6px;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+  color: #222;
+}
+
+/* DESCRIPTION */
+.dz-product-description {
+  margin: 0 0 8px;
+  font-size: 11px;
+  line-height: 15px;
+  color: #777;
+}
+
+/* PRICE */
+.dz-price {
+  margin-bottom: 5px;
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 600;
+  color: #111;
+}
+
+/* STOCK */
+.dz-stock {
+  margin-bottom: 10px;
+  font-size: 10px;
+  line-height: 14px;
+  color: #777;
+}
+
+/* BUTTON - ALWAYS AT THE BOTTOM */
+.dz-product-button {
+  align-self: flex-start;
+  margin-top: auto;
+
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  overflow: hidden;
+  gap: 7px;
+
+  padding: 8px 12px;
+
+  border: 0;
+  border-radius: 6px;
+
+  background: #111;
+  color: #fff;
+
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 15px;
+
+  text-decoration: none;
+  cursor: pointer;
+
+  transition: background 0.2s ease, transform 0.2s ease;
 }
 
-.dz-product-image img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.dz-product-button:hover {
+  background: #333;
+  color: #fff;
 }
 
-.dz-no-image {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  font-size: 4rem;
+.dz-product-button strong {
+  font-size: 14px;
+  font-weight: 400;
 }
 
+/* RESPONSIVE */
 @media (max-width: 1200px) {
   .dz-products-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
