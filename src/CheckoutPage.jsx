@@ -2,7 +2,8 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useCart } from './CartContext'
 import { apiFetch, lireJson } from './api'
-import { FaArrowLeft, FaLock, FaTruck } from 'react-icons/fa'
+import { FaArrowLeft, FaLock, FaTruck, FaChevronDown, FaSearch } from 'react-icons/fa'
+import wilayas from './data/wilaya-commune.json'
 import './CheckoutPage.css'
 
 function CheckoutPage() {
@@ -19,6 +20,43 @@ function CheckoutPage() {
   })
 
   const [chargement, setChargement] = useState(false)
+  const [wilayaOuverte, setWilayaOuverte] = useState(false)
+  const [rechercheWilaya, setRechercheWilaya] = useState('')
+  const [rechercheCommune, setRechercheCommune] = useState('')
+  const [communeOuverte, setCommuneOuverte] = useState(false)
+
+  function normaliserTexte(texte) {
+    return texte
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+  }
+
+  const wilayasFiltrees = wilayas.filter(function (wilaya) {
+    const nom = wilaya.ascii || ''
+
+    return normaliserTexte(nom).includes(
+      normaliserTexte(rechercheWilaya)
+    )
+  })
+
+  const wilayaSelectionnee = wilayas.find(function (wilaya) {
+    return wilaya.ascii === form.wilaya
+  })
+
+  const communes = wilayaSelectionnee
+    ? wilayaSelectionnee.communes
+    : []
+
+  const communesFiltrees = communes
+    .filter(function (commune) {
+      const nom = commune.ascii || ''
+
+      return normaliserTexte(nom).includes(
+        normaliserTexte(rechercheCommune)
+      )
+    })
+    .slice(0, 8)
 
   function handleChange(event) {
     const { name, value } = event.target
@@ -29,6 +67,33 @@ function CheckoutPage() {
         [name]: value
       }
     })
+  }
+
+  function choisirWilaya(wilaya) {
+    setForm(function (previous) {
+      return {
+        ...previous,
+        wilaya: wilaya.ascii,
+        commune: ''
+      }
+    })
+
+    setRechercheWilaya('')
+    setRechercheCommune('')
+    setWilayaOuverte(false)
+    setCommuneOuverte(false)
+  }
+
+  function choisirCommune(commune) {
+    setForm(function (previous) {
+      return {
+        ...previous,
+        commune: commune.ascii
+      }
+    })
+
+    setRechercheCommune(commune.ascii)
+    setCommuneOuverte(false)
   }
 
   async function handleSubmit(event) {
@@ -131,42 +196,178 @@ function CheckoutPage() {
                 />
               </div>
 
-              <div className="dz-field">
+              <div className="dz-field dz-dropdown-field">
                 <label>Wilaya</label>
-                <select
-                  name="wilaya"
-                  value={form.wilaya}
-                  onChange={handleChange}
-                  required
-                >
-                  <option value="">Choisir une wilaya</option>
-                  <option value="Alger">Alger</option>
-                  <option value="Constantine">Constantine</option>
-                  <option value="Skikda">Skikda</option>
-                  <option value="Annaba">Annaba</option>
-                  <option value="Oran">Oran</option>
-                  <option value="Sétif">Sétif</option>
-                  <option value="Blida">Blida</option>
-                  <option value="Batna">Batna</option>
-                </select>
+
+                <div className="dz-custom-dropdown">
+
+                  <button
+                    type="button"
+                    className={
+                      wilayaOuverte
+                        ? 'dz-dropdown-trigger active'
+                        : 'dz-dropdown-trigger'
+                    }
+                    onClick={function () {
+                      setWilayaOuverte(!wilayaOuverte)
+                      setCommuneOuverte(false)
+                    }}
+                  >
+                    <span>
+                      {form.wilaya || 'Choose a wilaya'}
+                    </span>
+
+                    <FaChevronDown />
+                  </button>
+
+                  {wilayaOuverte && (
+                    <div className="dz-dropdown-menu">
+
+                      <div className="dz-dropdown-search">
+                        <FaSearch />
+
+                        <input
+                          type="text"
+                          value={rechercheWilaya}
+                          onChange={function (event) {
+                            setRechercheWilaya(event.target.value)
+                          }}
+                          placeholder="Search wilaya..."
+                          autoFocus
+                        />
+                      </div>
+
+                      <div className="dz-dropdown-list">
+
+                        {wilayasFiltrees.length > 0 ? (
+                          wilayasFiltrees.map(function (wilaya) {
+                            return (
+                              <button
+                                type="button"
+                                key={wilaya.code}
+                                className={
+                                  form.wilaya === wilaya.ascii
+                                    ? 'dz-dropdown-option selected'
+                                    : 'dz-dropdown-option'
+                                }
+                                onClick={function () {
+                                  choisirWilaya(wilaya)
+                                }}
+                              >
+                                <span>{wilaya.ascii}</span>
+
+                                <small>
+                                  {String(wilaya.code).padStart(2, '0')}
+                                </small>
+                              </button>
+                            )
+                          })
+                        ) : (
+                          <div className="dz-dropdown-empty">
+                            No wilaya found
+                          </div>
+                        )}
+
+                      </div>
+
+                    </div>
+                  )}
+
+                </div>
+
               </div>
 
-              <div className="dz-field">
+              <div className="dz-field dz-dropdown-field">
                 <label>Commune</label>
-                <input
-                  type="text"
-                  name="commune"
-                  value={form.commune}
-                  onChange={handleChange}
-                  placeholder="Votre commune"
-                  required
-                />
+
+                <div className="dz-custom-dropdown">
+
+                  <button
+                    type="button"
+                    disabled={!form.wilaya}
+                    className={
+                      communeOuverte
+                        ? 'dz-dropdown-trigger active'
+                        : 'dz-dropdown-trigger'
+                    }
+                    onClick={function () {
+                      if (!form.wilaya) {
+                        return
+                      }
+
+                      setCommuneOuverte(!communeOuverte)
+                      setWilayaOuverte(false)
+                    }}
+                  >
+                    <span>
+                      {form.commune || (
+                        form.wilaya
+                          ? 'Choose a commune'
+                          : 'Choose a wilaya first'
+                      )}
+                    </span>
+
+                    <FaChevronDown />
+                  </button>
+
+                  {communeOuverte && (
+                    <div className="dz-dropdown-menu">
+
+                      <div className="dz-dropdown-search">
+                        <FaSearch />
+
+                        <input
+                          type="text"
+                          value={rechercheCommune}
+                          onChange={function (event) {
+                            setRechercheCommune(event.target.value)
+                          }}
+                          placeholder="Search commune..."
+                          autoFocus
+                        />
+                      </div>
+
+                      <div className="dz-dropdown-list">
+
+                        {communesFiltrees.length > 0 ? (
+                          communesFiltrees.map(function (commune) {
+                            return (
+                              <button
+                                type="button"
+                                key={commune.code || commune.ascii}
+                                className={
+                                  form.commune === commune.ascii
+                                    ? 'dz-dropdown-option selected'
+                                    : 'dz-dropdown-option'
+                                }
+                                onClick={function () {
+                                  choisirCommune(commune)
+                                }}
+                              >
+                                <span>{commune.ascii}</span>
+                              </button>
+                            )
+                          })
+                        ) : (
+                          <div className="dz-dropdown-empty">
+                            No commune found
+                          </div>
+                        )}
+
+                      </div>
+
+                    </div>
+                  )}
+
+                </div>
+
               </div>
 
             </div>
 
             <div className="dz-field dz-address-field">
               <label>Adresse</label>
+
               <textarea
                 name="adresse"
                 value={form.adresse}
