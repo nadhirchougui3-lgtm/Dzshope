@@ -45,7 +45,6 @@ function CartPage() {
 
       <div className="dz-cart-layout">
 
-        {/* LEFT */}
         <div className="dz-cart-products">
 
           {cartItems.map(function (item) {
@@ -130,7 +129,6 @@ function CartPage() {
 
         </div>
 
-        {/* RIGHT */}
         <div className="dz-cart-summary">
 
           <div className="dz-summary-card">
@@ -158,9 +156,12 @@ function CartPage() {
               </strong>
             </div>
 
-            <button className="dz-checkout-btn">
+            <Link
+              to="/checkout"
+              className="dz-checkout-btn"
+            >
               Checkout
-            </button>
+            </Link>
 
           </div>
 
@@ -191,6 +192,4 @@ function CartPage() {
   )
 }
 
-export default CartPage
-
-
+export default CartPage ;

@@ -6,13 +6,13 @@ import LandingPage from './LandingPage'
 import ProductsPage from './ProductsPage'
 import ProductDetailPage from './ProductDetailPage'
 import CartPage from './CartPage'
+import CheckoutPage from './CheckoutPage'
 import Footer from './footer'
 import SignUp from './SignUp'
 import ContactPage from './ContactPage'
 
 function App() {
   return (
-    <>
     <CartProvider>
       <BrowserRouter>
 
@@ -22,7 +22,11 @@ function App() {
 
           <main className="flex-grow-1">
             <Routes>
-              <Route path="/" element={<LandingPage />} />
+
+              <Route
+                path="/"
+                element={<LandingPage />}
+              />
 
               <Route
                 path="/produits"
@@ -45,9 +49,15 @@ function App() {
               />
 
               <Route
+                path="/checkout"
+                element={<CheckoutPage />}
+              />
+
+              <Route
                 path="/SignUp"
                 element={<SignUp />}
               />
+
             </Routes>
           </main>
 
@@ -57,8 +67,7 @@ function App() {
 
       </BrowserRouter>
     </CartProvider>
-    </>
   )
 }
 
-export default App
+export default App ;

@@ -57,6 +57,10 @@ export function CartProvider({ children }) {
     })
   }
 
+  function clearCart() {
+    setCartItems([])
+  }
+
   const total = cartItems.reduce(function (sum, item) {
     return sum + item.prix * item.quantity
   }, 0)
@@ -68,6 +72,7 @@ export function CartProvider({ children }) {
         addToCart,
         removeFromCart,
         updateQuantity,
+        clearCart,
         total
       }}
     >

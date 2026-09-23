@@ -3,6 +3,7 @@ import cors from 'cors'
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 import productRoutes from './routes/products.js'
+import orderRoutes from './routes/orders.js'
 
 dotenv.config()
 
@@ -13,6 +14,7 @@ app.use(cors({ origin: 'http://localhost:5178' }))
 app.use(express.json())
 
 app.use('/api/products', productRoutes)
+app.use('/api/orders', orderRoutes)
 
 app.get('/', function (req, res) {
   res.json({ message: 'API DZShop en ligne' })
