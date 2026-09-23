@@ -112,7 +112,8 @@ function CheckoutPage() {
           nom: item.nom,
           prix: item.prix,
           quantity: item.quantity,
-          image: item.image
+          image: item.image,
+          taille: item.taille || ''
         }
       })
 
@@ -465,7 +466,7 @@ function CheckoutPage() {
               {cartItems.map(function (item) {
                 return (
                   <div
-                    key={item._id}
+                    key={item._id + '-' + item.taille}
                     className="dz-checkout-item"
                   >
 
@@ -476,7 +477,18 @@ function CheckoutPage() {
 
                     <div>
                       <h3>{item.nom}</h3>
-                      <span>Quantité : {item.quantity}</span>
+
+                      <span>
+                        Quantité : {item.quantity}
+                      </span>
+
+                      {item.taille && (
+                        <span>
+                          {item.categorie === 'Chaussures'
+                            ? 'Pointure'
+                            : 'Taille'} : {item.taille}
+                        </span>
+                      )}
                     </div>
 
                     <strong>

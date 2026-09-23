@@ -50,7 +50,7 @@ function CartPage() {
           {cartItems.map(function (item) {
             return (
               <div
-                key={item._id}
+                key={item._id + '-' + item.taille}
                 className="dz-cart-product"
               >
 
@@ -64,6 +64,14 @@ function CartPage() {
 
                   <h3>{item.nom}</h3>
 
+                  {item.taille && (
+                    <div className="dz-cart-size">
+                      {item.categorie === 'Chaussures'
+                        ? 'Pointure'
+                        : 'Taille'}: <strong>{item.taille}</strong>
+                    </div>
+                  )}
+
                   <span className="dz-cart-price">
                     {item.prix.toLocaleString('fr-FR')} DA
                   </span>
@@ -76,7 +84,8 @@ function CartPage() {
                         onClick={function () {
                           updateQuantity(
                             item._id,
-                            Math.max(1, item.quantity - 1)
+                            Math.max(1, item.quantity - 1),
+                            item.taille
                           )
                         }}
                       >
@@ -89,7 +98,8 @@ function CartPage() {
                         onClick={function () {
                           updateQuantity(
                             item._id,
-                            item.quantity + 1
+                            item.quantity + 1,
+                            item.taille
                           )
                         }}
                       >
@@ -99,7 +109,7 @@ function CartPage() {
                     </div>
 
                     <Link
-                      to={`/products/${item._id}`}
+                      to={`/produit/${item._id}`}
                       className="dz-view-btn"
                     >
                       View
@@ -108,7 +118,7 @@ function CartPage() {
                     <button
                       className="dz-delete-btn"
                       onClick={function () {
-                        removeFromCart(item._id)
+                        removeFromCart(item._id, item.taille)
                       }}
                     >
                       <FaTrash />
@@ -192,4 +202,4 @@ function CartPage() {
   )
 }
 
-export default CartPage ;
+export default CartPage

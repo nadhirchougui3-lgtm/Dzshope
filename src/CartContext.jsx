@@ -5,15 +5,15 @@ const CartContext = createContext()
 export function CartProvider({ children }) {
   const [cartItems, setCartItems] = useState([])
 
-  function addToCart(product, quantity = 1) {
+  function addToCart(product, quantity = 1, taille = '') {
     setCartItems(function (items) {
       const existingProduct = items.find(function (item) {
-        return item._id === product._id
+        return item._id === product._id && item.taille === taille
       })
 
       if (existingProduct) {
         return items.map(function (item) {
-          if (item._id === product._id) {
+          if (item._id === product._id && item.taille === taille) {
             return {
               ...item,
               quantity: item.quantity + quantity
@@ -28,24 +28,25 @@ export function CartProvider({ children }) {
         ...items,
         {
           ...product,
-          quantity: quantity
+          quantity: quantity,
+          taille: taille
         }
       ]
     })
   }
 
-  function removeFromCart(id) {
+  function removeFromCart(id, taille = '') {
     setCartItems(function (items) {
       return items.filter(function (item) {
-        return item._id !== id
+        return !(item._id === id && item.taille === taille)
       })
     })
   }
 
-  function updateQuantity(id, quantity) {
+  function updateQuantity(id, quantity, taille = '') {
     setCartItems(function (items) {
       return items.map(function (item) {
-        if (item._id === id) {
+        if (item._id === id && item.taille === taille) {
           return {
             ...item,
             quantity: quantity

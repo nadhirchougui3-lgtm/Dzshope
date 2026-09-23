@@ -38,46 +38,32 @@ const couleurs = [
   { nom: 'Gris', image: '' }
 ]
 
-function nettoyerRecherche(nom) {
-  return nom
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-}
+const taillesVetements = [
+  'XS',
+  'S',
+  'M',
+  'L',
+  'XL',
+  'XXL',
+  'XXXL'
+]
 
-async function rechercherImage(nom, categorie) {
-  const recherche = `${nettoyerRecherche(nom)} ${categorie} product`
-
-  const response = await fetch(
-    `https://api.pexels.com/v1/search?query=${encodeURIComponent(recherche)}&orientation=square&size=large&per_page=10`,
-    {
-      headers: {
-        Authorization: process.env.PEXELS_API_KEY
-      }
-    }
-  )
-
-  if (!response.ok) {
-    throw new Error(`Erreur Pexels: ${response.status}`)
-  }
-
-  const data = await response.json()
-
-  if (!data.photos.length) {
-    return ''
-  }
-
-  return data.photos[0].src.large
-}
-
-async function attendre(ms) {
-  return new Promise(function (resolve) {
-    setTimeout(resolve, ms)
-  })
-}
+const taillesChaussures = [
+  '36',
+  '37',
+  '38',
+  '39',
+  '40',
+  '41',
+  '42',
+  '43',
+  '44',
+  '45'
+]
 
 async function seed() {
   try {
-    await mongoose.connect(process.env.MONGO_URI)
+    await mongoose.connect(process.env.MONGODB_URI)
 
     console.log('MongoDB connecté')
 
@@ -89,9 +75,15 @@ async function seed() {
       for (let index = 0; index < noms.length; index++) {
         const nom = noms[index]
 
-        console.log(`Recherche image: ${nom}`)
+        let tailles = []
 
-        const image = await rechercherImage(nom, categorie)
+        if (categorie === 'Vêtements') {
+          tailles = taillesVetements
+        }
+
+        if (categorie === 'Chaussures') {
+          tailles = taillesChaussures
+        }
 
         produits.push({
           nom,
@@ -99,11 +91,10 @@ async function seed() {
           prix: prix[categorie][index],
           categorie,
           stock: 10 + index,
-          image,
-          couleurs
+          image: '',
+          couleurs,
+          tailles
         })
-
-        await attendre(300)
       }
     }
 
@@ -111,11 +102,11 @@ async function seed() {
 
     console.log(`${produits.length} produits ajoutés`)
     console.log(`${Object.keys(categories).length} catégories créées`)
-    console.log('Images ajoutées')
+    console.log('Tailles vêtements: XS, S, M, L, XL, XXL, XXXL')
+    console.log('Tailles chaussures: 36, 37, 38, 39, 40, 41, 42, 43, 44, 45')
+    console.log('Seed terminé')
 
     await mongoose.disconnect()
-
-    console.log('Seed terminé')
   } catch (error) {
     console.error('Erreur:', error)
     process.exit(1)

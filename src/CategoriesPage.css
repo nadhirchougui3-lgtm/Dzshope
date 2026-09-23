@@ -1,0 +1,130 @@
+.dz-categories-page {
+  position: relative;
+  z-index: 0;
+  margin-top: -24px;
+  margin-bottom: -56px;
+  padding: 55px 0 120px;
+  background: #080f19;
+  box-shadow: 0 0 0 100vmax #080f19;
+  clip-path: inset(0 -100vmax);
+}
+
+.dz-categories-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.dz-categories-label {
+  display: inline-block;
+  margin-bottom: 12px;
+  color: #c62828;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.dz-categories-header h1 {
+  color: white;
+  font-size: 2.3rem;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.dz-categories-header p {
+  color: #8c9aaa;
+  margin: 0;
+}
+
+.dz-categories-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.dz-category-link {
+  text-decoration: none;
+}
+
+.dz-category-card {
+  position: relative;
+  min-height: 190px;
+  padding: 30px;
+  background: #0d1826;
+  border: 1px solid #1c2a3b;
+  border-radius: 20px;
+  transition: 0.25s ease;
+}
+
+.dz-category-card:hover {
+  transform: translateY(-6px);
+  border-color: #c62828;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+}
+
+.dz-category-emoji {
+  font-size: 3rem;
+  margin-bottom: 15px;
+}
+
+.dz-category-content > span {
+  display: block;
+  color: #8c9aaa;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.dz-category-card h2 {
+  color: white;
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin-bottom: 7px;
+}
+
+.dz-category-card p {
+  color: #8c9aaa;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.dz-category-arrow {
+  position: absolute;
+  right: 22px;
+  bottom: 22px;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #c62828;
+  color: white;
+  font-size: 1.1rem;
+  font-weight: bold;
+  transition: 0.25s ease;
+}
+
+.dz-category-card:hover .dz-category-arrow {
+  transform: translateX(4px);
+}
+
+@media (max-width: 1000px) {
+  .dz-categories-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .dz-categories-page {
+    margin-top: -24px;
+    margin-bottom: -56px;
+    padding: 45px 0 100px;
+  }
+
+  .dz-categories-grid {
+    grid-template-columns: 1fr;
+  }
+}

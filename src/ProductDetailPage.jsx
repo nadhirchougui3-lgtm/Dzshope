@@ -11,10 +11,12 @@ function ProductDetailPage() {
   const [produit, setProduit] = useState(null)
   const [chargement, setChargement] = useState(true)
   const [quantity, setQuantity] = useState(1)
+  const [taille, setTaille] = useState('')
 
   useEffect(function () {
     setChargement(true)
     setQuantity(1)
+    setTaille('')
 
     apiFetch('/api/products/' + id)
       .then(function (res) {
@@ -74,8 +76,14 @@ function ProductDetailPage() {
   }
 
   function handleAddToCart() {
-    addToCart(produit, quantity)
+    if (produit.tailles && produit.tailles.length > 0 && !taille) {
+      return
+    }
+
+    addToCart(produit, quantity, taille)
   }
+
+  const aDesTailles = produit.tailles && produit.tailles.length > 0
 
   return (
     <div className="dz-detail-page">
@@ -179,15 +187,51 @@ function ProductDetailPage() {
 
             </div>
 
+            {aDesTailles && (
+              <div className="dz-size-section">
+
+                <span>
+                  {produit.categorie === 'Chaussures'
+                    ? 'Pointure'
+                    : 'Taille'}
+                </span>
+
+                <div className="dz-size-options">
+
+                  {produit.tailles.map(function (option) {
+                    return (
+                      <button
+                        key={option}
+                        type="button"
+                        className={taille === option ? 'active' : ''}
+                        onClick={function () {
+                          setTaille(option)
+                        }}
+                      >
+                        {option}
+                      </button>
+                    )
+                  })}
+
+                </div>
+
+              </div>
+            )}
+
             <button
               className="dz-add-cart"
               onClick={handleAddToCart}
-              disabled={produit.stock === 0}
+              disabled={
+                produit.stock === 0 ||
+                (aDesTailles && !taille)
+              }
             >
               🛒
               {produit.stock === 0
                 ? ' Rupture de stock'
-                : ' Ajouter au panier'}
+                : aDesTailles && !taille
+                  ? ' Choisir une taille'
+                  : ' Ajouter au panier'}
             </button>
 
             <Link
@@ -207,4 +251,4 @@ function ProductDetailPage() {
   )
 }
 
-export default ProductDetailPage
+export default ProductDetailPage ;

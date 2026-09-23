@@ -2,81 +2,6 @@ import { Link } from 'react-router-dom'
 import './LandingPage.css'
 
 function LandingPage() {
-  const categories = [
-    {
-      nom: 'Vêtements',
-      label: 'Clothing',
-      emoji: '👕',
-      description: 'Discover our clothing collection.'
-    },
-    {
-      nom: 'Chaussures',
-      label: 'Shoes',
-      emoji: '👟',
-      description: 'Discover our shoe collection.'
-    },
-    {
-      nom: 'Sacs',
-      label: 'Bags',
-      emoji: '🎒',
-      description: 'Discover our bags collection.'
-    },
-    {
-      nom: 'Montres',
-      label: 'Watches',
-      emoji: '⌚',
-      description: 'Discover our watches collection.'
-    },
-    {
-      nom: 'Téléphones',
-      label: 'Phones',
-      emoji: '📱',
-      description: 'Discover our phones collection.'
-    },
-    {
-      nom: 'Audio',
-      label: 'Audio',
-      emoji: '🎧',
-      description: 'Discover our audio products.'
-    },
-    {
-      nom: 'Ordinateurs',
-      label: 'Computers',
-      emoji: '💻',
-      description: 'Discover our computers collection.'
-    },
-    {
-      nom: 'Gaming',
-      label: 'Gaming',
-      emoji: '🎮',
-      description: 'Discover our gaming products.'
-    },
-    {
-      nom: 'Soins personnels',
-      label: 'Personal Care',
-      emoji: '🧴',
-      description: 'Discover our personal care products.'
-    },
-    {
-      nom: 'Accessoires',
-      label: 'Accessories',
-      emoji: '🕶️',
-      description: 'Discover our accessories collection.'
-    },
-    {
-      nom: 'Sport',
-      label: 'Sports',
-      emoji: '⚽',
-      description: 'Discover our sports products.'
-    },
-    {
-      nom: 'Maquillage',
-      label: 'Makeup',
-      emoji: '💄',
-      description: 'Discover our makeup collection.'
-    }
-  ]
-
   return (
     <>
       <section className="dz-hero">
@@ -106,9 +31,9 @@ function LandingPage() {
                   🛍️ Our Products
                 </Link>
 
-                <a href="#categories" className="dz-outline-button">
+                <Link to="/categories" className="dz-outline-button">
                   View Categories
-                </a>
+                </Link>
 
               </div>
 
@@ -183,70 +108,8 @@ function LandingPage() {
           </div>
         </div>
       </section>
-
-      <section id="categories" className="dz-categories">
-
-        <div className="container">
-
-          <div className="text-center mb-5">
-
-            <h2 className="dz-section-title">
-              Our Categories
-            </h2>
-
-            <p className="dz-section-text">
-              Explore our different product categories.
-            </p>
-
-          </div>
-
-          <div className="row g-4">
-
-            {categories.map(function (categorie) {
-              return (
-                <div
-                  className="col-md-6 col-lg-4"
-                  key={categorie.nom}
-                >
-
-                  <Link
-                    to={'/produits?categorie=' + encodeURIComponent(categorie.nom)}
-                    className="dz-category-link"
-                  >
-
-                    <div className="dz-category-card">
-
-                      <div className="dz-category-emoji">
-                        {categorie.emoji}
-                      </div>
-
-                      <h5>
-                        {categorie.label}
-                      </h5>
-
-                      <p>
-                        {categorie.description}
-                      </p>
-
-                      <div className="dz-arrow">
-                        →
-                      </div>
-
-                    </div>
-
-                  </Link>
-
-                </div>
-              )
-            })}
-
-          </div>
-
-        </div>
-
-      </section>
     </>
   )
 }
 
-export default LandingPage;
+export default LandingPage

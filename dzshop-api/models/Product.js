@@ -41,12 +41,18 @@ const schema = new mongoose.Schema({
         type: String,
         required: true
       },
+
       image: {
         type: String,
         default: ''
       }
     }
-  ]
+  ],
+
+  tailles: {
+    type: [String],
+    default: []
+  }
 
 }, {
   timestamps: true
