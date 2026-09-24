@@ -92,6 +92,11 @@ function Footer() {
 
       </div>
 
+      <div className="dz-footer-bottom">
+        <p>© {new Date().getFullYear()} DZShop. All rights reserved.</p>
+        <span>Quality · Price · Trust</span>
+      </div>
+
       <div className="dz-footer-services">
 
         <div className="dz-footer-service">
@@ -127,11 +132,6 @@ function Footer() {
           </div>
         </div>
 
-      </div>
-
-      <div className="dz-footer-bottom">
-        <p>© {new Date().getFullYear()} DZShop. All rights reserved.</p>
-        <span>Quality · Price · Trust</span>
       </div>
 
     </footer>
