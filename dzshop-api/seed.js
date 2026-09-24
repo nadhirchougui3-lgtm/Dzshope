@@ -1,6 +1,8 @@
 import mongoose from 'mongoose'
-import 'dotenv/config'
+import dotenv from 'dotenv'
 import Product from './models/Product.js'
+
+dotenv.config()
 
 const categories = {
   'Vêtements': ['T-shirt Blanc','T-shirt Noir','Polo Bleu Marine','Chemise Blanche','Chemise Noire','Sweat Gris','Sweat Noir','Veste Denim','Veste Noire','Pull Beige'],
@@ -32,34 +34,129 @@ const prix = {
   'Maquillage': [2500,1800,2000,2000,4500,1800,2000,2500,2200,3000]
 }
 
-const couleurs = [
-  { nom: 'Noir', image: '' },
-  { nom: 'Blanc', image: '' },
-  { nom: 'Gris', image: '' }
-]
+const taillesVetements = ['XS','S','M','L','XL','XXL','XXXL']
+const taillesChaussures = ['36','37','38','39','40','41','42','43','44','45']
 
-const taillesVetements = [
-  'XS',
-  'S',
-  'M',
-  'L',
-  'XL',
-  'XXL',
-  'XXXL'
-]
+const aliases = {
+  'Vêtements': ['mens-shirts','tops','mens-shoes'],
+  'Chaussures': ['mens-shoes','womens-shoes'],
+  'Sacs': ['mens-shirts','womens-bags'],
+  'Montres': ['mens-watches','womens-watches'],
+  'Téléphones': ['smartphones'],
+  'Audio': ['mobile-accessories'],
+  'Ordinateurs': ['laptops'],
+  'Gaming': ['laptops','mobile-accessories'],
+  'Soins personnels': ['beauty','skin-care','fragrances'],
+  'Accessoires': ['mens-watches','womens-watches','sunglasses'],
+  'Sport': ['sports-accessories'],
+  'Maquillage': ['beauty','skin-care']
+}
 
-const taillesChaussures = [
-  '36',
-  '37',
-  '38',
-  '39',
-  '40',
-  '41',
-  '42',
-  '43',
-  '44',
-  '45'
-]
+const mots = {
+  'Vêtements': ['shirt','t-shirt','polo','top','hoodie','sweatshirt','jacket','coat','dress'],
+  'Chaussures': ['shoe','shoes','sneaker','boot','moccasin','footwear'],
+  'Sacs': ['bag','backpack','handbag','purse'],
+  'Montres': ['watch','watches'],
+  'Téléphones': ['phone','smartphone','iphone','galaxy','pixel','redmi'],
+  'Audio': ['earbuds','earphones','headphones','headset','airpods'],
+  'Ordinateurs': ['laptop','notebook','computer','macbook','chromebook'],
+  'Gaming': ['gaming','controller','keyboard','mouse','webcam','microphone'],
+  'Soins personnels': ['trimmer','shaver','dryer','brush','mirror','manicure','toothbrush','massager','skin'],
+  'Accessoires': ['wallet','belt','sunglasses','cap','card','umbrella','keychain'],
+  'Sport': ['football','basketball','fitness','jump','yoga','bottle','dumbbell','resistance','knee'],
+  'Maquillage': ['makeup','foundation','mascara','lipstick','eyeshadow','eyeliner','blush','powder','concealer','highlighter']
+}
+
+function normaliser(texte = '') {
+  return texte
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+}
+
+function tokens(texte = '') {
+  return normaliser(texte)
+    .split(/[^a-z0-9]+/)
+    .filter(Boolean)
+}
+
+function scoreProduit(source, categorie, nom) {
+  const texte = normaliser(
+    `${source.title || ''} ${source.description || ''} ${source.category || ''}`
+  )
+
+  const motsCategorie = mots[categorie] || []
+  const aliasCategorie = aliases[categorie] || []
+
+  let score = 0
+
+  for (const mot of motsCategorie) {
+    if (texte.includes(normaliser(mot))) {
+      score += 20
+    }
+  }
+
+  if (aliasCategorie.includes(source.category)) {
+    score += 50
+  }
+
+  const nomTokens = tokens(nom)
+
+  for (const token of nomTokens) {
+    if (token.length > 2 && texte.includes(token)) {
+      score += 5
+    }
+  }
+
+  if (Array.isArray(source.images) && source.images.length > 0) {
+    score += 10
+  }
+
+  return score
+}
+
+async function recupererProduits() {
+  const response = await fetch('https://dummyjson.com/products?limit=0')
+
+  if (!response.ok) {
+    throw new Error(`DummyJSON error: ${response.status}`)
+  }
+
+  const data = await response.json()
+
+  return (data.products || []).filter(
+    produit =>
+      produit &&
+      Array.isArray(produit.images) &&
+      produit.images.length > 0 &&
+      typeof produit.images[0] === 'string' &&
+      produit.images[0].startsWith('http')
+  )
+}
+
+function choisirProduit(produits, categorie, nom, utilises) {
+  const candidats = produits
+    .filter(produit => !utilises.has(produit.id))
+    .map(produit => ({
+      produit,
+      score: scoreProduit(produit, categorie, nom)
+    }))
+    .sort((a, b) => b.score - a.score)
+
+  if (!candidats.length) {
+    return null
+  }
+
+  return candidats[0].produit
+}
+
+function creerDescription(nom, categorie, source) {
+  const descriptionSource = source?.description || ''
+
+  return descriptionSource.trim()
+    ? descriptionSource
+    : `${nom} de qualité avec un design moderne et une finition soignée.`
+}
 
 async function seed() {
   try {
@@ -67,13 +164,33 @@ async function seed() {
 
     console.log('MongoDB connecté')
 
+    const sources = await recupererProduits()
+
+    console.log(`${sources.length} produits DummyJSON disponibles`)
+
     await Product.deleteMany({})
 
+    const utilises = new Set()
     const produits = []
 
     for (const [categorie, noms] of Object.entries(categories)) {
-      for (let index = 0; index < noms.length; index++) {
-        const nom = noms[index]
+      for (let i = 0; i < noms.length; i++) {
+        const ancienNom = noms[i]
+
+        const source = choisirProduit(
+          sources,
+          categorie,
+          ancienNom,
+          utilises
+        )
+
+        if (!source) {
+          throw new Error(
+            `Impossible de trouver une image pour ${ancienNom}`
+          )
+        }
+
+        utilises.add(source.id)
 
         let tailles = []
 
@@ -86,13 +203,17 @@ async function seed() {
         }
 
         produits.push({
-          nom,
-          description: `${nom} de qualité, idéal pour un usage quotidien.`,
-          prix: prix[categorie][index],
+          nom: ancienNom,
+          description: creerDescription(
+            ancienNom,
+            categorie,
+            source
+          ),
+          prix: prix[categorie][i],
           categorie,
-          stock: 10 + index,
-          image: '',
-          couleurs,
+          stock: Math.floor(Math.random() * 46) + 5,
+          image: source.images[0],
+          couleurs: [],
           tailles
         })
       }
@@ -102,14 +223,12 @@ async function seed() {
 
     console.log(`${produits.length} produits ajoutés`)
     console.log(`${Object.keys(categories).length} catégories créées`)
-    console.log('Tailles vêtements: XS, S, M, L, XL, XXL, XXXL')
-    console.log('Tailles chaussures: 36, 37, 38, 39, 40, 41, 42, 43, 44, 45')
+    console.log(`${utilises.size} images uniques utilisées`)
     console.log('Seed terminé')
-
-    await mongoose.disconnect()
   } catch (error) {
-    console.error('Erreur:', error)
-    process.exit(1)
+    console.error('Erreur seed:', error.message)
+  } finally {
+    await mongoose.disconnect()
   }
 }
 

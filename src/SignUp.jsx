@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { FaEye, FaEyeSlash } from 'react-icons/fa'
 
 function SignUp() {
   const [nom, setNom] = useState('')
@@ -88,7 +89,7 @@ function SignUp() {
                 className="btn position-absolute top-50 end-0 translate-middle-y border-0"
                 onClick={() => setShowPassword(!showPassword)}
               >
-                {showPassword ? '🙈' : '👁️'}
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
               </button>
             </div>
           </div>
@@ -111,7 +112,7 @@ function SignUp() {
                 className="btn position-absolute top-50 end-0 translate-middle-y border-0"
                 onClick={() => setShowConfirmation(!showConfirmation)}
               >
-                {showConfirmation ? '🙈' : '👁️'}
+                {showConfirmation ? <FaEyeSlash /> : <FaEye />}
               </button>
             </div>
           </div>

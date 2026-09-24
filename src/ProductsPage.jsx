@@ -44,7 +44,6 @@ function ProductsPage() {
 
       <div className="container">
 
-        {/* HEADER */}
         <div className="dz-products-header">
 
           <div>
@@ -65,7 +64,6 @@ function ProductsPage() {
 
         </div>
 
-        {/* PRODUCTS */}
         <div className="dz-products-grid">
 
           {produitsFiltres.map(function (p) {
@@ -77,12 +75,11 @@ function ProductsPage() {
 
                 <div className="dz-product-card">
 
-                  {/* PRODUCT IMAGE */}
                   <div className="dz-product-image">
 
                     {p.image ? (
                       <img
-                        src={p.image}
+                        src={p.image || null}
                         alt={p.nom}
                       />
                     ) : (
@@ -97,7 +94,6 @@ function ProductsPage() {
 
                   </div>
 
-                  {/* PRODUCT INFO */}
                   <div className="dz-product-content">
 
                     <h3>
@@ -148,4 +144,4 @@ function ProductsPage() {
   )
 }
 
-export default ProductsPage
+export default ProductsPage ;

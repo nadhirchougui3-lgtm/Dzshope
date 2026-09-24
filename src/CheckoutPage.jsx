@@ -471,7 +471,7 @@ function CheckoutPage() {
                   >
 
                     <img
-                      src={item.image}
+                      src={item.image || null}
                       alt={item.nom}
                     />
 
@@ -524,4 +524,4 @@ function CheckoutPage() {
   )
 }
 
-export default CheckoutPage ;
+export default CheckoutPage ; 

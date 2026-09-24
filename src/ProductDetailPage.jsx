@@ -112,7 +112,7 @@ function ProductDetailPage() {
 
             {produit.image ? (
               <img
-                src={produit.image}
+                src={produit.image || null}
                 alt={produit.nom}
               />
             ) : (

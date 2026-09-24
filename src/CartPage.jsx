@@ -55,7 +55,7 @@ function CartPage() {
               >
 
                 <img
-                  src={item.image}
+                  src={item.image || null}
                   alt={item.nom}
                   className="dz-cart-product-image"
                 />
@@ -202,4 +202,4 @@ function CartPage() {
   )
 }
 
-export default CartPage
+export default CartPage ;
