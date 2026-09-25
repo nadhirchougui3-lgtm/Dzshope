@@ -12,11 +12,13 @@ function ProductDetailPage() {
   const [chargement, setChargement] = useState(true)
   const [quantity, setQuantity] = useState(1)
   const [taille, setTaille] = useState('')
+  const [couleur, setCouleur] = useState('')
 
   useEffect(function () {
     setChargement(true)
     setQuantity(1)
     setTaille('')
+    setCouleur('')
 
     apiFetch('/api/products/' + id)
       .then(function (res) {
@@ -24,6 +26,15 @@ function ProductDetailPage() {
       })
       .then(function (data) {
         setProduit(data)
+
+        if (
+          data &&
+          Array.isArray(data.couleurs) &&
+          data.couleurs.length === 1
+        ) {
+          setCouleur(data.couleurs[0].nom)
+        }
+
         setChargement(false)
       })
       .catch(function () {
@@ -75,15 +86,57 @@ function ProductDetailPage() {
     })
   }
 
+  function choisirCouleur(option) {
+    setCouleur(option.nom)
+  }
+
+  function getImageProduit() {
+    if (
+      produit.categorie === 'Vêtements' &&
+      couleur &&
+      Array.isArray(produit.couleurs)
+    ) {
+      const couleurSelectionnee = produit.couleurs.find(function (option) {
+        return option.nom === couleur
+      })
+
+      return couleurSelectionnee?.image || ''
+    }
+
+    return produit.image || ''
+  }
+
   function handleAddToCart() {
-    if (produit.tailles && produit.tailles.length > 0 && !taille) {
+    if (
+      produit.tailles &&
+      produit.tailles.length > 0 &&
+      !taille
+    ) {
       return
     }
 
-    addToCart(produit, quantity, taille)
+    if (
+      produit.categorie === 'Vêtements' &&
+      produit.couleurs &&
+      produit.couleurs.length > 0 &&
+      !couleur
+    ) {
+      return
+    }
+
+    addToCart(produit, quantity, taille, couleur)
   }
 
-  const aDesTailles = produit.tailles && produit.tailles.length > 0
+  const aDesTailles =
+    Array.isArray(produit.tailles) &&
+    produit.tailles.length > 0
+
+  const aDesCouleurs =
+    produit.categorie === 'Vêtements' &&
+    Array.isArray(produit.couleurs) &&
+    produit.couleurs.length > 0
+
+  const imageProduit = getImageProduit()
 
   return (
     <div className="dz-detail-page">
@@ -91,6 +144,7 @@ function ProductDetailPage() {
       <div className="container">
 
         <div className="dz-breadcrumb">
+
           <Link to="/">
             Accueil
           </Link>
@@ -104,21 +158,20 @@ function ProductDetailPage() {
           <span>›</span>
 
           <span>{produit.nom}</span>
+
         </div>
 
         <div className="dz-detail-card">
 
           <div className="dz-detail-image">
 
-            {produit.image ? (
+            {imageProduit ? (
               <img
-                src={produit.image || null}
+                src={imageProduit}
                 alt={produit.nom}
               />
             ) : (
-              <div className="dz-detail-no-image">
-                🛍️
-              </div>
+              <div className="dz-detail-no-image"></div>
             )}
 
             {produit.categorie && (
@@ -203,7 +256,11 @@ function ProductDetailPage() {
                       <button
                         key={option}
                         type="button"
-                        className={taille === option ? 'active' : ''}
+                        className={
+                          taille === option
+                            ? 'active'
+                            : ''
+                        }
                         onClick={function () {
                           setTaille(option)
                         }}
@@ -218,20 +275,58 @@ function ProductDetailPage() {
               </div>
             )}
 
+            {aDesCouleurs && (
+              <div className="dz-color-section">
+
+                <span>
+                  Couleur
+                  {couleur && ` : ${couleur}`}
+                </span>
+
+                <div className="dz-color-options">
+
+                  {produit.couleurs.map(function (option) {
+                    return (
+                      <button
+                        key={option.nom}
+                        type="button"
+                        className={
+                          couleur === option.nom
+                            ? 'active'
+                            : ''
+                        }
+                        onClick={function () {
+                          choisirCouleur(option)
+                        }}
+                      >
+                        {option.nom}
+                      </button>
+                    )
+                  })}
+
+                </div>
+
+              </div>
+            )}
+
             <button
               className="dz-add-cart"
               onClick={handleAddToCart}
               disabled={
                 produit.stock === 0 ||
-                (aDesTailles && !taille)
+                (aDesTailles && !taille) ||
+                (aDesCouleurs && !couleur)
               }
             >
               🛒
+
               {produit.stock === 0
                 ? ' Rupture de stock'
                 : aDesTailles && !taille
                   ? ' Choisir une taille'
-                  : ' Ajouter au panier'}
+                  : aDesCouleurs && !couleur
+                    ? ' Choisir une couleur'
+                    : ' Ajouter au panier'}
             </button>
 
             <Link
