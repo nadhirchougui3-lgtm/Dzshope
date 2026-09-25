@@ -14,6 +14,14 @@ function ProductsPage() {
     apiFetch('/api/products')
       .then(lireJson)
       .then(function (data) {
+        console.log('Produits API:', data)
+
+        data.forEach(function (p) {
+          if (p.categorie === 'Maquillage') {
+            console.log('Image Maquillage:', p.nom, p.image)
+          }
+        })
+
         setProducts(data)
       })
       .catch(function (err) {
@@ -79,8 +87,12 @@ function ProductsPage() {
 
                     {p.image ? (
                       <img
-                        src={p.image || null}
+                        src={p.image}
                         alt={p.nom}
+                        onError={function (e) {
+                          console.error('Image impossible à charger:', p.nom, p.image)
+                          e.currentTarget.style.display = 'none'
+                        }}
                       />
                     ) : (
                       <div className="dz-no-image">

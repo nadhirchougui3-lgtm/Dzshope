@@ -108,6 +108,8 @@ function ProductDetailPage() {
 
   function handleAddToCart() {
     if (
+      (produit.categorie === 'Vêtements' ||
+        produit.categorie === 'Chaussures') &&
       produit.tailles &&
       produit.tailles.length > 0 &&
       !taille
@@ -128,6 +130,8 @@ function ProductDetailPage() {
   }
 
   const aDesTailles =
+    (produit.categorie === 'Vêtements' ||
+      produit.categorie === 'Chaussures') &&
     Array.isArray(produit.tailles) &&
     produit.tailles.length > 0
 

@@ -71,7 +71,7 @@ function Footer() {
           <div className="dz-contact-item">
             <FaEnvelope />
             <a href="mailto:contact@dzshop.com">
-              contact@dzshop.com
+              DzShop@gmail.com
             </a>
           </div>
 
