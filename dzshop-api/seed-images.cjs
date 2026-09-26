@@ -1,21 +1,16 @@
 require('dotenv').config()
+
 const mongoose = require('mongoose')
 const fs = require('fs')
 const path = require('path')
-const Product = require('./models/Product')
+const ProductModule = require('./models/Product.js')
 
-const imageMap = {
-  'CeraVe Hydrating Cleanser 236ml': 'cerave-hydrating-cleanser.jpg',
-  'CeraVe Moisturizing Cream 340g': 'cerave-moisturizing-cream.jpg',
-  'NIVEA MEN Sensitive Face Wash 100ml': 'nivea-men-sensitive-face-wash.jpg',
-  'Dove Deeply Nourishing Body Wash 550ml': 'dove-deeply-nourishing-body-wash.jpg',
-  'The Ordinary Niacinamide 10% + Zinc 1% 30ml': 'the-ordinary-niacinamide-zinc.jpg',
-  'Neutrogena Hydro Boost Aqua-Gel 50ml': 'neutrogena-hydro-boost-aqua-gel.jpg',
-  "L'Oréal Paris Elvive Dream Long Shampoo 250ml": 'loreal-elvive-dream-long.jpg',
-  'NIVEA Soft Moisturizing Cream 200ml': 'nivea-soft-moisturizing-cream.jpg',
-  'Dove Original Deodorant 150ml': 'dove-original-deodorant.jpg',
-  'Neutrogena Norwegian Formula Hand Cream 56g': 'neutrogena-hand-cream.jpg'
-}
+const Product = ProductModule.default || ProductModule
+
+const productName = 'Kiehl’s Creme de Corps 500ml'
+
+const imageUrl =
+  'https://a.cdnsbn.com/images/products/xl/04449828603.jpg'
 
 const imagesFolder = path.join(
   __dirname,
@@ -25,47 +20,87 @@ const imagesFolder = path.join(
   'products'
 )
 
-async function updateImages() {
+async function updateImage() {
   try {
-    await mongoose.connect(process.env.MONGO_URI)
+    fs.mkdirSync(imagesFolder, {
+      recursive: true
+    })
 
-    console.log('MongoDB connected')
+    await mongoose.connect(process.env.MONGODB_URI)
 
-    const products = await Product.find({
+    console.log('MongoDB connecté')
+    console.log('')
+
+    const product = await Product.findOne({
+      nom: productName,
       categorie: 'Soins personnels'
     })
 
-    console.log(`${products.length} products found`)
-
-    for (const product of products) {
-      const imageName = imageMap[product.nom]
-
-      if (!imageName) {
-        console.log(`✗ Product not mapped: ${product.nom}`)
-        continue
-      }
-
-      const imagePath = path.join(imagesFolder, imageName)
-
-      if (!fs.existsSync(imagePath)) {
-        console.log(`✗ Image not found: ${imageName}`)
-        continue
-      }
-
-      product.image = `/images/products/${imageName}`
-
-      await product.save()
-
-      console.log(`✓ ${product.nom}`)
+    if (!product) {
+      throw new Error(
+        `Produit introuvable : ${productName}`
+      )
     }
 
+    const response = await fetch(imageUrl)
+
+    if (!response.ok) {
+      throw new Error(
+        `Image HTTP ${response.status}`
+      )
+    }
+
+    const contentType =
+      response.headers.get('content-type') || ''
+
+    if (!contentType.startsWith('image/')) {
+      throw new Error(
+        `Fichier reçu invalide : ${contentType}`
+      )
+    }
+
+    const buffer = Buffer.from(
+      await response.arrayBuffer()
+    )
+
+    const fileName =
+      'kiehls-creme-de-corps-500ml.jpg'
+
+    const filePath = path.join(
+      imagesFolder,
+      fileName
+    )
+
+    fs.writeFileSync(
+      filePath,
+      buffer
+    )
+
+    product.image =
+      `/images/products/${fileName}`
+
+    await product.save()
+
+    console.log(
+      `✓ ${productName}`
+    )
+
+    console.log(
+      `  ${product.image}`
+    )
+
     console.log('')
-    console.log('✓ Images linked successfully')
+    console.log(
+      '✓ Image remplacée avec succès'
+    )
   } catch (error) {
-    console.error('Error:', error.message)
+    console.error(
+      'Erreur :',
+      error.message
+    )
   } finally {
     await mongoose.disconnect()
   }
 }
 
-updateImages()
+updateImage()
