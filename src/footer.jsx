@@ -8,7 +8,10 @@ import {
   FaEnvelope,
   FaTruck,
   FaShieldAlt,
-  FaHeadset
+  FaHeadset,
+  FaCcVisa,
+  FaCcMastercard,
+  FaMoneyBillWave
 } from 'react-icons/fa'
 import './Footer.css'
 
@@ -16,43 +19,97 @@ function Footer() {
   return (
     <footer className="dz-footer">
 
+      <div className="dz-footer-services">
+
+        <div className="dz-footer-service">
+          <div className="dz-footer-service-icon">
+            <FaTruck />
+          </div>
+          <div>
+            <strong>Fast Delivery</strong>
+            <span>Throughout Algeria</span>
+          </div>
+        </div>
+
+        <div className="dz-footer-service">
+          <div className="dz-footer-service-icon">
+            <FaShieldAlt />
+          </div>
+          <div>
+            <strong>Secure Payment</strong>
+            <span>Buy with confidence</span>
+          </div>
+        </div>
+
+        <div className="dz-footer-service">
+          <div className="dz-footer-service-icon">
+            <FaHeadset />
+          </div>
+          <div>
+            <strong>Customer Service</strong>
+            <span>A team ready to help you</span>
+          </div>
+        </div>
+
+      </div>
+
       <div className="dz-footer-main">
 
         <div className="dz-footer-brand">
+
           <Link to="/" className="dz-footer-logo">
-            <div className="dz-footer-logo-icon">DZ</div>
-
-            <div>
-              <div className="dz-footer-logo-name">
-                DZ<span>Shop</span>
-              </div>
-
-              <div className="dz-footer-logo-tagline">
-                Qualité · Prix · Confiance
-              </div>
-            </div>
+            <span className="dz-footer-logo-box">DZ</span>
+            <span className="dz-footer-logo-text">
+              DZ<span>Shop</span>
+            </span>
           </Link>
 
           <p className="dz-footer-description">
-            Discover quality products, great prices and a simple
-            shopping experience delivered directly to your home.
+            Your trusted online shopping destination in Algeria.
+            Quality products, great prices and a simple shopping experience.
           </p>
+
+          <div className="dz-footer-socials">
+            <a href="#" aria-label="Facebook">
+              <FaFacebookF />
+            </a>
+            <a href="#" aria-label="Instagram">
+              <FaInstagram />
+            </a>
+            <a href="#" aria-label="TikTok">
+              <FaTiktok />
+            </a>
+          </div>
+
         </div>
 
         <div className="dz-footer-column">
           <h3>Shop</h3>
           <Link to="/">Home</Link>
-          <Link to="/produits">Produits</Link>
+          <Link to="/produits">All Products</Link>
           <Link to="/categories">Categories</Link>
-          <Link to="/panier">Panier</Link>
+          <Link to="/produits">New Arrivals</Link>
+          <Link to="/produits">Special Offers</Link>
+          <Link to="/panier">Shopping Cart</Link>
         </div>
 
         <div className="dz-footer-column">
-          <h3>Information</h3>
-          <Link to="/contact">Contact</Link>
-          <Link to="/signup">Sign Up</Link>
-          <Link to="/produits">Our Products</Link>
-          <Link to="/">About DZShop</Link>
+          <h3>Customer Service</h3>
+          <Link to="/contact">Help Center</Link>
+          <Link to="/contact">Delivery Information</Link>
+          <Link to="/contact">Payment Methods</Link>
+          <Link to="/contact">Returns & Refunds</Link>
+          <Link to="/contact">Contact Us</Link>
+          <Link to="/contact">FAQ</Link>
+        </div>
+
+        <div className="dz-footer-column">
+          <h3>My Account</h3>
+          <Link to="/signup">Create an Account</Link>
+          <Link to="/panier">My Basket</Link>
+          <Link to="/produits">My Products</Link>
+          <Link to="/contact">Assistance</Link>
+          <Link to="/contact">FAQ</Link>
         </div>
 
         <div className="dz-footer-column dz-footer-contact">
@@ -70,67 +127,59 @@ function Footer() {
 
           <div className="dz-contact-item">
             <FaEnvelope />
-            <a href="mailto:contact@dzshop.com">
-              DzShop@gmail.com
-            </a>
+            <a href="mailto:dzshop@gmail.com">dzshop@gmail.com</a>
           </div>
 
-          <div className="dz-socials">
-            <a href="#" aria-label="Facebook">
-              <FaFacebookF />
-            </a>
+          <span className="dz-contact-note">
+            Available every day to help you
+          </span>
+        </div>
 
-            <a href="#" aria-label="Instagram">
-              <FaInstagram />
-            </a>
+      </div>
 
-            <a href="#" aria-label="TikTok">
-              <FaTiktok />
-            </a>
-          </div>
+      <div className="dz-footer-payment">
+
+        <div className="dz-payment-title">
+          Payment methods
+        </div>
+
+        <div className="dz-payment-method">
+          <FaMoneyBillWave />
+          <span>Cash on delivery</span>
+        </div>
+
+        <div className="dz-payment-method">
+          <FaCcVisa />
+          <span>Visa</span>
+        </div>
+
+        <div className="dz-payment-method">
+          <FaCcMastercard />
+          <span>MasterCard</span>
+        </div>
+
+        <div className="dz-delivery-note">
+          <FaTruck />
+          <span>Delivery to all 69 wilayas</span>
         </div>
 
       </div>
 
       <div className="dz-footer-bottom">
-        <p>© {new Date().getFullYear()} DZShop. All rights reserved.</p>
-        <span>Quality · Price · Trust</span>
-      </div>
 
-      <div className="dz-footer-services">
+        <p>
+          © {new Date().getFullYear()} DZShop. All rights reserved.
+        </p>
 
-        <div className="dz-footer-service">
-          <div className="dz-footer-service-icon">
-            <FaTruck />
-          </div>
-
-          <div>
-            <strong>Fast Delivery</strong>
-            <span>Across 69 wilayas</span>
-          </div>
+        <div className="dz-footer-bottom-links">
+          <a href="#">Terms of Use</a>
+          <a href="#">Privacy Policy</a>
+          <a href="#">Cookies</a>
         </div>
 
-        <div className="dz-footer-service">
-          <div className="dz-footer-service-icon">
-            <FaShieldAlt />
-          </div>
-
-          <div>
-            <strong>Secure Shopping</strong>
-            <span>Safe and reliable</span>
-          </div>
-        </div>
-
-        <div className="dz-footer-service">
-          <div className="dz-footer-service-icon">
-            <FaHeadset />
-          </div>
-
-          <div>
-            <strong>Customer Support</strong>
-            <span>We're here to help</span>
-          </div>
-        </div>
+        <span className="dz-footer-country">
+          🇩🇿 Algeria
+        </span>
 
       </div>
 
