@@ -106,13 +106,13 @@ function CheckoutPage() {
     setChargement(true)
 
     try {
+      // On envoie SEULEMENT quel produit et combien : le SERVEUR retrouve les
+      // vrais prix dans la base et calcule le total. Jamais le prix ni le total :
+      // ils seraient modifiables depuis les outils du navigateur (F12).
       const produits = cartItems.map(function (item) {
         return {
           productId: item._id,
-          nom: item.nom,
-          prix: item.prix,
           quantity: item.quantity,
-          image: item.image,
           taille: item.taille || ''
         }
       })
@@ -121,8 +121,7 @@ function CheckoutPage() {
         method: 'POST',
         body: JSON.stringify({
           ...form,
-          produits,
-          total
+          produits
         })
       })
 

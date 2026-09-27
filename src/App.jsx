@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { CartProvider } from './CartContext'
+import { AuthProvider } from './AuthContext'
 
 import Navbar from './navbar'
 import Footer from './footer'
@@ -10,14 +11,17 @@ import CategoriesPage from './CategoriesPage'
 import CartPage from './CartPage'
 import CheckoutPage from './CheckoutPage'
 import SignUp from './SignUp'
+import LoginPage from './LoginPage'
 import ContactPage from './ContactPage'
+import PrivateRoute from './PrivateRoute'
 
 function App() {
   return (
     <BrowserRouter>
+      <AuthProvider>
       <CartProvider>
         <div className="d-flex flex-column min-vh-100">
-          
+
           <Navbar />
 
           <main className="flex-grow-1 container py-4">
@@ -30,9 +34,19 @@ function App() {
               <Route path="/categories" element={<CategoriesPage />} />
 
               <Route path="/panier" element={<CartPage />} />
-              <Route path="/checkout" element={<CheckoutPage />} />
+
+              {/* protégée : il faut être connecté */}
+              <Route
+                path="/checkout"
+                element={
+                  <PrivateRoute>
+                    <CheckoutPage />
+                  </PrivateRoute>
+                }
+              />
 
               <Route path="/signup" element={<SignUp />} />
+              <Route path="/login" element={<LoginPage />} />
               <Route path="/contact" element={<ContactPage />} />
 
               <Route path="*" element={
@@ -49,6 +63,7 @@ function App() {
 
         </div>
       </CartProvider>
+      </AuthProvider>
     </BrowserRouter>
   )
 }

@@ -4,13 +4,16 @@ import {
   FaShoppingBag,
   FaShoppingCart,
   FaPhone,
-  FaUserPlus
+  FaUserPlus,
+  FaUser
 } from 'react-icons/fa'
 import { useCart } from './CartContext'
+import { useAuth } from './AuthContext'
 import './navbar.css'
 
 function Navbar() {
   const { cartItems } = useCart()
+  const { user, logout } = useAuth()
 
   const cartCount = cartItems.reduce(function (total, item) {
     return total + item.quantity
@@ -93,16 +96,45 @@ function Navbar() {
             <span>Panier</span>
           </NavLink>
 
-          {/* SIGN UP */}
-          <NavLink
-            to="/SignUp"
-            className={({ isActive }) =>
-              'dz-nav-link ' + (isActive ? 'active' : '')
-            }
-          >
-            <FaUserPlus />
-            <span>Sign Up</span>
-          </NavLink>
+          {/* CONNEXION / COMPTE */}
+          {user ? (
+            <>
+              <span className="dz-nav-link">
+                <FaUser />
+                <span>{user.nom}</span>
+              </span>
+              <button
+                type="button"
+                className="dz-nav-link"
+                style={{ background: 'none', border: 'none' }}
+                onClick={logout}
+              >
+                Déconnexion
+              </button>
+            </>
+          ) : (
+            <>
+              <NavLink
+                to="/login"
+                className={({ isActive }) =>
+                  'dz-nav-link ' + (isActive ? 'active' : '')
+                }
+              >
+                <FaUser />
+                <span>Connexion</span>
+              </NavLink>
+
+              <NavLink
+                to="/signup"
+                className={({ isActive }) =>
+                  'dz-nav-link ' + (isActive ? 'active' : '')
+                }
+              >
+                <FaUserPlus />
+                <span>Sign Up</span>
+              </NavLink>
+            </>
+          )}
 
         </div>
       </div>
