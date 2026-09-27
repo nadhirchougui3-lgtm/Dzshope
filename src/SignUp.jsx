@@ -1,24 +1,45 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { FaEye, FaEyeSlash } from 'react-icons/fa'
+import { useAuth } from './AuthContext'
 
 function SignUp() {
+  const { register } = useAuth()
+  const navigate = useNavigate()
+
   const [nom, setNom] = useState('')
   const [telephone, setTelephone] = useState('')
   const [motDePasse, setMotDePasse] = useState('')
   const [confirmation, setConfirmation] = useState('')
+  const [erreur, setErreur] = useState('')
+  const [envoi, setEnvoi] = useState(false)
 
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmation, setShowConfirmation] = useState(false)
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault()
+    setErreur('')
 
-    if (motDePasse !== confirmation) {
-      alert('Les mots de passe ne correspondent pas.')
+    if (motDePasse.length < 6) {
+      setErreur('Le mot de passe doit faire au moins 6 caractères.')
       return
     }
 
-    alert('Compte créé avec succès !')
+    if (motDePasse !== confirmation) {
+      setErreur('Les mots de passe ne correspondent pas.')
+      return
+    }
+
+    setEnvoi(true)
+    try {
+      // Vrai appel à l'API : le compte est créé dans MongoDB, et on est connecté tout de suite
+      await register(nom, telephone, motDePasse)
+      navigate('/')
+    } catch (err) {
+      setErreur(err.message)
+    }
+    setEnvoi(false)
   }
 
   function handleGoogleSignUp() {
@@ -45,6 +66,8 @@ function SignUp() {
         }}
       >
         <h2 className="text-center mb-4">Create an account</h2>
+
+        {erreur && <div className="alert alert-danger">{erreur}</div>}
 
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
@@ -117,8 +140,8 @@ function SignUp() {
             </div>
           </div>
 
-          <button type="submit" className="btn btn-dark w-100">
-            Sign Up
+          <button type="submit" className="btn btn-dark w-100" disabled={envoi}>
+            {envoi ? 'Création...' : 'Sign Up'}
           </button>
 
           <div className="d-flex align-items-center gap-3 my-4">

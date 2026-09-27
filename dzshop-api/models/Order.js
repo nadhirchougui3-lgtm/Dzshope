@@ -3,6 +3,13 @@ import mongoose from 'mongoose'
 const orderSchema = new mongoose.Schema(
 
   {
+    // À qui appartient la commande
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+      index: true
+    },
 
     nom: {
       type: String,
@@ -87,4 +94,4 @@ const orderSchema = new mongoose.Schema(
 
 const Order = mongoose.model('Order', orderSchema)
 
-export default Order ;
+export default Order
