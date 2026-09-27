@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from './AuthContext'
+import GoogleSignInButton from './GoogleSignInButton'
 
 function LoginPage() {
-  const { login } = useAuth()
+  const { login, loginGoogle } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -25,6 +26,17 @@ function LoginPage() {
       setErreur(err.message)
     }
     setEnvoi(false)
+  }
+
+  // Appelée par le bouton Google avec le jeton reçu de Google
+  async function connexionGoogle(credential) {
+    setErreur('')
+    try {
+      await loginGoogle(credential)
+      navigate(destination, { replace: true })
+    } catch (err) {
+      setErreur(err.message)
+    }
   }
 
   return (
@@ -69,6 +81,9 @@ function LoginPage() {
             {envoi ? 'Connexion...' : 'Se connecter'}
           </button>
         </form>
+
+        <div className="text-center text-muted my-3">— ou —</div>
+        <GoogleSignInButton onCredential={connexionGoogle} />
 
         <p className="text-center mt-3 mb-0">
           Pas de compte ? <Link to="/signup">Créer un compte</Link>
