@@ -92,7 +92,8 @@ function ProductDetailPage() {
 
   function getImageProduit() {
     if (
-      produit.categorie === 'Vêtements' &&
+      (produit.categorie === 'Vêtements' ||
+        produit.categorie === 'Chaussures') &&
       couleur &&
       Array.isArray(produit.couleurs)
     ) {
@@ -100,7 +101,7 @@ function ProductDetailPage() {
         return option.nom === couleur
       })
 
-      return couleurSelectionnee?.image || ''
+      return couleurSelectionnee?.image || produit.image || ''
     }
 
     return produit.image || ''
@@ -118,7 +119,8 @@ function ProductDetailPage() {
     }
 
     if (
-      produit.categorie === 'Vêtements' &&
+      (produit.categorie === 'Vêtements' ||
+        produit.categorie === 'Chaussures') &&
       produit.couleurs &&
       produit.couleurs.length > 0 &&
       !couleur
@@ -136,7 +138,8 @@ function ProductDetailPage() {
     produit.tailles.length > 0
 
   const aDesCouleurs =
-    produit.categorie === 'Vêtements' &&
+    (produit.categorie === 'Vêtements' ||
+      produit.categorie === 'Chaussures') &&
     Array.isArray(produit.couleurs) &&
     produit.couleurs.length > 0
 
@@ -172,7 +175,7 @@ function ProductDetailPage() {
             {imageProduit ? (
               <img
                 src={imageProduit}
-                alt={produit.nom}
+                alt={produit.nom + (couleur ? ` - ${couleur}` : '')}
               />
             ) : (
               <div className="dz-detail-no-image"></div>
@@ -284,7 +287,6 @@ function ProductDetailPage() {
 
                 <span>
                   Couleur
-                  {couleur && ` : ${couleur}`}
                 </span>
 
                 <div className="dz-color-options">
