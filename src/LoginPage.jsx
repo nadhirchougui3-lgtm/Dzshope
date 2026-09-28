@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { FaEye, FaEyeSlash, FaArrowRight } from 'react-icons/fa'
 import { useAuth } from './AuthContext'
+import GoogleSignInButton from './GoogleSignInButton'
 
 function LoginPage() {
-  const { login } = useAuth()
+  const { login, loginGoogle } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -11,6 +13,7 @@ function LoginPage() {
   const [motDePasse, setMotDePasse] = useState('')
   const [erreur, setErreur] = useState('')
   const [envoi, setEnvoi] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
 
   const destination = (location.state && location.state.from) || '/'
 
@@ -18,62 +21,377 @@ function LoginPage() {
     e.preventDefault()
     setErreur('')
     setEnvoi(true)
+
     try {
       await login(telephone, motDePasse)
       navigate(destination, { replace: true })
     } catch (err) {
       setErreur(err.message)
     }
+
     setEnvoi(false)
+  }
+
+  async function connexionGoogle(credential) {
+    setErreur('')
+
+    try {
+      await loginGoogle(credential)
+      navigate(destination, { replace: true })
+    } catch (err) {
+      setErreur(err.message)
+    }
   }
 
   return (
     <div
-      className="d-flex justify-content-center align-items-center"
-      style={{ minHeight: 'calc(100vh - 70px)', background: '#ffffff', padding: '50px 20px' }}
+      style={{
+        minHeight: 'calc(100vh - 70px)',
+        background: 'linear-gradient(135deg, #f8f8f8 0%, #ffffff 50%, #fff5f5 100%)',
+        padding: '60px 20px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}
     >
       <div
-        className="card shadow-lg p-4"
-        style={{ width: '100%', maxWidth: '450px', background: '#ffffff', border: 'none', borderRadius: '18px' }}
+        style={{
+          width: '100%',
+          maxWidth: '1050px',
+          minHeight: '610px',
+          background: '#ffffff',
+          borderRadius: '28px',
+          overflow: 'hidden',
+          boxShadow: '0 20px 60px rgba(0, 0, 0, 0.10)',
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr'
+        }}
       >
-        <h2 className="text-center mb-4">Connexion</h2>
+        <div
+          style={{
+            background: 'linear-gradient(145deg, #111111 0%, #1c1c1c 60%, #b40000 100%)',
+            color: '#ffffff',
+            padding: '55px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            position: 'relative',
+            overflow: 'hidden'
+          }}
+        >
+          <div
+            style={{
+              position: 'absolute',
+              width: '260px',
+              height: '260px',
+              borderRadius: '50%',
+              background: 'rgba(255, 0, 0, 0.12)',
+              top: '-80px',
+              right: '-80px'
+            }}
+          />
 
-        {erreur && <div className="alert alert-danger">{erreur}</div>}
+          <div
+            style={{
+              position: 'absolute',
+              width: '180px',
+              height: '180px',
+              borderRadius: '50%',
+              background: 'rgba(255, 255, 255, 0.04)',
+              bottom: '-60px',
+              left: '-60px'
+            }}
+          />
 
-        <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <label className="form-label">Numéro de téléphone</label>
-            <input
-              type="tel"
-              className="form-control"
-              placeholder="Votre numéro"
-              value={telephone}
-              onChange={(e) => setTelephone(e.target.value)}
-              required
+          <div style={{ position: 'relative', zIndex: 2 }}>
+            <div
+              style={{
+                fontSize: '15px',
+                fontWeight: '700',
+                letterSpacing: '3px',
+                color: '#ff3b3b',
+                marginBottom: '18px'
+              }}
+            >
+              DZSHOP
+            </div>
+
+            <h1
+              style={{
+                fontSize: '44px',
+                fontWeight: '800',
+                lineHeight: '1.1',
+                marginBottom: '20px'
+              }}
+            >
+              Welcome
+              <br />
+              Back.
+            </h1>
+
+            <p
+              style={{
+                color: '#d5d5d5',
+                fontSize: '16px',
+                lineHeight: '1.7',
+                maxWidth: '380px',
+                margin: 0
+              }}
+            >
+              Sign in to your account and continue shopping with DZShop.
+            </p>
+
+            <div
+              style={{
+                marginTop: '45px',
+                width: '55px',
+                height: '4px',
+                borderRadius: '10px',
+                background: '#e00000'
+              }}
             />
           </div>
+        </div>
 
-          <div className="mb-4">
-            <label className="form-label">Mot de passe</label>
-            <input
-              type="password"
-              className="form-control"
-              placeholder="Votre mot de passe"
-              value={motDePasse}
-              onChange={(e) => setMotDePasse(e.target.value)}
-              required
-            />
+        <div
+          style={{
+            padding: '55px 60px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center'
+          }}
+        >
+          <div style={{ marginBottom: '32px' }}>
+            <h2
+              style={{
+                fontSize: '30px',
+                fontWeight: '800',
+                color: '#111111',
+                marginBottom: '8px'
+              }}
+            >
+              Sign In
+            </h2>
+
+            <p
+              style={{
+                color: '#777777',
+                margin: 0,
+                fontSize: '14px'
+              }}
+            >
+              Enter your details to access your account.
+            </p>
           </div>
 
-          <button type="submit" className="btn btn-dark w-100" disabled={envoi}>
-            {envoi ? 'Connexion...' : 'Se connecter'}
-          </button>
-        </form>
+          {erreur && (
+            <div
+              style={{
+                background: '#fff1f1',
+                border: '1px solid #ffcaca',
+                color: '#c00000',
+                borderRadius: '12px',
+                padding: '12px 15px',
+                marginBottom: '20px',
+                fontSize: '14px'
+              }}
+            >
+              {erreur}
+            </div>
+          )}
 
-        <p className="text-center mt-3 mb-0">
-          Pas de compte ? <Link to="/signup">Créer un compte</Link>
-        </p>
+          <form onSubmit={handleSubmit}>
+            <div style={{ marginBottom: '22px' }}>
+              <label
+                style={{
+                  display: 'block',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  color: '#222222',
+                  marginBottom: '8px'
+                }}
+              >
+                Phone number
+              </label>
+
+              <input
+                type="tel"
+                placeholder="Your number"
+                value={telephone}
+                onChange={(e) => setTelephone(e.target.value)}
+                required
+                style={{
+                  width: '100%',
+                  height: '52px',
+                  border: '1px solid #dddddd',
+                  borderRadius: '12px',
+                  padding: '0 16px',
+                  fontSize: '14px',
+                  outline: 'none',
+                  background: '#fafafa',
+                  boxSizing: 'border-box'
+                }}
+              />
+            </div>
+
+            <div style={{ marginBottom: '26px' }}>
+              <label
+                style={{
+                  display: 'block',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  color: '#222222',
+                  marginBottom: '8px'
+                }}
+              >
+                Password
+              </label>
+
+              <div style={{ position: 'relative' }}>
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="Your password"
+                  value={motDePasse}
+                  onChange={(e) => setMotDePasse(e.target.value)}
+                  required
+                  style={{
+                    width: '100%',
+                    height: '52px',
+                    border: '1px solid #dddddd',
+                    borderRadius: '12px',
+                    padding: '0 50px 0 16px',
+                    fontSize: '14px',
+                    outline: 'none',
+                    background: '#fafafa',
+                    boxSizing: 'border-box'
+                  }}
+                />
+
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{
+                    position: 'absolute',
+                    right: '10px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    width: '38px',
+                    height: '38px',
+                    border: 'none',
+                    background: 'transparent',
+                    color: '#777777',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </button>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={envoi}
+              style={{
+                width: '100%',
+                height: '52px',
+                border: 'none',
+                borderRadius: '12px',
+                background: '#111111',
+                color: '#ffffff',
+                fontSize: '15px',
+                fontWeight: '700',
+                cursor: envoi ? 'not-allowed' : 'pointer',
+                opacity: envoi ? 0.7 : 1,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '10px',
+                transition: '0.2s ease'
+              }}
+            >
+              {envoi ? 'Connexion...' : 'Sign In'}
+              {!envoi && <FaArrowRight size={13} />}
+            </button>
+
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '14px',
+                margin: '27px 0'
+              }}
+            >
+              <div
+                style={{
+                  flex: 1,
+                  height: '1px',
+                  background: '#e5e5e5'
+                }}
+              />
+
+              <span
+                style={{
+                  color: '#999999',
+                  fontSize: '12px',
+                  fontWeight: '700'
+                }}
+              >
+                OR
+              </span>
+
+              <div
+                style={{
+                  flex: 1,
+                  height: '1px',
+                  background: '#e5e5e5'
+                }}
+              />
+            </div>
+
+            <GoogleSignInButton onCredential={connexionGoogle} />
+
+            <p
+              style={{
+                textAlign: 'center',
+                marginTop: '25px',
+                marginBottom: 0,
+                color: '#777777',
+                fontSize: '14px'
+              }}
+            >
+              Don't have an account?{' '}
+              <Link
+                to="/signup"
+                style={{
+                  color: '#c00000',
+                  fontWeight: '700',
+                  textDecoration: 'none'
+                }}
+              >
+                Create an account
+              </Link>
+            </p>
+          </form>
+        </div>
       </div>
+
+      <style>
+        {`
+          @media (max-width: 768px) {
+            .login-page-layout {
+              grid-template-columns: 1fr !important;
+            }
+          }
+
+          input:focus {
+            border-color: #c00000 !important;
+            box-shadow: 0 0 0 3px rgba(192, 0, 0, 0.08);
+          }
+        `}
+      </style>
     </div>
   )
 }
