@@ -75,6 +75,14 @@ function ProductsPage() {
         <div className="dz-products-grid">
 
           {produitsFiltres.map(function (p) {
+            const imagePath =
+              p.categorie === 'Maquillage' && p.image
+                ? p.image.replace(
+                    '/images/products/makeup/',
+                    '/images/products/'
+                  )
+                : p.image
+
             return (
               <div
                 className="dz-product-item"
@@ -85,12 +93,16 @@ function ProductsPage() {
 
                   <div className="dz-product-image">
 
-                    {p.image ? (
+                    {imagePath ? (
                       <img
-                        src={p.image}
+                        src={imagePath}
                         alt={p.nom}
                         onError={function (e) {
-                          console.error('Image impossible à charger:', p.nom, p.image)
+                          console.error(
+                            'Image impossible à charger:',
+                            p.nom,
+                            imagePath
+                          )
                           e.currentTarget.style.display = 'none'
                         }}
                       />
