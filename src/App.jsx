@@ -19,53 +19,57 @@ function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-      <CartProvider>
-        <div className="d-flex flex-column min-vh-100">
+        <CartProvider>
+          <div className="d-flex flex-column min-vh-100">
 
-          <Navbar />
+            <Navbar />
 
-          <main className="flex-grow-1 container py-4">
-            <Routes>
+            <main className="flex-grow-1 container py-4">
+              <Routes>
 
-              <Route path="/" element={<LandingPage />} />
+                <Route path="/" element={<LandingPage />} />
 
-              <Route path="/produits" element={<ProductsPage />} />
-              <Route path="/produit/:id" element={<ProductDetailPage />} />
-              <Route path="/categories" element={<CategoriesPage />} />
+                <Route path="/produits" element={<ProductsPage />} />
+                <Route path="/produit/:id" element={<ProductDetailPage />} />
+                <Route path="/categories" element={<CategoriesPage />} />
 
-              <Route path="/panier" element={<CartPage />} />
+                <Route path="/panier" element={<CartPage />} />
 
-              {/* protégée : il faut être connecté */}
-              <Route
-                path="/checkout"
-                element={
-                  <PrivateRoute>
-                    <CheckoutPage />
-                  </PrivateRoute>
-                }
-              />
+                <Route
+                  path="/checkout"
+                  element={
+                    <PrivateRoute>
+                      <CheckoutPage />
+                    </PrivateRoute>
+                  }
+                />
 
-              <Route path="/signup" element={<SignUp />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/contact" element={<ContactPage />} />
+                <Route path="/signup" element={<SignUp />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/contact" element={<ContactPage />} />
 
-              <Route path="*" element={
-                <div className="text-center py-5">
-                  <h1>404 - Page Non Trouvée</h1>
-                  <p className="text-muted">La page que vous cherchez n'existe pas.</p>
-                </div>
-              } />
+                <Route
+                  path="*"
+                  element={
+                    <div className="text-center py-5">
+                      <h1>404 - Page Non Trouvée</h1>
+                      <p className="text-muted">
+                        La page que vous cherchez n'existe pas.
+                      </p>
+                    </div>
+                  }
+                />
 
-            </Routes>
-          </main>
+              </Routes>
+            </main>
 
-          <Footer />
+            <Footer />
 
-        </div>
-      </CartProvider>
+          </div>
+        </CartProvider>
       </AuthProvider>
     </BrowserRouter>
   )
 }
 
-export default App ;
+export default App

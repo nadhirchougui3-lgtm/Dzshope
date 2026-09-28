@@ -1,113 +1,177 @@
 .dz-categories-page {
   position: relative;
   z-index: 0;
-  margin-top: -24px;
-  margin-bottom: -56px;
-  padding: 55px 0 120px;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+}
+
+.dz-categories-page::before {
+  content: '';
+  position: absolute;
+  top: -24px;
+  bottom: -94px;
+  left: 50%;
+  width: 100vw;
+  transform: translateX(-50%);
   background: #080f19;
-  box-shadow: 0 0 0 100vmax #080f19;
-  clip-path: inset(0 -100vmax);
+  z-index: -1;
 }
 
 .dz-categories-header {
+  max-width: 900px;
+  margin: 0 auto 42px;
+  padding-top: 8px;
   text-align: center;
-  margin-bottom: 50px;
 }
 
 .dz-categories-label {
   display: inline-block;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   color: #c62828;
-  font-size: 0.8rem;
+  font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 2px;
   text-transform: uppercase;
 }
 
 .dz-categories-header h1 {
-  color: white;
-  font-size: 2.3rem;
+  margin: 0 0 8px;
+  color: #fff;
+  font-size: 2.2rem;
   font-weight: 800;
-  margin-bottom: 10px;
+}
+
+.dz-categories-header h1 span {
+  color: #c62828;
 }
 
 .dz-categories-header p {
-  color: #8c9aaa;
   margin: 0;
+  color: #8c9aaa;
+  font-size: 0.9rem;
 }
 
 .dz-categories-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  gap: 20px;
 }
 
 .dz-category-link {
+  display: block;
+  color: inherit;
   text-decoration: none;
 }
 
 .dz-category-card {
-  position: relative;
-  min-height: 190px;
-  padding: 30px;
+  overflow: hidden;
+  height: 100%;
   background: #0d1826;
   border: 1px solid #1c2a3b;
-  border-radius: 20px;
-  transition: 0.25s ease;
+  border-radius: 16px;
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
 .dz-category-card:hover {
-  transform: translateY(-6px);
+  transform: translateY(-5px);
   border-color: #c62828;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.25);
 }
 
-.dz-category-emoji {
-  font-size: 3rem;
-  margin-bottom: 15px;
+.dz-category-image {
+  position: relative;
+  height: 195px;
+  overflow: hidden;
+  background: #111c2a;
 }
 
-.dz-category-content > span {
+.dz-category-image img {
+  width: 100%;
+  height: 100%;
   display: block;
-  color: #8c9aaa;
-  font-size: 0.75rem;
-  font-weight: 600;
-  margin-bottom: 5px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+  object-fit: cover;
+  transition: transform 0.4s ease;
 }
 
-.dz-category-card h2 {
-  color: white;
-  font-size: 1.35rem;
-  font-weight: 700;
-  margin-bottom: 7px;
+.dz-category-card:hover .dz-category-image img {
+  transform: scale(1.05);
 }
 
-.dz-category-card p {
-  color: #8c9aaa;
-  margin: 0;
-  line-height: 1.5;
-}
-
-.dz-category-arrow {
+.dz-category-overlay {
   position: absolute;
-  right: 22px;
-  bottom: 22px;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 45%,
+    rgba(0, 0, 0, 0.55)
+  );
+}
+
+.dz-category-index {
+  position: absolute;
+  top: 14px;
+  right: 14px;
   width: 34px;
   height: 34px;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: rgba(8, 15, 25, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 50%;
-  background: #c62828;
-  color: white;
-  font-size: 1.1rem;
-  font-weight: bold;
-  transition: 0.25s ease;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 800;
 }
 
-.dz-category-card:hover .dz-category-arrow {
+.dz-category-content {
+  padding: 20px;
+}
+
+.dz-category-name {
+  display: block;
+  margin-bottom: 5px;
+  color: #c62828;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
+}
+
+.dz-category-content h2 {
+  margin: 0 0 7px;
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.dz-category-content p {
+  min-height: 40px;
+  margin: 0 0 16px;
+  color: #8c9aaa;
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+
+.dz-category-action {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 13px;
+  border-top: 1px solid #1c2a3b;
+  color: #fff;
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.dz-category-action strong {
+  color: #c62828;
+  font-size: 1.1rem;
+  transition: transform 0.25s ease;
+}
+
+.dz-category-card:hover .dz-category-action strong {
   transform: translateX(4px);
 }
 
@@ -118,13 +182,20 @@
 }
 
 @media (max-width: 768px) {
-  .dz-categories-page {
-    margin-top: -24px;
-    margin-bottom: -56px;
-    padding: 45px 0 100px;
+  .dz-categories-header {
+    margin-bottom: 30px;
+  }
+
+  .dz-categories-header h1 {
+    font-size: 1.9rem;
   }
 
   .dz-categories-grid {
     grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .dz-category-image {
+    height: 205px;
   }
 }
