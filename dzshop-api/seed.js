@@ -4,54 +4,64 @@ import Product from './models/Product.js'
 
 const products = [
   {
-    nom: 'Augustinus Bader The Body Cream 100ml',
-    description: 'Crème corporelle luxueuse Augustinus Bader pour une hydratation intense et une peau plus douce.',
-    prix: 42000
+    nom: 'Huda Beauty Easy Bake Loose Baking & Setting Powder',
+    description: 'Poudre libre professionnelle Huda Beauty pour fixer le maquillage et obtenir un fini lisse et longue tenue.',
+    prix: 9500,
+    image: '/images/products/makeup/huda-beauty-easy-bake.jpg'
   },
   {
-    nom: 'La Mer The Body Crème 200ml',
-    description: 'Crème corporelle premium La Mer pour nourrir et hydrater la peau.',
-    prix: 65000
+    nom: 'Huda Beauty #FauxFilter Luminous Matte Foundation',
+    description: 'Fond de teint haute couvrance Huda Beauty offrant un fini mat lumineux et une tenue longue durée.',
+    prix: 12500,
+    image: '/images/products/makeup/huda-beauty-fauxfilter-foundation.jpg'
   },
   {
-    nom: 'Jo Malone London Lime Basil & Mandarin Body Crème 175ml',
-    description: 'Crème corporelle parfumée Jo Malone London aux notes Lime Basil & Mandarin.',
-    prix: 32000
+    nom: 'Charlotte Tilbury Airbrush Flawless Foundation',
+    description: 'Fond de teint iconique Charlotte Tilbury avec une couvrance modulable et un fini impeccable.',
+    prix: 14500,
+    image: '/images/products/makeup/charlotte-tilbury-airbrush-flawless-foundation.jpg'
   },
   {
-    nom: 'Aesop Geranium Leaf Body Cleanser 500ml',
-    description: 'Nettoyant corps Aesop aux feuilles de géranium pour une peau propre et rafraîchie.',
-    prix: 12500
+    nom: 'Charlotte Tilbury Pillow Talk Lipstick',
+    description: 'Rouge à lèvres iconique Charlotte Tilbury dans la teinte Pillow Talk, avec une finition élégante et confortable.',
+    prix: 10500,
+    image: '/images/products/makeup/charlotte-tilbury-pillow-talk.jpg'
   },
   {
-    nom: 'Le Labo Hinoki Shower Gel 500ml',
-    description: 'Gel douche parfumé Le Labo Hinoki pour nettoyer délicatement la peau.',
-    prix: 18000
+    nom: 'MAC Studio Fix Fluid SPF 15 Foundation',
+    description: 'Fond de teint professionnel MAC offrant une couvrance modulable, un fini naturel et une longue tenue.',
+    prix: 9500,
+    image: '/images/products/makeup/mac-studio-fix-fluid.jpg'
   },
   {
-    nom: 'Kiehl’s Creme de Corps 500ml',
-    description: 'Lotion corporelle nourrissante Kiehl’s pour hydrater et adoucir la peau.',
-    prix: 14500
+    nom: 'MAC M·A·Cximal Silky Matte Lipstick',
+    description: 'Rouge à lèvres professionnel MAC avec une texture crémeuse et un fini mat longue tenue.',
+    prix: 7500,
+    image: '/images/products/makeup/mac-maximal-silky-matte.jpg'
   },
   {
-    nom: 'Sol de Janeiro Brazilian Bum Bum Cream 240ml',
-    description: 'Crème corporelle emblématique Sol de Janeiro à la texture riche et parfumée.',
-    prix: 11500
+    nom: 'Rare Beauty Soft Pinch Liquid Blush',
+    description: 'Blush liquide Rare Beauty hautement pigmenté avec une texture légère et facile à estomper.',
+    prix: 8500,
+    image: '/images/products/makeup/rare-beauty-soft-pinch.jpg'
   },
   {
-    nom: 'OUAI Body Crème 212ml',
-    description: 'Crème corporelle luxueuse OUAI pour hydrater et parfumer délicatement la peau.',
-    prix: 13500
+    nom: 'NARS Light Reflecting Foundation',
+    description: 'Fond de teint NARS à la couvrance modulable avec un fini naturel lumineux et sophistiqué.',
+    prix: 13500,
+    image: '/images/products/makeup/nars-light-reflecting-foundation.jpg'
   },
   {
-    nom: 'Byredo Bal d’Afrique Body Lotion 225ml',
-    description: 'Lotion corporelle parfumée Byredo Bal d’Afrique à la texture légère et hydratante.',
-    prix: 25000
+    nom: 'Dior Addict Lip Glow',
+    description: 'Baume à lèvres iconique Dior qui sublime naturellement la couleur des lèvres avec une finition brillante.',
+    prix: 11000,
+    image: '/images/products/makeup/dior-addict-lip-glow.jpg'
   },
   {
-    nom: 'Diptyque Do Son Perfumed Body Lotion 200ml',
-    description: 'Lotion corporelle parfumée Diptyque Do Son pour hydrater et parfumer la peau.',
-    prix: 22000
+    nom: 'YSL Rouge Pur Couture The Slim',
+    description: 'Rouge à lèvres YSL luxueux avec une texture confortable et une couleur intense au fini sophistiqué.',
+    prix: 12500,
+    image: '/images/products/makeup/ysl-rouge-pur-couture-the-slim.jpg'
   }
 ]
 
@@ -62,16 +72,16 @@ async function seed() {
     console.log('MongoDB connecté')
 
     const produitsExistants = await Product.find({
-      categorie: 'Soins personnels'
+      categorie: 'Maquillage'
     }).sort({ _id: 1 })
 
     console.log(
-      `${produitsExistants.length} produits Soins personnels trouvés`
+      `${produitsExistants.length} produits Maquillage trouvés`
     )
 
     if (produitsExistants.length !== 10) {
       throw new Error(
-        `Nombre inattendu : ${produitsExistants.length}. Le seed attend exactement 10 produits Soins personnels.`
+        `Nombre inattendu : ${produitsExistants.length}. Le seed attend exactement 10 produits Maquillage.`
       )
     }
 
@@ -82,7 +92,8 @@ async function seed() {
       produit.nom = nouveau.nom
       produit.description = nouveau.description
       produit.prix = nouveau.prix
-      produit.categorie = 'Soins personnels'
+      produit.image = nouveau.image
+      produit.categorie = 'Maquillage'
 
       await produit.save()
 
@@ -90,7 +101,7 @@ async function seed() {
     }
 
     console.log('')
-    console.log('10 produits Soins personnels mis à jour')
+    console.log('10 produits Maquillage mis à jour')
     console.log('Aucun autre produit modifié')
     console.log('Seed terminé')
   } catch (error) {

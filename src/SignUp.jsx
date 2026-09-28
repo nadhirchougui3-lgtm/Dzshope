@@ -4,7 +4,7 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa'
 import { useAuth } from './AuthContext'
 
 function SignUp() {
-  const { register } = useAuth()
+  const { register, loginGoogle } = useAuth()
   const navigate = useNavigate()
 
   const [nom, setNom] = useState('')
@@ -33,7 +33,6 @@ function SignUp() {
 
     setEnvoi(true)
     try {
-      // Vrai appel à l'API : le compte est créé dans MongoDB, et on est connecté tout de suite
       await register(nom, telephone, motDePasse)
       navigate('/')
     } catch (err) {
@@ -42,8 +41,46 @@ function SignUp() {
     setEnvoi(false)
   }
 
-  function handleGoogleSignUp() {
-    alert('Google Sign Up sera configuré prochainement.')
+  async function handleGoogleSignUp() {
+    setErreur('')
+
+    if (!window.google) {
+      setErreur('Google Sign Up non disponible.')
+      return
+    }
+
+    try {
+      const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID
+
+      if (!clientId) {
+        setErreur('Google Sign Up non configuré.')
+        return
+      }
+
+      await new Promise((resolve, reject) => {
+        window.google.accounts.id.initialize({
+          client_id: clientId,
+          callback: async (response) => {
+            try {
+              await loginGoogle(response.credential)
+              resolve()
+            } catch (err) {
+              reject(err)
+            }
+          }
+        })
+
+        window.google.accounts.id.prompt((notification) => {
+          if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+            reject(new Error('Impossible d’ouvrir Google Sign Up.'))
+          }
+        })
+      })
+
+      navigate('/')
+    } catch (err) {
+      setErreur(err.message)
+    }
   }
 
   return (

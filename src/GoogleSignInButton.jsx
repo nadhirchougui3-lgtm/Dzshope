@@ -2,8 +2,6 @@ import { useEffect, useRef } from 'react'
 
 const ADRESSE_SCRIPT = 'https://accounts.google.com/gsi/client'
 
-// Le bouton officiel « Continuer avec Google ».
-// Google nous renvoie un "credential" (un jeton signé) : on le passe à la fonction onCredential.
 function GoogleSignInButton(props) {
   const conteneur = useRef(null)
   const dernierCallback = useRef(props.onCredential)
@@ -24,6 +22,7 @@ function GoogleSignInButton(props) {
             dernierCallback.current(reponse.credential)
           },
         })
+
         window.google.accounts.id.renderButton(conteneur.current, {
           theme: 'outline',
           size: 'large',
@@ -38,12 +37,14 @@ function GoogleSignInButton(props) {
       }
 
       let script = document.querySelector('script[src="' + ADRESSE_SCRIPT + '"]')
+
       if (!script) {
         script = document.createElement('script')
         script.src = ADRESSE_SCRIPT
         script.async = true
         document.head.appendChild(script)
       }
+
       script.addEventListener('load', afficherLeBouton)
 
       return function () {
@@ -54,10 +55,10 @@ function GoogleSignInButton(props) {
   )
 
   if (!clientId) {
-    return <p className="text-muted small text-center mb-0">Connexion Google non configurée (variable VITE_GOOGLE_CLIENT_ID manquante).</p>
+    return null
   }
 
   return <div ref={conteneur} className="d-flex justify-content-center"></div>
 }
 
-export default GoogleSignInButton
+export default GoogleSignInButton ;

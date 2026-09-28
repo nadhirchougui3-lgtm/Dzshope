@@ -23,7 +23,6 @@ function Navbar() {
     <nav className="dz-navbar">
       <div className="dz-navbar-container">
 
-        {/* LOGO */}
         <Link to="/" className="dz-logo">
           <div className="dz-logo-mark">
             DZ
@@ -40,10 +39,8 @@ function Navbar() {
           </div>
         </Link>
 
-        {/* NAVIGATION */}
         <div className="dz-nav-links">
 
-          {/* HOME */}
           <NavLink
             to="/"
             className={({ isActive }) =>
@@ -54,7 +51,6 @@ function Navbar() {
             <span>Home</span>
           </NavLink>
 
-          {/* PRODUITS */}
           <NavLink
             to="/produits"
             className={({ isActive }) =>
@@ -65,7 +61,6 @@ function Navbar() {
             <span>Produits</span>
           </NavLink>
 
-          {/* CONTACT */}
           <NavLink
             to="/contact"
             className={({ isActive }) =>
@@ -76,7 +71,6 @@ function Navbar() {
             <span>Contact</span>
           </NavLink>
 
-          {/* PANIER */}
           <NavLink
             to="/panier"
             className={({ isActive }) =>
@@ -96,7 +90,6 @@ function Navbar() {
             <span>Panier</span>
           </NavLink>
 
-          {/* CONNEXION / COMPTE */}
           {user ? (
             <>
               <span className="dz-nav-link">
@@ -121,7 +114,7 @@ function Navbar() {
                 }
               >
                 <FaUser />
-                <span>Connexion</span>
+                <span>Sign In</span>
               </NavLink>
 
               <NavLink
@@ -142,4 +135,4 @@ function Navbar() {
   )
 }
 
-export default Navbar
+export default Navbar ;
