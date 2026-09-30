@@ -114,4 +114,4 @@ router.get('/me', protect, function (req, res) {
   res.json({ user: req.user.versPublic() })
 })
 
-export default router
+export default router ;

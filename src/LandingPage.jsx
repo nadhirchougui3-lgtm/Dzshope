@@ -11,7 +11,7 @@ function LandingPage() {
             <div className="col-lg-6">
 
               <span className="dz-collection-badge">
-                ✨ Discover our collection
+                ✨ Discover Our Collection
               </span>
 
               <h1 className="dz-hero-title">
@@ -42,7 +42,7 @@ function LandingPage() {
                 <div className="col-md-4">
                   <div className="dz-feature-card">
                     <div className="dz-feature-icon">🚚</div>
-                    <h6>Delivery to 69 wilayas</h6>
+                    <h6>Delivery to 69 Wilayas</h6>
                     <small>
                       Receive your order anywhere in Algeria.
                     </small>
@@ -52,7 +52,7 @@ function LandingPage() {
                 <div className="col-md-4">
                   <div className="dz-feature-card">
                     <div className="dz-feature-icon">💵</div>
-                    <h6>Cash on delivery</h6>
+                    <h6>Cash on Delivery</h6>
                     <small>
                       Pay only when you receive your order.
                     </small>
@@ -62,7 +62,7 @@ function LandingPage() {
                 <div className="col-md-4">
                   <div className="dz-feature-card">
                     <div className="dz-feature-icon">↩️</div>
-                    <h6>7-day returns</h6>
+                    <h6>7-Day Returns</h6>
                     <small>
                       Return your order within 7 days.
                     </small>
@@ -89,9 +89,9 @@ function LandingPage() {
                   </div>
 
                   <div>
-                    <strong>Delivery everywhere</strong>
+                    <strong>Delivery Everywhere</strong>
                     <small>
-                      69 wilayas 🇩🇿
+                      69 Wilayas 🇩🇿
                     </small>
                   </div>
 
@@ -112,4 +112,4 @@ function LandingPage() {
   )
 }
 
-export default LandingPage
+export default LandingPage ;

@@ -34,7 +34,7 @@ function Navbar() {
             </div>
 
             <div className="dz-tagline">
-              Qualité · Prix · Confiance
+              Quality · Price · Trust
             </div>
           </div>
         </Link>
@@ -58,7 +58,7 @@ function Navbar() {
             }
           >
             <FaShoppingBag />
-            <span>Produits</span>
+            <span>Products</span>
           </NavLink>
 
           <NavLink
@@ -87,7 +87,7 @@ function Navbar() {
               )}
             </div>
 
-            <span>Panier</span>
+            <span>Shopping Bag</span>
           </NavLink>
 
           {user ? (
@@ -96,13 +96,14 @@ function Navbar() {
                 <FaUser />
                 <span>{user.nom}</span>
               </span>
+
               <button
                 type="button"
                 className="dz-nav-link"
                 style={{ background: 'none', border: 'none' }}
                 onClick={logout}
               >
-                Déconnexion
+                Sign Out
               </button>
             </>
           ) : (

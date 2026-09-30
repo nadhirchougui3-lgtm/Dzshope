@@ -1,0 +1,6168 @@
+
+===== C:\Users\MEI\Desktop\react-04\dzshop\src\App.css =====
+.counter {
+  font-size: 16px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  color: var(--accent);
+  background: var(--accent-bg);
+  border: 2px solid transparent;
+  transition: border-color 0.3s;
+  margin-bottom: 24px;
+
+  &:hover {
+    border-color: var(--accent-border);
+  }
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+}
+
+.hero {
+  position: relative;
+
+  .base,
+  .framework,
+  .vite {
+    inset-inline: 0;
+    margin: 0 auto;
+  }
+
+  .base {
+    width: 170px;
+    position: relative;
+    z-index: 0;
+  }
+
+  .framework,
+  .vite {
+    position: absolute;
+  }
+
+  .framework {
+    z-index: 1;
+    top: 34px;
+    height: 28px;
+    transform: perspective(2000px) rotateZ(300deg) rotateX(44deg) rotateY(39deg)
+      scale(1.4);
+  }
+
+  .vite {
+    z-index: 0;
+    top: 107px;
+    height: 26px;
+    width: auto;
+    transform: perspective(2000px) rotateZ(300deg) rotateX(40deg) rotateY(39deg)
+      scale(0.8);
+  }
+}
+
+#center {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  place-content: center;
+  place-items: center;
+  flex-grow: 1;
+
+  @media (max-width: 1024px) {
+    padding: 32px 20px 24px;
+    gap: 18px;
+  }
+}
+
+#next-steps {
+  display: flex;
+  border-top: 1px solid var(--border);
+  text-align: left;
+
+  & > div {
+    flex: 1 1 0;
+    padding: 32px;
+    @media (max-width: 1024px) {
+      padding: 24px 20px;
+    }
+  }
+
+  .icon {
+    margin-bottom: 16px;
+    width: 22px;
+    height: 22px;
+  }
+
+  @media (max-width: 1024px) {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+#docs {
+  border-right: 1px solid var(--border);
+
+  @media (max-width: 1024px) {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+}
+
+#next-steps ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  gap: 8px;
+  margin: 32px 0 0;
+
+  .logo {
+    height: 18px;
+  }
+
+  a {
+    color: var(--text-h);
+    font-size: 16px;
+    border-radius: 6px;
+    background: var(--social-bg);
+    display: flex;
+    padding: 6px 12px;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    transition: box-shadow 0.3s;
+
+    &:hover {
+      box-shadow: var(--shadow);
+    }
+    .button-icon {
+      height: 18px;
+      width: 18px;
+    }
+  }
+
+  @media (max-width: 1024px) {
+    margin-top: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    li {
+      flex: 1 1 calc(50% - 8px);
+    }
+
+    a {
+      width: 100%;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+  }
+}
+
+#spacer {
+  height: 88px;
+  border-top: 1px solid var(--border);
+  @media (max-width: 1024px) {
+    height: 48px;
+  }
+}
+
+.ticks {
+  position: relative;
+  width: 100%;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: -4.5px;
+    border: 5px solid transparent;
+  }
+
+  &::before {
+    left: 0;
+    border-left-color: var(--border);
+  }
+  &::after {
+    right: 0;
+    border-right-color: var(--border);
+  }
+}
+
+===== C:\Users\MEI\Desktop\react-04\dzshop\src\App.jsx =====
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { CartProvider } from './CartContext'
+import { AuthProvider } from './AuthContext'
+
+import Navbar from './navbar'
+import Footer from './footer'
+import LandingPage from './LandingPage'
+import ProductsPage from './ProductsPage'
+import ProductDetailPage from './ProductDetailPage'
+import CategoriesPage from './CategoriesPage'
+import CartPage from './CartPage'
+import CheckoutPage from './CheckoutPage'
+import SignUp from './SignUp'
+import LoginPage from './LoginPage'
+import ContactPage from './ContactPage'
+import PrivateRoute from './PrivateRoute'
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AuthProvider>
+        <CartProvider>
+          <div className="d-flex flex-column min-vh-100">
+
+            <Navbar />
+
+            <main className="flex-grow-1 container py-4">
+              <Routes>
+
+                <Route path="/" element={<LandingPage />} />
+
+                <Route path="/produits" element={<ProductsPage />} />
+                <Route path="/produit/:id" element={<ProductDetailPage />} />
+                <Route path="/categories" element={<CategoriesPage />} />
+
+                <Route path="/panier" element={<CartPage />} />
+
+                <Route
+                  path="/checkout"
+                  element={
+                    <PrivateRoute>
+                      <CheckoutPage />
+                    </PrivateRoute>
+                  }
+                />
+
+                <Route path="/signup" element={<SignUp />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/contact" element={<ContactPage />} />
+
+                <Route
+                  path="*"
+                  element={
+                    <div className="text-center py-5">
+                      <h1>404 - Page Non Trouvée</h1>
+                      <p className="text-muted">
+                        La page que vous cherchez n'existe pas.
+                      </p>
+                    </div>
+                  }
+                />
+
+              </Routes>
+            </main>
+
+            <Footer />
+
+          </div>
+        </CartProvider>
+      </AuthProvider>
+    </BrowserRouter>
+  )
+}
+
+export default App
+
+===== C:\Users\MEI\Desktop\react-04\dzshop\src\CartPage.css =====
+.dz-cart-page {
+min-height: 100vh;
+padding: 45px 7%;
+background: #f6f6f6;
+color: #171717;
+}
+
+.dz-cart-header {
+display: flex;
+align-items: center;
+justify-content: space-between;
+margin-bottom: 35px;
+}
+
+.dz-cart-label {
+color: #e3262e;
+font-size: 12px;
+font-weight: 800;
+letter-spacing: 3px;
+}
+
+.dz-cart-header h1 {
+margin: 6px 0;
+font-size: 38px;
+font-weight: 800;
+}
+
+.dz-cart-header p {
+margin: 0;
+color: #777;
+font-size: 14px;
+}
+
+.dz-cart-header-icon {
+font-size: 48px;
+color: #e3262e;
+}
+
+.dz-cart-layout {
+display: grid;
+grid-template-columns: minmax(0, 1.8fr) minmax(320px, 0.8fr);
+gap: 30px;
+align-items: start;
+}
+
+.dz-cart-products {
+display: flex;
+flex-direction: column;
+gap: 14px;
+}
+
+.dz-cart-product {
+display: flex;
+align-items: center;
+gap: 18px;
+padding: 16px;
+background: white;
+border: 1px solid #e5e5e5;
+border-radius: 14px;
+transition: 0.2s ease;
+}
+
+.dz-cart-product:hover {
+border-color: #d5d5d5;
+box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+}
+
+.dz-cart-product-image {
+width: 95px;
+height: 95px;
+flex-shrink: 0;
+object-fit: cover;
+border-radius: 10px;
+background: #eee;
+}
+
+.dz-cart-product-info {
+flex: 1;
+min-width: 0;
+}
+
+.dz-cart-product-info h3 {
+margin: 0 0 6px;
+font-size: 17px;
+font-weight: 700;
+}
+
+.dz-cart-price {
+color: #777;
+font-size: 14px;
+}
+
+.dz-cart-actions {
+display: flex;
+align-items: center;
+gap: 8px;
+margin-top: 15px;
+}
+
+.dz-cart-quantity {
+display: flex;
+align-items: center;
+height: 36px;
+overflow: hidden;
+border: 1px solid #ddd;
+border-radius: 8px;
+}
+
+.dz-cart-quantity button {
+width: 34px;
+height: 36px;
+border: none;
+background: #f5f5f5;
+color: #222;
+font-size: 18px;
+cursor: pointer;
+}
+
+.dz-cart-quantity button:hover {
+background: #e9e9e9;
+}
+
+.dz-cart-quantity strong {
+width: 34px;
+text-align: center;
+font-size: 14px;
+}
+
+.dz-view-btn {
+padding: 8px 13px;
+border: 1px solid #ddd;
+border-radius: 8px;
+color: #222;
+text-decoration: none;
+font-size: 13px;
+transition: 0.2s;
+}
+
+.dz-view-btn:hover {
+background: #f3f3f3;
+color: #222;
+}
+
+.dz-delete-btn {
+display: flex;
+align-items: center;
+gap: 6px;
+padding: 8px 4px;
+border: none;
+background: transparent;
+color: #e3262e;
+font-size: 13px;
+cursor: pointer;
+}
+
+.dz-delete-btn:hover {
+color: #b71920;
+}
+
+.dz-product-total {
+align-self: flex-start;
+margin-left: auto;
+white-space: nowrap;
+font-size: 15px;
+}
+
+.dz-cart-summary {
+position: sticky;
+top: 25px;
+}
+
+.dz-summary-card {
+padding: 30px;
+background: #171717;
+color: white;
+border-radius: 16px;
+box-shadow: 0 12px 30px rgba(0, 0, 0, 0.14);
+}
+
+.dz-summary-card h2 {
+margin: 0 0 27px;
+font-size: 22px;
+}
+
+.dz-summary-line {
+display: flex;
+align-items: center;
+justify-content: space-between;
+margin-bottom: 19px;
+color: #c8c8c8;
+font-size: 14px;
+}
+
+.dz-summary-line strong {
+color: white;
+}
+
+.dz-free {
+color: #5ed58a;
+font-size: 11px;
+font-weight: 800;
+}
+
+.dz-summary-card hr {
+height: 1px;
+margin: 23px 0;
+border: none;
+background: #3b3b3b;
+}
+
+.dz-summary-total {
+display: flex;
+align-items: center;
+justify-content: space-between;
+padding-bottom: 2px;
+font-size: 18px;
+font-weight: 700;
+}
+
+.dz-summary-total strong {
+color: #ff4a52;
+font-size: 21px;
+}
+
+.dz-checkout-btn {
+display: block;
+width: calc(100% - 20px);
+box-sizing: border-box;
+margin: 30px 10px 0;
+padding: 15px 22px;
+border: none;
+border-radius: 10px;
+background: #e3262e;
+color: white;
+font-size: 15px;
+font-weight: 700;
+line-height: 1.4;
+text-align: center;
+text-decoration: none;
+cursor: pointer;
+transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dz-checkout-btn:hover {
+background: #c91e25;
+transform: translateY(-1px);
+box-shadow: 0 7px 18px rgba(227, 38, 46, 0.25);
+}
+
+.dz-benefits {
+margin-top: 14px;
+padding: 16px 18px;
+background: white;
+border: 1px solid #e5e5e5;
+border-radius: 14px;
+}
+
+.dz-benefits div {
+display: flex;
+align-items: center;
+gap: 11px;
+padding: 9px 0;
+color: #444;
+font-size: 13px;
+}
+
+.dz-benefits svg {
+color: #e3262e;
+}
+
+.dz-delivery-card {
+margin-top: 14px;
+padding: 24px;
+background: white;
+border: 1px solid #e5e5e5;
+border-radius: 14px;
+box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+}
+
+.dz-delivery-card h2 {
+margin: 0 0 22px;
+font-size: 19px;
+font-weight: 800;
+}
+
+.dz-delivery-card label {
+display: block;
+margin: 16px 0 7px;
+color: #333;
+font-size: 13px;
+font-weight: 700;
+}
+
+.dz-delivery-card label:first-of-type {
+margin-top: 0;
+}
+
+.dz-delivery-card select,
+.dz-delivery-card input {
+width: 100%;
+box-sizing: border-box;
+height: 44px;
+padding: 0 12px;
+border: 1px solid #dcdcdc;
+border-radius: 9px;
+outline: none;
+background: #fafafa;
+color: #222;
+font-size: 13px;
+transition: 0.2s ease;
+}
+
+.dz-delivery-card select:focus,
+.dz-delivery-card input:focus {
+border-color: #e3262e;
+background: white;
+box-shadow: 0 0 0 3px rgba(227, 38, 46, 0.08);
+}
+
+.dz-delivery-card select:disabled {
+background: #f1f1f1;
+color: #999;
+cursor: not-allowed;
+}
+
+.dz-delivery-card input::placeholder {
+color: #999;
+}
+
+.dz-delivery-options {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 10px;
+}
+
+.dz-delivery-option {
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 8px;
+min-height: 48px;
+padding: 10px;
+border: 1px solid #ddd;
+border-radius: 9px;
+background: #fafafa;
+color: #333;
+font-size: 13px;
+font-weight: 600;
+cursor: pointer;
+transition: 0.2s ease;
+}
+
+.dz-delivery-option:hover {
+border-color: #bbb;
+background: #f5f5f5;
+}
+
+.dz-delivery-option.active {
+border-color: #e3262e;
+background: #fff3f3;
+color: #e3262e;
+}
+
+.dz-confirm-order-btn {
+width: 100%;
+margin-top: 20px;
+padding: 13px;
+border: none;
+border-radius: 9px;
+background: #171717;
+color: white;
+font-size: 14px;
+font-weight: 700;
+cursor: pointer;
+transition: 0.2s ease;
+}
+
+.dz-confirm-order-btn:hover:not(:disabled) {
+background: #333;
+}
+
+.dz-confirm-order-btn:disabled {
+background: #d5d5d5;
+color: #999;
+cursor: not-allowed;
+}
+
+.dz-cart-empty {
+min-height: 80vh;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+text-align: center;
+}
+
+.dz-empty-icon {
+margin-bottom: 20px;
+color: #e3262e;
+font-size: 60px;
+}
+
+.dz-cart-empty h1 {
+font-size: 30px;
+font-weight: 800;
+}
+
+.dz-cart-empty p {
+color: #777;
+}
+
+.dz-shop-btn {
+margin-top: 15px;
+padding: 12px 20px;
+border-radius: 8px;
+background: #171717;
+color: white;
+text-decoration: none;
+}
+
+@media (max-width: 900px) {
+.dz-cart-page {
+padding: 30px 20px;
+}
+
+.dz-cart-layout {
+grid-template-columns: 1fr;
+}
+
+.dz-cart-summary {
+position: static;
+}
+}
+
+@media (max-width: 600px) {
+.dz-cart-page {
+padding: 25px 15px;
+}
+
+.dz-cart-header h1 {
+font-size: 30px;
+}
+
+.dz-cart-header-icon {
+font-size: 38px;
+}
+
+.dz-cart-product {
+align-items: flex-start;
+}
+
+.dz-cart-product-image {
+width: 75px;
+height: 75px;
+}
+
+.dz-product-total {
+display: none;
+}
+
+.dz-cart-actions {
+flex-wrap: wrap;
+}
+
+.dz-summary-card {
+padding: 22px;
+}
+
+.dz-checkout-btn {
+width: calc(100% - 12px);
+margin: 28px 6px 0;
+padding: 14px 18px;
+}
+
+.dz-delivery-card {
+padding: 20px;
+}
+
+.dz-delivery-options {
+grid-template-columns: 1fr;
+}
+}
+
+===== C:\Users\MEI\Desktop\react-04\dzshop\src\CartPage.jsx =====
+import { useCart } from './CartContext'
+import { Link } from 'react-router-dom'
+import {
+  FaShoppingCart,
+  FaTruck,
+  FaShieldAlt,
+  FaUndo,
+  FaTrash
+} from 'react-icons/fa'
+import './CartPage.css'
+
+function CartPage() {
+  const {
+    cartItems,
+    removeFromCart,
+    updateQuantity,
+    total
+  } = useCart()
+
+  if (cartItems.length === 0) {
+    return (
+      <div className="dz-cart-empty">
+        <FaShoppingCart className="dz-empty-icon" />
+        <h1>Ton panier est vide</h1>
+        <p>Ajoute des produits pour commencer tes achats.</p>
+        <Link to="/" className="dz-shop-btn">
+          Continuer mes achats
+        </Link>
+      </div>
+    )
+  }
+
+  return (
+    <div className="dz-cart-page">
+
+      <div className="dz-cart-header">
+        <div>
+          <span className="dz-cart-label">DZSHOP</span>
+          <h1>Votre panier</h1>
+          <p>{cartItems.length} produit(s) dans votre panier</p>
+        </div>
+
+        <FaShoppingCart className="dz-cart-header-icon" />
+      </div>
+
+      <div className="dz-cart-layout">
+
+        <div className="dz-cart-products">
+
+          {cartItems.map(function (item) {
+            return (
+              <div
+                key={item._id + '-' + item.taille}
+                className="dz-cart-product"
+              >
+
+                <img
+                  src={item.image || null}
+                  alt={item.nom}
+                  className="dz-cart-product-image"
+                />
+
+                <div className="dz-cart-product-info">
+
+                  <h3>{item.nom}</h3>
+
+                  {item.taille && (
+                    <div className="dz-cart-size">
+                      {item.categorie === 'Chaussures'
+                        ? 'Pointure'
+                        : 'Taille'}: <strong>{item.taille}</strong>
+                    </div>
+                  )}
+
+                  <span className="dz-cart-price">
+                    {item.prix.toLocaleString('fr-FR')} DA
+                  </span>
+
+                  <div className="dz-cart-actions">
+
+                    <div className="dz-cart-quantity">
+
+                      <button
+                        onClick={function () {
+                          updateQuantity(
+                            item._id,
+                            Math.max(1, item.quantity - 1),
+                            item.taille
+                          )
+                        }}
+                      >
+                        −
+                      </button>
+
+                      <strong>{item.quantity}</strong>
+
+                      <button
+                        onClick={function () {
+                          updateQuantity(
+                            item._id,
+                            item.quantity + 1,
+                            item.taille
+                          )
+                        }}
+                      >
+                        +
+                      </button>
+
+                    </div>
+
+                    <Link
+                      to={`/produit/${item._id}`}
+                      className="dz-view-btn"
+                    >
+                      View
+                    </Link>
+
+                    <button
+                      className="dz-delete-btn"
+                      onClick={function () {
+                        removeFromCart(item._id, item.taille)
+                      }}
+                    >
+                      <FaTrash />
+                      Delete
+                    </button>
+
+                  </div>
+
+                </div>
+
+                <strong className="dz-product-total">
+                  {(item.prix * item.quantity).toLocaleString('fr-FR')} DA
+                </strong>
+
+              </div>
+            )
+          })}
+
+        </div>
+
+        <div className="dz-cart-summary">
+
+          <div className="dz-summary-card">
+
+            <h2>Résumé</h2>
+
+            <div className="dz-summary-line">
+              <span>Sous-total</span>
+              <strong>
+                {total.toLocaleString('fr-FR')} DA
+              </strong>
+            </div>
+
+            <div className="dz-summary-line">
+              <span>Livraison</span>
+              <span className="dz-free">GRATUITE</span>
+            </div>
+
+            <hr />
+
+            <div className="dz-summary-total">
+              <span>Total</span>
+              <strong>
+                {total.toLocaleString('fr-FR')} DA
+              </strong>
+            </div>
+
+            <Link
+              to="/checkout"
+              className="dz-checkout-btn"
+            >
+              Checkout
+            </Link>
+
+          </div>
+
+          <div className="dz-benefits">
+
+            <div>
+              <FaTruck />
+              <span>Livraison rapide</span>
+            </div>
+
+            <div>
+              <FaShieldAlt />
+              <span>Paiement sécurisé</span>
+            </div>
+
+            <div>
+              <FaUndo />
+              <span>Retour facile</span>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  )
+}
+
+export default CartPage ;
+
+===== C:\Users\MEI\Desktop\react-04\dzshop\src\CategoriesPage.css =====
+.dz-categories-page {
+  position: relative;
+  z-index: 0;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+}
+
+.dz-categories-page::before {
+  content: '';
+  position: absolute;
+  top: -24px;
+  bottom: -94px;
+  left: 50%;
+  width: 100vw;
+  transform: translateX(-50%);
+  background: #080f19;
+  z-index: -1;
+}
+
+.dz-categories-header {
+  max-width: 900px;
+  margin: 0 auto 42px;
+  padding-top: 8px;
+  text-align: center;
+}
+
+.dz-categories-label {
+  display: inline-block;
+  margin-bottom: 10px;
+  color: #c62828;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.dz-categories-header h1 {
+  margin: 0 0 8px;
+  color: #fff;
+  font-size: 2.2rem;
+  font-weight: 800;
+}
+
+.dz-categories-header h1 span {
+  color: #c62828;
+}
+
+.dz-categories-header p {
+  margin: 0;
+  color: #8c9aaa;
+  font-size: 0.9rem;
+}
+
+.dz-categories-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.dz-category-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.dz-category-card {
+  overflow: hidden;
+  height: 100%;
+  background: #0d1826;
+  border: 1px solid #1c2a3b;
+  border-radius: 16px;
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.dz-category-card:hover {
+  transform: translateY(-5px);
+  border-color: #c62828;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.25);
+}
+
+.dz-category-image {
+  position: relative;
+  height: 195px;
+  overflow: hidden;
+  background: #111c2a;
+}
+
+.dz-category-image img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.dz-category-card:hover .dz-category-image img {
+  transform: scale(1.05);
+}
+
+.dz-category-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 45%,
+    rgba(0, 0, 0, 0.55)
+  );
+}
+
+.dz-category-index {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(8, 15, 25, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 50%;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
+.dz-category-content {
+  padding: 20px;
+}
+
+.dz-category-name {
+  display: block;
+  margin-bottom: 5px;
+  color: #c62828;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
+}
+
+.dz-category-content h2 {
+  margin: 0 0 7px;
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.dz-category-content p {
+  min-height: 40px;
+  margin: 0 0 16px;
+  color: #8c9aaa;
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+
+.dz-category-action {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 13px;
+  border-top: 1px solid #1c2a3b;
+  color: #fff;
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.dz-category-action strong {
+  color: #c62828;
+  font-size: 1.1rem;
+  transition: transform 0.25s ease;
+}
+
+.dz-category-card:hover .dz-category-action strong {
+  transform: translateX(4px);
+}
+
+@media (max-width: 1000px) {
+  .dz-categories-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .dz-categories-header {
+    margin-bottom: 30px;
+  }
+
+  .dz-categories-header h1 {
+    font-size: 1.9rem;
+  }
+
+  .dz-categories-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .dz-category-image {
+    height: 205px;
+  }
+}
+
+===== C:\Users\MEI\Desktop\react-04\dzshop\src\CategoriesPage.jsx =====
+import { Link } from 'react-router-dom'
+import './CategoriesPage.css'
+
+function CategoriesPage() {
+  const categories = [
+    {
+      nom: 'Vêtements',
+      label: 'Fashion & Clothing',
+      description: 'Explore our latest clothing collection.',
+      image: 'https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&w=900&q=85'
+    },
+    {
+      nom: 'Chaussures',
+      label: 'Shoes & Footwear',
+      description: 'Discover footwear for every style.',
+      image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=85'
+    },
+    {
+      nom: 'Sacs',
+      label: 'Bags & Luggage',
+      description: 'Bags designed for style and everyday use.',
+      image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=900&q=85'
+    },
+    {
+      nom: 'Montres',
+      label: 'Watches',
+      description: 'Elegant watches for every occasion.',
+      image: 'https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=900&q=85'
+    },
+    {
+      nom: 'Téléphones',
+      label: 'Smartphones',
+      description: 'Discover the latest smartphones.',
+      image: 'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?auto=format&fit=crop&w=900&q=85'
+    },
+    {
+      nom: 'Audio',
+      label: 'Audio & Headphones',
+      description: 'Enjoy music with premium audio products.',
+      image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=900&q=85'
+    },
+    {
+      nom: 'Ordinateurs',
+      label: 'Computers & Laptops',
+      description: 'Powerful devices for work and entertainment.',
+      image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=900&q=85'
+    },
+    {
+      nom: 'Gaming',
+      label: 'Gaming',
+      description: 'Gear up with equipment made for gamers.',
+      image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=900&q=85'
+    },
+    {
+      nom: 'Soins personnels',
+      label: 'Personal Care',
+      description: 'Premium skincare products for your daily routine.',
+      image: 'https://images.unsplash.com/photo-1739980213756-753aea153bb8?auto=format&fit=crop&w=900&q=85'
+    },
+    {
+      nom: 'Accessoires',
+      label: 'Men’s Accessories',
+      description: 'Complete your look with rings, bracelets and more.',
+      image: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=900&q=85'
+    },
+    {
+      nom: 'Sport',
+      label: 'Sports & Fitness',
+      description: 'Equipment and essentials for an active lifestyle.',
+      image: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=900&q=85'
+    },
+    {
+      nom: 'Maquillage',
+      label: 'Beauty & Makeup',
+      description: 'Discover makeup from iconic beauty brands.',
+      image: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=900&q=85'
+    },
+    {
+      nom: 'Maison',
+      label: 'Home & Kitchen',
+      description: 'Useful essentials for your home and kitchen.',
+      image: 'https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=900&q=85'
+    },
+    {
+      nom: 'Camping',
+      label: 'Outdoor & Camping',
+      description: 'Practical equipment for outdoor adventures.',
+      image: 'https://images.unsplash.com/photo-1475483768296-6163e08872a1?auto=format&fit=crop&w=900&q=85'
+    },
+    {
+      nom: 'Décoration',
+      label: 'Home Decoration',
+      description: 'Add character and style to your home.',
+      image: 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=900&q=85'
+    },
+    {
+      nom: 'Art & Création',
+      label: 'Art & Creative Supplies',
+      description: 'Tools and supplies for creative projects.',
+      image: 'https://images.unsplash.com/photo-1777353245766-8b2ef9e436e1?auto=format&fit=crop&w=900&q=85'
+    },
+    {
+      nom: 'Lecture',
+      label: 'Books & Reading',
+      description: 'Discover books and inspiring reading collections.',
+      image: 'https://images.unsplash.com/photo-1526243741027-444d633d7365?auto=format&fit=crop&w=900&q=85'
+    },
+    {
+      nom: 'Bureau',
+      label: 'Office & Stationery',
+      description: 'Practical tools for your workspace.',
+      image: 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=900&q=85'
+    }
+  ]
+
+  return (
+    <div className="dz-categories-page">
+      <div className="dz-categories-header">
+        <span className="dz-categories-label">
+          DZSHOP COLLECTION
+        </span>
+
+        <h1>
+          Shop by <span>Category</span>
+        </h1>
+
+        <p>
+          Explore our carefully selected collections and find exactly what you need.
+        </p>
+      </div>
+
+      <div className="dz-categories-grid">
+        {categories.map(function (categorie, index) {
+          return (
+            <Link
+              key={categorie.nom}
+              to={'/produits?categorie=' + encodeURIComponent(categorie.nom)}
+              className="dz-category-link"
+            >
+              <article className="dz-category-card">
+                <div className="dz-category-image">
+                  <img
+                    src={categorie.image}
+                    alt={categorie.label}
+                  />
+
+                  <div className="dz-category-overlay"></div>
+
+                  <span className="dz-category-index">
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
+                </div>
+
+                <div className="dz-category-content">
+                  <span className="dz-category-name">
+                    {categorie.nom}
+                  </span>
+
+                  <h2>
+                    {categorie.label}
+                  </h2>
+
+                  <p>
+                    {categorie.description}
+                  </p>
+
+                  <span className="dz-category-action">
+                    Explore collection
+                    <strong>→</strong>
+                  </span>
+                </div>
+              </article>
+            </Link>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+export default CategoriesPage 
+
+===== C:\Users\MEI\Desktop\react-04\dzshop\src\CheckoutPage.css =====
+.dz-checkout-page {
+min-height: 100vh;
+padding: 45px 7%;
+background: #f6f6f6;
+color: #171717;
+}
+
+.dz-checkout-header {
+margin-bottom: 35px;
+}
+
+.dz-back-link {
+display: inline-flex;
+align-items: center;
+gap: 8px;
+margin-bottom: 28px;
+color: #555;
+font-size: 13px;
+font-weight: 600;
+text-decoration: none;
+transition: 0.2s ease;
+}
+
+.dz-back-link:hover {
+color: #e3262e;
+}
+
+.dz-checkout-label {
+color: #e3262e;
+font-size: 12px;
+font-weight: 800;
+letter-spacing: 3px;
+}
+
+.dz-checkout-header h1 {
+margin: 6px 0;
+font-size: 38px;
+font-weight: 800;
+}
+
+.dz-checkout-header p {
+margin: 0;
+color: #777;
+font-size: 14px;
+}
+
+.dz-checkout-layout {
+display: grid;
+grid-template-columns: minmax(0, 1.55fr) minmax(320px, 0.8fr);
+gap: 30px;
+align-items: start;
+}
+
+.dz-checkout-form {
+min-width: 0;
+}
+
+.dz-checkout-card {
+padding: 30px;
+background: white;
+border: 1px solid #e5e5e5;
+border-radius: 16px;
+box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+}
+
+.dz-section-title {
+margin-bottom: 27px;
+}
+
+.dz-section-title > div {
+display: flex;
+align-items: center;
+gap: 13px;
+}
+
+.dz-section-title span {
+display: flex;
+align-items: center;
+justify-content: center;
+width: 32px;
+height: 32px;
+flex-shrink: 0;
+border-radius: 50%;
+background: #fff0f0;
+color: #e3262e;
+font-size: 11px;
+font-weight: 800;
+}
+
+.dz-section-title h2 {
+margin: 0;
+font-size: 19px;
+font-weight: 800;
+}
+
+.dz-checkout-fields {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 20px;
+}
+
+.dz-field {
+display: flex;
+flex-direction: column;
+}
+
+.dz-field label {
+margin-bottom: 8px;
+color: #333;
+font-size: 13px;
+font-weight: 700;
+}
+
+.dz-field input,
+.dz-field select,
+.dz-field textarea {
+width: 100%;
+box-sizing: border-box;
+border: 1px solid #dcdcdc;
+border-radius: 9px;
+outline: none;
+background: #fafafa;
+color: #222;
+font-family: inherit;
+font-size: 13px;
+transition: 0.2s ease;
+}
+
+.dz-field input,
+.dz-field select {
+height: 46px;
+padding: 0 13px;
+}
+
+.dz-field select {
+cursor: pointer;
+}
+
+.dz-field textarea {
+min-height: 105px;
+padding: 13px;
+resize: vertical;
+}
+
+.dz-field input:focus,
+.dz-field select:focus,
+.dz-field textarea:focus {
+border-color: #e3262e;
+background: white;
+box-shadow: 0 0 0 3px rgba(227, 38, 46, 0.08);
+}
+
+.dz-field input::placeholder,
+.dz-field textarea::placeholder {
+color: #999;
+}
+
+.dz-field select option {
+color: #222;
+background: white;
+}
+
+.dz-dropdown-field {
+position: relative;
+z-index: 20;
+}
+
+.dz-custom-dropdown {
+position: relative;
+width: 100%;
+}
+
+.dz-dropdown-trigger {
+display: flex;
+align-items: center;
+justify-content: space-between;
+width: 100%;
+height: 46px;
+padding: 0 13px;
+border: 1px solid #dcdcdc;
+border-radius: 9px;
+outline: none;
+background: #fafafa;
+color: #222;
+font-family: inherit;
+font-size: 13px;
+text-align: left;
+cursor: pointer;
+transition: 0.2s ease;
+}
+
+.dz-dropdown-trigger:hover {
+border-color: #bbb;
+background: white;
+}
+
+.dz-dropdown-trigger.active {
+border-color: #e3262e;
+background: white;
+box-shadow: 0 0 0 3px rgba(227, 38, 46, 0.08);
+}
+
+.dz-dropdown-trigger svg {
+flex-shrink: 0;
+color: #777;
+font-size: 11px;
+transition: transform 0.2s ease;
+}
+
+.dz-dropdown-trigger.active svg {
+color: #e3262e;
+transform: rotate(180deg);
+}
+
+.dz-dropdown-trigger:disabled {
+background: #f1f1f1;
+color: #aaa;
+cursor: not-allowed;
+}
+
+.dz-dropdown-menu {
+position: absolute;
+top: calc(100% + 8px);
+left: 0;
+right: 0;
+z-index: 100;
+overflow: hidden;
+border: 1px solid #e1e1e1;
+border-radius: 12px;
+background: white;
+box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+animation: dzDropdownOpen 0.15s ease;
+}
+
+@keyframes dzDropdownOpen {
+from {
+opacity: 0;
+transform: translateY(-5px);
+}
+
+to {
+opacity: 1;
+transform: translateY(0);
+}
+}
+
+.dz-dropdown-search {
+display: flex;
+align-items: center;
+gap: 10px;
+height: 46px;
+padding: 0 13px;
+border-bottom: 1px solid #eeeeee;
+background: white;
+}
+
+.dz-dropdown-search svg {
+flex-shrink: 0;
+color: #999;
+font-size: 12px;
+}
+
+.dz-dropdown-search input {
+width: 100%;
+height: 100%;
+padding: 0;
+border: none;
+outline: none;
+background: transparent;
+color: #222;
+font-family: inherit;
+font-size: 13px;
+}
+
+.dz-dropdown-search input::placeholder {
+color: #999;
+}
+
+.dz-dropdown-list {
+max-height: 245px;
+overflow-y: auto;
+padding: 6px;
+}
+
+.dz-dropdown-list::-webkit-scrollbar {
+width: 5px;
+}
+
+.dz-dropdown-list::-webkit-scrollbar-track {
+background: transparent;
+}
+
+.dz-dropdown-list::-webkit-scrollbar-thumb {
+border-radius: 10px;
+background: #d5d5d5;
+}
+
+.dz-dropdown-option {
+display: flex;
+align-items: center;
+justify-content: space-between;
+width: 100%;
+min-height: 40px;
+padding: 9px 11px;
+border: none;
+border-radius: 7px;
+background: transparent;
+color: #333;
+font-family: inherit;
+font-size: 13px;
+text-align: left;
+cursor: pointer;
+transition: 0.15s ease;
+}
+
+.dz-dropdown-option:hover {
+background: #f7f7f7;
+color: #e3262e;
+}
+
+.dz-dropdown-option.selected {
+background: #fff1f1;
+color: #e3262e;
+font-weight: 700;
+}
+
+.dz-dropdown-option small {
+color: #999;
+font-size: 10px;
+font-weight: 600;
+}
+
+.dz-dropdown-option.selected small {
+color: #e3262e;
+}
+
+.dz-dropdown-empty {
+padding: 20px 12px;
+color: #999;
+font-size: 12px;
+text-align: center;
+}
+
+.dz-address-field {
+margin-top: 20px;
+}
+
+.dz-delivery-title {
+margin-top: 38px;
+}
+
+.dz-delivery-options {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 14px;
+}
+
+.dz-delivery-option {
+display: flex;
+align-items: center;
+gap: 13px;
+min-height: 72px;
+padding: 14px;
+border: 1px solid #ddd;
+border-radius: 10px;
+background: #fafafa;
+color: #333;
+text-align: left;
+cursor: pointer;
+transition: 0.2s ease;
+}
+
+.dz-delivery-option:hover {
+border-color: #bbb;
+background: #f5f5f5;
+}
+
+.dz-delivery-option.active {
+border-color: #e3262e;
+background: #fff4f4;
+color: #e3262e;
+}
+
+.dz-delivery-option strong {
+display: flex;
+align-items: center;
+justify-content: center;
+width: 38px;
+height: 38px;
+flex-shrink: 0;
+border-radius: 9px;
+background: white;
+color: #e3262e;
+font-size: 15px;
+}
+
+.dz-delivery-option span {
+display: flex;
+flex-direction: column;
+gap: 4px;
+font-size: 11px;
+line-height: 1.4;
+color: #777;
+}
+
+.dz-delivery-option span b {
+color: #222;
+font-size: 13px;
+}
+
+.dz-delivery-option.active span b {
+color: #e3262e;
+}
+
+.dz-confirm-order-btn {
+display: block;
+width: 100%;
+min-height: 54px;
+margin-top: 30px;
+padding: 15px 24px;
+border: none;
+border-radius: 10px;
+background: #e3262e;
+color: white;
+font-size: 14px;
+font-weight: 700;
+line-height: 1.4;
+cursor: pointer;
+transition: 0.2s ease;
+}
+
+.dz-confirm-order-btn:hover:not(:disabled) {
+background: #c91e25;
+transform: translateY(-1px);
+box-shadow: 0 7px 18px rgba(227, 38, 46, 0.2);
+}
+
+.dz-confirm-order-btn:disabled {
+background: #d5d5d5;
+color: #999;
+cursor: not-allowed;
+}
+
+.dz-checkout-summary {
+position: sticky;
+top: 25px;
+width: 100%;
+}
+
+.dz-checkout-summary-card {
+padding: 28px;
+background: white;
+border: 1px solid #e5e5e5;
+border-radius: 16px;
+box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+}
+
+.dz-checkout-summary-card h2 {
+margin: 0 0 25px;
+font-size: 21px;
+font-weight: 800;
+}
+
+.dz-checkout-items {
+display: flex;
+flex-direction: column;
+gap: 16px;
+}
+
+.dz-checkout-item {
+display: grid;
+grid-template-columns: 65px minmax(0, 1fr) auto;
+align-items: center;
+gap: 14px;
+min-height: 65px;
+}
+
+.dz-checkout-item img {
+width: 65px;
+height: 65px;
+object-fit: cover;
+border: 1px solid #eee;
+border-radius: 10px;
+background: #eee;
+}
+
+.dz-checkout-item h3 {
+margin: 0 0 6px;
+font-size: 13px;
+font-weight: 700;
+line-height: 1.45;
+word-break: break-word;
+}
+
+.dz-checkout-item span {
+color: #888;
+font-size: 11px;
+line-height: 1.5;
+}
+
+.dz-checkout-item strong {
+min-width: 80px;
+color: #222;
+text-align: right;
+white-space: nowrap;
+font-size: 12px;
+line-height: 1.5;
+}
+
+.dz-checkout-total {
+display: flex;
+align-items: center;
+justify-content: space-between;
+margin-top: 23px;
+padding-top: 21px;
+border-top: 1px solid #e5e5e5;
+font-size: 16px;
+font-weight: 700;
+}
+
+.dz-checkout-total strong {
+color: #e3262e;
+font-size: 21px;
+}
+
+.dz-secure-checkout {
+display: flex;
+align-items: center;
+gap: 10px;
+margin-top: 20px;
+padding: 13px;
+border-radius: 9px;
+background: #f7f7f7;
+color: #555;
+font-size: 12px;
+line-height: 1.5;
+}
+
+.dz-secure-checkout svg {
+flex-shrink: 0;
+color: #e3262e;
+}
+
+@media (max-width: 900px) {
+.dz-checkout-page {
+padding: 30px 20px;
+}
+
+.dz-checkout-layout {
+grid-template-columns: 1fr;
+}
+
+.dz-checkout-summary {
+position: static;
+}
+}
+
+@media (max-width: 650px) {
+.dz-checkout-page {
+padding: 25px 15px;
+}
+
+.dz-checkout-header h1 {
+font-size: 30px;
+}
+
+.dz-checkout-card {
+padding: 22px;
+}
+
+.dz-checkout-fields {
+grid-template-columns: 1fr;
+gap: 18px;
+}
+
+.dz-delivery-options {
+grid-template-columns: 1fr;
+}
+
+.dz-checkout-summary-card {
+padding: 22px;
+}
+
+.dz-checkout-item {
+grid-template-columns: 55px minmax(0, 1fr);
+gap: 12px;
+}
+
+.dz-checkout-item img {
+width: 55px;
+height: 55px;
+}
+
+.dz-checkout-item strong {
+grid-column: 2;
+min-width: 0;
+text-align: left;
+}
+
+.dz-confirm-order-btn {
+margin-top: 25px;
+}
+
+.dz-dropdown-menu {
+max-height: 300px;
+}
+}
+
+
+===== C:\Users\MEI\Desktop\react-04\dzshop\src\CheckoutPage.jsx =====
+import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { useCart } from './CartContext'
+import { apiFetch, lireJson } from './api'
+import { FaArrowLeft, FaLock, FaTruck, FaChevronDown, FaSearch } from 'react-icons/fa'
+import wilayas from './data/wilaya-commune.json'
+import './CheckoutPage.css'
+
+function CheckoutPage() {
+  const { cartItems, total, clearCart } = useCart()
+  const navigate = useNavigate()
+
+  const [form, setForm] = useState({
+    nom: '',
+    telephone: '',
+    wilaya: '',
+    commune: '',
+    adresse: '',
+    livraison: 'domicile'
+  })
+
+  const [chargement, setChargement] = useState(false)
+  const [wilayaOuverte, setWilayaOuverte] = useState(false)
+  const [rechercheWilaya, setRechercheWilaya] = useState('')
+  const [rechercheCommune, setRechercheCommune] = useState('')
+  const [communeOuverte, setCommuneOuverte] = useState(false)
+
+  function normaliserTexte(texte) {
+    return texte
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+  }
+
+  const wilayasFiltrees = wilayas.filter(function (wilaya) {
+    const nom = wilaya.ascii || ''
+
+    return normaliserTexte(nom).includes(
+      normaliserTexte(rechercheWilaya)
+    )
+  })
+
+  const wilayaSelectionnee = wilayas.find(function (wilaya) {
+    return wilaya.ascii === form.wilaya
+  })
+
+  const communes = wilayaSelectionnee
+    ? wilayaSelectionnee.communes
+    : []
+
+  const communesFiltrees = communes
+    .filter(function (commune) {
+      const nom = commune.ascii || ''
+
+      return normaliserTexte(nom).includes(
+        normaliserTexte(rechercheCommune)
+      )
+    })
+    .slice(0, 8)
+
+  function handleChange(event) {
+    const { name, value } = event.target
+
+    setForm(function (previous) {
+      return {
+        ...previous,
+        [name]: value
+      }
+    })
+  }
+
+  function choisirWilaya(wilaya) {
+    setForm(function (previous) {
+      return {
+        ...previous,
+        wilaya: wilaya.ascii,
+        commune: ''
+      }
+    })
+
+    setRechercheWilaya('')
+    setRechercheCommune('')
+    setWilayaOuverte(false)
+    setCommuneOuverte(false)
+  }
+
+  function choisirCommune(commune) {
+    setForm(function (previous) {
+      return {
+        ...previous,
+        commune: commune.ascii
+      }
+    })
+
+    setRechercheCommune(commune.ascii)
+    setCommuneOuverte(false)
+  }
+
+  async function handleSubmit(event) {
+    event.preventDefault()
+
+    if (cartItems.length === 0) {
+      return
+    }
+
+    setChargement(true)
+
+    try {
+      // On envoie SEULEMENT quel produit et combien : le SERVEUR retrouve les
+      // vrais prix dans la base et calcule le total. Jamais le prix ni le total :
+      // ils seraient modifiables depuis les outils du navigateur (F12).
+      const produits = cartItems.map(function (item) {
+        return {
+          productId: item._id,
+          quantity: item.quantity,
+          taille: item.taille || ''
+        }
+      })
+
+      const reponse = await apiFetch('/api/orders', {
+        method: 'POST',
+        body: JSON.stringify({
+          ...form,
+          produits
+        })
+      })
+
+      await lireJson(reponse)
+
+      clearCart()
+      navigate('/panier')
+    } catch (error) {
+      alert(error.message)
+    } finally {
+      setChargement(false)
+    }
+  }
+
+  return (
+    <div className="dz-checkout-page">
+
+      <div className="dz-checkout-header">
+
+        <Link to="/panier" className="dz-back-link">
+          <FaArrowLeft />
+          Retour au panier
+        </Link>
+
+        <div>
+          <span className="dz-checkout-label">DZSHOP</span>
+          <h1>Finaliser la commande</h1>
+          <p>Complétez vos informations de livraison</p>
+        </div>
+
+      </div>
+
+      <div className="dz-checkout-layout">
+
+        <div className="dz-checkout-form">
+
+          <form
+            className="dz-checkout-card"
+            onSubmit={handleSubmit}
+          >
+
+            <div className="dz-section-title">
+              <div>
+                <span>01</span>
+                <h2>Informations de livraison</h2>
+              </div>
+            </div>
+
+            <div className="dz-checkout-fields">
+
+              <div className="dz-field">
+                <label>Nom complet</label>
+                <input
+                  type="text"
+                  name="nom"
+                  value={form.nom}
+                  onChange={handleChange}
+                  placeholder="Votre nom complet"
+                  required
+                />
+              </div>
+
+              <div className="dz-field">
+                <label>Numéro de téléphone</label>
+                <input
+                  type="tel"
+                  name="telephone"
+                  value={form.telephone}
+                  onChange={handleChange}
+                  placeholder="05 XX XX XX XX"
+                  required
+                />
+              </div>
+
+              <div className="dz-field dz-dropdown-field">
+                <label>Wilaya</label>
+
+                <div className="dz-custom-dropdown">
+
+                  <button
+                    type="button"
+                    className={
+                      wilayaOuverte
+                        ? 'dz-dropdown-trigger active'
+                        : 'dz-dropdown-trigger'
+                    }
+                    onClick={function () {
+                      setWilayaOuverte(!wilayaOuverte)
+                      setCommuneOuverte(false)
+                    }}
+                  >
+                    <span>
+                      {form.wilaya || 'Choose a wilaya'}
+                    </span>
+
+                    <FaChevronDown />
+                  </button>
+
+                  {wilayaOuverte && (
+                    <div className="dz-dropdown-menu">
+
+                      <div className="dz-dropdown-search">
+                        <FaSearch />
+
+                        <input
+                          type="text"
+                          value={rechercheWilaya}
+                          onChange={function (event) {
+                            setRechercheWilaya(event.target.value)
+                          }}
+                          placeholder="Search wilaya..."
+                          autoFocus
+                        />
+                      </div>
+
+                      <div className="dz-dropdown-list">
+
+                        {wilayasFiltrees.length > 0 ? (
+                          wilayasFiltrees.map(function (wilaya) {
+                            return (
+                              <button
+                                type="button"
+                                key={wilaya.code}
+                                className={
+                                  form.wilaya === wilaya.ascii
+                                    ? 'dz-dropdown-option selected'
+                                    : 'dz-dropdown-option'
+                                }
+                                onClick={function () {
+                                  choisirWilaya(wilaya)
+                                }}
+                              >
+                                <span>{wilaya.ascii}</span>
+
+                                <small>
+                                  {String(wilaya.code).padStart(2, '0')}
+                                </small>
+                              </button>
+                            )
+                          })
+                        ) : (
+                          <div className="dz-dropdown-empty">
+                            No wilaya found
+                          </div>
+                        )}
+
+                      </div>
+
+                    </div>
+                  )}
+
+                </div>
+
+              </div>
+
+              <div className="dz-field dz-dropdown-field">
+                <label>Commune</label>
+
+                <div className="dz-custom-dropdown">
+
+                  <button
+                    type="button"
+                    disabled={!form.wilaya}
+                    className={
+                      communeOuverte
+                        ? 'dz-dropdown-trigger active'
+                        : 'dz-dropdown-trigger'
+                    }
+                    onClick={function () {
+                      if (!form.wilaya) {
+                        return
+                      }
+
+                      setCommuneOuverte(!communeOuverte)
+                      setWilayaOuverte(false)
+                    }}
+                  >
+                    <span>
+                      {form.commune || (
+                        form.wilaya
+                          ? 'Choose a commune'
+                          : 'Choose a wilaya first'
+                      )}
+                    </span>
+
+                    <FaChevronDown />
+                  </button>
+
+                  {communeOuverte && (
+                    <div className="dz-dropdown-menu">
+
+                      <div className="dz-dropdown-search">
+                        <FaSearch />
+
+                        <input
+                          type="text"
+                          value={rechercheCommune}
+                          onChange={function (event) {
+                            setRechercheCommune(event.target.value)
+                          }}
+                          placeholder="Search commune..."
+                          autoFocus
+                        />
+                      </div>
+
+                      <div className="dz-dropdown-list">
+
+                        {communesFiltrees.length > 0 ? (
+                          communesFiltrees.map(function (commune) {
+                            return (
+                              <button
+                                type="button"
+                                key={commune.code || commune.ascii}
+                                className={
+                                  form.commune === commune.ascii
+                                    ? 'dz-dropdown-option selected'
+                                    : 'dz-dropdown-option'
+                                }
+                                onClick={function () {
+                                  choisirCommune(commune)
+                                }}
+                              >
+                                <span>{commune.ascii}</span>
+                              </button>
+                            )
+                          })
+                        ) : (
+                          <div className="dz-dropdown-empty">
+                            No commune found
+                          </div>
+                        )}
+
+                      </div>
+
+                    </div>
+                  )}
+
+                </div>
+
+              </div>
+
+            </div>
+
+            <div className="dz-field dz-address-field">
+              <label>Adresse</label>
+
+              <textarea
+                name="adresse"
+                value={form.adresse}
+                onChange={handleChange}
+                placeholder="Votre adresse complète"
+                required
+              />
+            </div>
+
+            <div className="dz-section-title dz-delivery-title">
+              <div>
+                <span>02</span>
+                <h2>Mode de livraison</h2>
+              </div>
+            </div>
+
+            <div className="dz-delivery-options">
+
+              <button
+                type="button"
+                className={
+                  form.livraison === 'domicile'
+                    ? 'dz-delivery-option active'
+                    : 'dz-delivery-option'
+                }
+                onClick={function () {
+                  setForm(function (previous) {
+                    return {
+                      ...previous,
+                      livraison: 'domicile'
+                    }
+                  })
+                }}
+              >
+                <strong>
+                  <FaTruck />
+                </strong>
+
+                <span>
+                  <b>Livraison à domicile</b>
+                  Livraison rapide à votre adresse
+                </span>
+              </button>
+
+              <button
+                type="button"
+                className={
+                  form.livraison === 'bureau'
+                    ? 'dz-delivery-option active'
+                    : 'dz-delivery-option'
+                }
+                onClick={function () {
+                  setForm(function (previous) {
+                    return {
+                      ...previous,
+                      livraison: 'bureau'
+                    }
+                  })
+                }}
+              >
+                <strong>
+                  <FaTruck />
+                </strong>
+
+                <span>
+                  <b>Livraison au bureau</b>
+                  Retrait auprès du transporteur
+                </span>
+              </button>
+
+            </div>
+
+            <button
+              type="submit"
+              className="dz-confirm-order-btn"
+              disabled={chargement || cartItems.length === 0}
+            >
+              {chargement
+                ? 'Création de la commande...'
+                : 'Confirmer la commande'}
+            </button>
+
+          </form>
+
+        </div>
+
+        <div className="dz-checkout-summary">
+
+          <div className="dz-checkout-summary-card">
+
+            <h2>Votre commande</h2>
+
+            <div className="dz-checkout-items">
+
+              {cartItems.map(function (item) {
+                return (
+                  <div
+                    key={item._id + '-' + item.taille}
+                    className="dz-checkout-item"
+                  >
+
+                    <img
+                      src={item.image || null}
+                      alt={item.nom}
+                    />
+
+                    <div>
+                      <h3>{item.nom}</h3>
+
+                      <span>
+                        Quantité : {item.quantity}
+                      </span>
+
+                      {item.taille && (
+                        <span>
+                          {item.categorie === 'Chaussures'
+                            ? 'Pointure'
+                            : 'Taille'} : {item.taille}
+                        </span>
+                      )}
+                    </div>
+
+                    <strong>
+                      {(item.prix * item.quantity).toLocaleString('fr-FR')} DA
+                    </strong>
+
+                  </div>
+                )
+              })}
+
+            </div>
+
+            <div className="dz-checkout-total">
+              <span>Total</span>
+
+              <strong>
+                {total.toLocaleString('fr-FR')} DA
+              </strong>
+            </div>
+
+            <div className="dz-secure-checkout">
+              <FaLock />
+              <span>Paiement à la livraison</span>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  )
+}
+
+export default CheckoutPage ; 
+
+===== C:\Users\MEI\Desktop\react-04\dzshop\src\ContactPage.jsx =====
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
+
+function ContactPage() {
+  return (
+    <div className="bg-light min-vh-100 py-5">
+      <Container>
+
+        {/* Header */}
+        <div className="text-center mb-5">
+          <p className="text-muted mb-2">DZSHOP</p>
+
+          <h1 className="fw-bold display-5 mb-3">
+            Contactez-nous
+          </h1>
+
+          <p className="text-muted mx-auto" style={{ maxWidth: "600px" }}>
+            Une question, une commande ou besoin d'aide ?
+            Contactez-nous directement sur votre plateforme préférée.
+          </p>
+        </div>
+
+        <Row className="g-4 align-items-stretch">
+
+          {/* LEFT SIDE */}
+          <Col lg={5}>
+            <div
+              className="bg-dark text-white rounded-4 p-4 p-md-5 h-100 shadow"
+            >
+              <p className="text-white-50 mb-2">
+                BESOIN D'AIDE ?
+              </p>
+
+              <h2 className="fw-bold mb-4">
+                Parlons ensemble.
+              </h2>
+
+              <p className="text-white-50 mb-5">
+                Nous sommes disponibles pour répondre à vos questions
+                concernant les produits, les commandes et la livraison.
+              </p>
+
+              {/* WhatsApp */}
+              <a
+                href="https://wa.me/213562997237"
+                target="_blank"
+                rel="noreferrer"
+                className="text-decoration-none"
+              >
+                <div
+                  className="bg-white text-dark rounded-4 p-3 mb-4 d-flex align-items-center"
+                  style={{ transition: "0.2s" }}
+                >
+                  <div
+                    className="rounded-circle d-flex align-items-center justify-content-center me-3"
+                    style={{
+                      width: "52px",
+                      height: "52px",
+                      backgroundColor: "#25D366",
+                      color: "white",
+                      fontSize: "24px"
+                    }}
+                  >
+                    W
+                  </div>
+
+                  <div>
+                    <div className="fw-bold">WhatsApp</div>
+                    <small className="text-muted">
+                      Chattez avec nous directement
+                    </small>
+                  </div>
+
+                  <div className="ms-auto fs-4">
+                    →
+                  </div>
+                </div>
+              </a>
+
+              {/* Socials */}
+              <div className="row g-3">
+
+                {/* Instagram */}
+                <div className="col-6">
+                  <a
+                    href="#"
+                    className="text-decoration-none text-white"
+                  >
+                    <div className="border border-secondary rounded-4 p-3 h-100">
+                      <div className="fs-3 mb-2">◎</div>
+                      <div className="fw-semibold">Instagram</div>
+                      <small className="text-white-50">
+                        @dzshop
+                      </small>
+                    </div>
+                  </a>
+                </div>
+
+                {/* Facebook */}
+                <div className="col-6">
+                  <a
+                    href="#"
+                    className="text-decoration-none text-white"
+                  >
+                    <div className="border border-secondary rounded-4 p-3 h-100">
+                      <div className="fs-3 mb-2">f</div>
+                      <div className="fw-semibold">Facebook</div>
+                      <small className="text-white-50">
+                        DZShop
+                      </small>
+                    </div>
+                  </a>
+                </div>
+
+                {/* TikTok */}
+                <div className="col-6">
+                  <a
+                    href="#"
+                    className="text-decoration-none text-white"
+                  >
+                    <div className="border border-secondary rounded-4 p-3 h-100">
+                      <div className="fs-3 mb-2">♪</div>
+                      <div className="fw-semibold">TikTok</div>
+                      <small className="text-white-50">
+                        @dzshop
+                      </small>
+                    </div>
+                  </a>
+                </div>
+
+                {/* Telegram */}
+                <div className="col-6">
+                  <a
+                    href="#"
+                    className="text-decoration-none text-white"
+                  >
+                    <div className="border border-secondary rounded-4 p-3 h-100">
+                      <div className="fs-3 mb-2">➤</div>
+                      <div className="fw-semibold">Telegram</div>
+                      <small className="text-white-50">
+                        DZShop
+                      </small>
+                    </div>
+                  </a>
+                </div>
+
+              </div>
+            </div>
+          </Col>
+
+          {/* RIGHT SIDE */}
+          <Col lg={7}>
+            <div className="bg-white rounded-4 shadow-sm p-4 p-md-5 h-100">
+
+              <div className="mb-4">
+                <p className="text-muted mb-1">
+                  MESSAGE
+                </p>
+
+                <h2 className="fw-bold mb-2">
+                  Envoyez-nous un message
+                </h2>
+
+                <p className="text-muted">
+                  Remplissez le formulaire et nous vous répondrons
+                  dès que possible.
+                </p>
+              </div>
+
+              <Form>
+
+                <Row>
+                  <Col md={6}>
+                    <Form.Group className="mb-4">
+                      <Form.Label>Nom</Form.Label>
+
+                      <Form.Control
+                        type="text"
+                        placeholder="Votre nom"
+                        className="py-3"
+                      />
+                    </Form.Group>
+                  </Col>
+
+                  <Col md={6}>
+                    <Form.Group className="mb-4">
+                      <Form.Label>Email</Form.Label>
+
+                      <Form.Control
+                        type="email"
+                        placeholder="Votre email"
+                        className="py-3"
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+
+                <Form.Group className="mb-4">
+                  <Form.Label>Sujet</Form.Label>
+
+                  <Form.Control
+                    type="text"
+                    placeholder="De quoi souhaitez-vous parler ?"
+                    className="py-3"
+                  />
+                </Form.Group>
+
+                <Form.Group className="mb-4">
+                  <Form.Label>Message</Form.Label>
+
+                  <Form.Control
+                    as="textarea"
+                    rows={7}
+                    placeholder="Écrivez votre message..."
+                    className="py-3"
+                  />
+                </Form.Group>
+
+                <Button
+                  type="submit"
+                  variant="dark"
+                  className="w-100 py-3 fw-semibold"
+                >
+                  Envoyer le message →
+                </Button>
+
+              </Form>
+            </div>
+          </Col>
+
+        </Row>
+
+      </Container>
+    </div>
+  );
+}
+
+export default ContactPage;
+
+===== C:\Users\MEI\Desktop\react-04\dzshop\src\footer.css =====
+.dz-footer {
+  width: 100%;
+  margin-top: 70px;
+  background: #080f19;
+  color: #ffffff;
+  overflow: hidden;
+}
+
+.dz-footer-services {
+  width: 100%;
+  min-height: 98px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  background: #101b29;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.dz-footer-service {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  padding: 20px 30px;
+  border-right: 1px solid rgba(255,255,255,0.08);
+}
+
+.dz-footer-service:last-child {
+  border-right: none;
+}
+
+.dz-footer-service-icon {
+  width: 46px;
+  height: 46px;
+  min-width: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(239,68,68,0.11);
+  color: #ef4444;
+  font-size: 18px;
+}
+
+.dz-footer-service strong {
+  display: block;
+  margin-bottom: 5px;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.dz-footer-service span {
+  display: block;
+  color: #8491a3;
+  font-size: 11px;
+}
+
+.dz-footer-main {
+  width: 100%;
+  padding: 58px 6% 52px;
+  display: grid;
+  grid-template-columns: 1.55fr 1fr 1fr 1fr 1.2fr;
+  gap: 42px;
+  background: #080f19;
+}
+
+.dz-footer-brand {
+  min-width: 0;
+}
+
+.dz-footer-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.dz-footer-logo-box {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: #ef1f2f;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  box-shadow: 0 8px 22px rgba(239,31,47,0.2);
+}
+
+.dz-footer-logo-text {
+  color: #ffffff;
+  font-size: 27px;
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+
+.dz-footer-logo-text span {
+  color: #ef4444;
+}
+
+.dz-footer-description {
+  max-width: 310px;
+  margin: 0 0 23px;
+  color: #8995a6;
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+.dz-footer-socials {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dz-footer-socials a {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #263444;
+  border-radius: 50%;
+  background: #111c2a;
+  color: #b8c1cc;
+  font-size: 14px;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.dz-footer-socials a:hover {
+  background: rgba(239,68,68,0.12);
+  transform: translateY(-3px);
+}
+
+.dz-footer-column {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.dz-footer-column h3 {
+  margin: 0 0 22px;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.dz-footer-column h3::after {
+  content: "";
+  display: block;
+  width: 27px;
+  height: 2px;
+  margin-top: 9px;
+  border-radius: 2px;
+  background: #ef1f2f;
+}
+
+.dz-footer-column > a {
+  margin-bottom: 13px;
+  color: #8491a3;
+  font-size: 11.5px;
+  line-height: 1.5;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.dz-footer-column > a:hover {
+  color: #ffffff;
+  transform: translateX(4px);
+}
+
+.dz-footer-contact {
+  padding-left: 4px;
+}
+
+.dz-footer-contact h3 {
+  font-size: 15px;
+}
+
+.dz-contact-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 17px;
+  color: #8491a3;
+  font-size: 11.5px;
+}
+
+.dz-contact-item svg {
+  min-width: 15px;
+  color: #ef1f2f;
+  font-size: 14px;
+}
+
+.dz-contact-item a {
+  color: #8491a3;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.dz-contact-item a:hover {
+  color: #ffffff;
+}
+
+.dz-contact-note {
+  margin-top: 1px;
+  color: #596779;
+  font-size: 10px;
+}
+
+.dz-footer-payment {
+  width: 100%;
+  min-height: 82px;
+  padding: 18px 6%;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #101a27;
+  border-top: 1px solid rgba(255,255,255,0.07);
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+
+.dz-payment-title {
+  margin-right: 7px;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.dz-payment-method {
+  min-height: 40px;
+  padding: 0 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #283647;
+  border-radius: 7px;
+  background: #0a121d;
+  color: #8d99a9;
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.dz-payment-method svg {
+  color: #d5dbe2;
+  font-size: 20px;
+}
+
+.dz-payment-method:first-of-type svg {
+  color: #ef4444;
+}
+
+.dz-delivery-note {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #8491a3;
+  font-size: 10.5px;
+  white-space: nowrap;
+}
+
+.dz-delivery-note svg {
+  color: #ef1f2f;
+  font-size: 15px;
+}
+
+.dz-footer-bottom {
+  width: 100%;
+  min-height: 66px;
+  padding: 0 6%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 25px;
+  background: #050a10;
+}
+
+.dz-footer-bottom p {
+  margin: 0;
+  color: #596779;
+  font-size: 10px;
+}
+
+.dz-footer-bottom-links {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.dz-footer-bottom-links a {
+  color: #596779;
+  font-size: 10px;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.dz-footer-bottom-links a:hover {
+  color: #ef4444;
+}
+
+.dz-footer-country {
+  color: #596779;
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+@media (max-width: 1150px) {
+  .dz-footer-main {
+    grid-template-columns: 1.4fr 1fr 1fr 1fr;
+    gap: 32px;
+  }
+
+  .dz-footer-contact {
+    grid-column: span 2;
+    padding-left: 0;
+  }
+
+  .dz-delivery-note {
+    display: none;
+  }
+}
+
+@media (max-width: 850px) {
+  .dz-footer-services {
+    grid-template-columns: 1fr;
+  }
+
+  .dz-footer-service {
+    justify-content: flex-start;
+    border-right: none;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .dz-footer-service:last-child {
+    border-bottom: none;
+  }
+
+  .dz-footer-main {
+    grid-template-columns: 1fr 1fr;
+    padding: 45px 7%;
+    gap: 40px 30px;
+  }
+
+  .dz-footer-brand {
+    grid-column: span 2;
+  }
+
+  .dz-footer-contact {
+    grid-column: span 2;
+  }
+
+  .dz-footer-payment {
+    padding: 20px 7%;
+    flex-wrap: wrap;
+  }
+
+  .dz-payment-title {
+    width: 100%;
+  }
+
+  .dz-footer-bottom {
+    min-height: auto;
+    padding: 20px 7%;
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+  }
+}
+
+@media (max-width: 500px) {
+  .dz-footer-main {
+    grid-template-columns: 1fr;
+  }
+
+  .dz-footer-brand,
+  .dz-footer-contact {
+    grid-column: span 1;
+  }
+
+  .dz-footer-service {
+    padding: 18px 7%;
+  }
+
+  .dz-footer-payment {
+    padding: 20px 7%;
+  }
+
+  .dz-payment-method {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .dz-footer-bottom {
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .dz-footer-bottom-links {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px 18px;
+  }
+}
+
+===== C:\Users\MEI\Desktop\react-04\dzshop\src\footer.jsx =====
+import { Link } from 'react-router-dom'
+import {
+  FaFacebookF,
+  FaInstagram,
+  FaTiktok,
+  FaMapMarkerAlt,
+  FaPhone,
+  FaEnvelope,
+  FaTruck,
+  FaShieldAlt,
+  FaHeadset,
+  FaCcVisa,
+  FaCcMastercard,
+  FaMoneyBillWave
+} from 'react-icons/fa'
+import './Footer.css'
+
+function Footer() {
+  return (
+    <footer className="dz-footer">
+
+      <div className="dz-footer-services">
+
+        <div className="dz-footer-service">
+          <div className="dz-footer-service-icon">
+            <FaTruck />
+          </div>
+          <div>
+            <strong>Fast Delivery</strong>
+            <span>Throughout Algeria</span>
+          </div>
+        </div>
+
+        <div className="dz-footer-service">
+          <div className="dz-footer-service-icon">
+            <FaShieldAlt />
+          </div>
+          <div>
+            <strong>Secure Payment</strong>
+            <span>Buy with confidence</span>
+          </div>
+        </div>
+
+        <div className="dz-footer-service">
+          <div className="dz-footer-service-icon">
+            <FaHeadset />
+          </div>
+          <div>
+            <strong>Customer Service</strong>
+            <span>A team ready to help you</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div className="dz-footer-main">
+
+        <div className="dz-footer-brand">
+
+          <Link to="/" className="dz-footer-logo">
+            <span className="dz-footer-logo-box">DZ</span>
+            <span className="dz-footer-logo-text">
+              DZ<span>Shop</span>
+            </span>
+          </Link>
+
+          <p className="dz-footer-description">
+            Your trusted online shopping destination in Algeria.
+            Quality products, great prices and a simple shopping experience.
+          </p>
+
+          <div className="dz-footer-socials">
+            <a href="#" aria-label="Facebook">
+              <FaFacebookF />
+            </a>
+            <a href="#" aria-label="Instagram">
+              <FaInstagram />
+            </a>
+            <a href="#" aria-label="TikTok">
+              <FaTiktok />
+            </a>
+          </div>
+
+        </div>
+
+        <div className="dz-footer-column">
+          <h3>Shop</h3>
+          <Link to="/">Home</Link>
+          <Link to="/produits">All Products</Link>
+          <Link to="/categories">Categories</Link>
+          <Link to="/produits">New Arrivals</Link>
+          <Link to="/produits">Special Offers</Link>
+          <Link to="/panier">Shopping Cart</Link>
+        </div>
+
+        <div className="dz-footer-column">
+          <h3>Customer Service</h3>
+          <Link to="/contact">Help Center</Link>
+          <Link to="/contact">Delivery Information</Link>
+          <Link to="/contact">Payment Methods</Link>
+          <Link to="/contact">Returns & Refunds</Link>
+          <Link to="/contact">Contact Us</Link>
+          <Link to="/contact">FAQ</Link>
+        </div>
+
+        <div className="dz-footer-column">
+          <h3>My Account</h3>
+          <Link to="/signup">Create an Account</Link>
+          <Link to="/panier">My Basket</Link>
+          <Link to="/produits">My Products</Link>
+          <Link to="/contact">Assistance</Link>
+          <Link to="/contact">FAQ</Link>
+        </div>
+
+        <div className="dz-footer-column dz-footer-contact">
+          <h3>Contact Us</h3>
+
+          <div className="dz-contact-item">
+            <FaMapMarkerAlt />
+            <span>Algeria</span>
+          </div>
+
+          <div className="dz-contact-item">
+            <FaPhone />
+            <a href="tel:0562997237">0562 99 72 37</a>
+          </div>
+
+          <div className="dz-contact-item">
+            <FaEnvelope />
+            <a href="mailto:dzshop@gmail.com">dzshop@gmail.com</a>
+          </div>
+
+          <span className="dz-contact-note">
+            Available every day to help you
+          </span>
+        </div>
+
+      </div>
+
+      <div className="dz-footer-payment">
+
+        <div className="dz-payment-title">
+          Payment methods
+        </div>
+
+        <div className="dz-payment-method">
+          <FaMoneyBillWave />
+          <span>Cash on delivery</span>
+        </div>
+
+        <div className="dz-payment-method">
+          <FaCcVisa />
+          <span>Visa</span>
+        </div>
+
+        <div className="dz-payment-method">
+          <FaCcMastercard />
+          <span>MasterCard</span>
+        </div>
+
+        <div className="dz-delivery-note">
+          <FaTruck />
+          <span>Delivery to all 69 wilayas</span>
+        </div>
+
+      </div>
+
+      <div className="dz-footer-bottom">
+
+        <p>
+          © {new Date().getFullYear()} DZShop. All rights reserved.
+        </p>
+
+        <div className="dz-footer-bottom-links">
+          <a href="#">Terms of Use</a>
+          <a href="#">Privacy Policy</a>
+          <a href="#">Cookies</a>
+        </div>
+
+        <span className="dz-footer-country">
+          🇩🇿 Algeria
+        </span>
+
+      </div>
+
+    </footer>
+  )
+}
+
+export default Footer ;
+
+===== C:\Users\MEI\Desktop\react-04\dzshop\src\GoogleSignInButton.jsx =====
+import { useEffect, useRef } from 'react'
+
+const ADRESSE_SCRIPT = 'https://accounts.google.com/gsi/client'
+
+function GoogleSignInButton(props) {
+  const conteneur = useRef(null)
+  const dernierCallback = useRef(props.onCredential)
+  const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID
+
+  dernierCallback.current = props.onCredential
+
+  useEffect(
+    function () {
+      if (!clientId) return
+
+      function afficherLeBouton() {
+        if (!window.google || !conteneur.current) return
+
+        window.google.accounts.id.initialize({
+          client_id: clientId,
+          callback: function (reponse) {
+            dernierCallback.current(reponse.credential)
+          },
+        })
+
+        window.google.accounts.id.renderButton(conteneur.current, {
+          theme: 'outline',
+          size: 'large',
+          text: 'continue_with',
+          width: 320,
+        })
+      }
+
+      if (window.google) {
+        afficherLeBouton()
+        return
+      }
+
+      let script = document.querySelector('script[src="' + ADRESSE_SCRIPT + '"]')
+
+      if (!script) {
+        script = document.createElement('script')
+        script.src = ADRESSE_SCRIPT
+        script.async = true
+        document.head.appendChild(script)
+      }
+
+      script.addEventListener('load', afficherLeBouton)
+
+      return function () {
+        script.removeEventListener('load', afficherLeBouton)
+      }
+    },
+    [clientId]
+  )
+
+  if (!clientId) {
+    return null
+  }
+
+  return <div ref={conteneur} className="d-flex justify-content-center"></div>
+}
+
+export default GoogleSignInButton ;
+
+===== C:\Users\MEI\Desktop\react-04\dzshop\src\index.css =====
+html,
+body {
+  overflow-x: hidden;
+}
+
+===== C:\Users\MEI\Desktop\react-04\dzshop\src\LandingPage.css =====
+.dz-hero {
+  background: #f8fafc;
+  min-height: 650px;
+}
+
+.dz-collection-badge {
+  display: inline-block;
+  padding: 9px 16px;
+  margin-bottom: 20px;
+  border-radius: 50px;
+  background: #fdecec;
+  color: #c62828;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.dz-hero-title {
+  max-width: 650px;
+  color: #0b1624;
+  font-size: clamp(2.7rem, 5vw, 4.4rem);
+  font-weight: 800;
+  line-height: 1.03;
+  letter-spacing: -2px;
+  margin-bottom: 25px;
+}
+
+.dz-hero-title span {
+  color: #c62828;
+}
+
+.dz-hero-text {
+  max-width: 590px;
+  color: #64748b;
+  font-size: 1.15rem;
+  line-height: 1.7;
+  margin-bottom: 30px;
+}
+
+/* BUTTONS */
+
+.dz-main-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 25px;
+  border-radius: 50px;
+  background: #c62828;
+  color: white;
+  text-decoration: none;
+  font-weight: 700;
+  box-shadow: 0 8px 20px rgba(198, 40, 40, 0.2);
+  transition: 0.2s ease;
+}
+
+.dz-main-button:hover {
+  background: #a91f1f;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.dz-outline-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 25px;
+  border: 1.5px solid #182536;
+  border-radius: 50px;
+  color: #182536;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.2s ease;
+}
+
+.dz-outline-button:hover {
+  background: #182536;
+  color: white;
+}
+
+/* FEATURES */
+
+.dz-feature-card {
+  height: 100%;
+  padding: 18px;
+  background: white;
+  border: 1px solid #e8edf3;
+  border-radius: 18px;
+  box-shadow: 0 5px 20px rgba(15, 23, 42, 0.05);
+}
+
+.dz-feature-icon {
+  font-size: 1.7rem;
+  margin-bottom: 10px;
+}
+
+.dz-feature-card h6 {
+  color: #101c2b;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.dz-feature-card small {
+  color: #718096;
+  line-height: 1.5;
+}
+
+/* IMAGE */
+
+.dz-image-wrapper {
+  position: relative;
+}
+
+.dz-hero-image {
+  width: 100%;
+  height: 500px;
+  object-fit: cover;
+  border-radius: 30px;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.18);
+}
+
+.dz-delivery-badge {
+  position: absolute;
+  left: 25px;
+  bottom: 25px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  background: white;
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.15);
+}
+
+.dz-delivery-icon {
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  background: #fdecec;
+  font-size: 1.4rem;
+}
+
+.dz-delivery-badge strong {
+  display: block;
+  color: #162334;
+}
+
+.dz-delivery-badge small {
+  color: #64748b;
+}
+
+.dz-secure-badge {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 10px 16px;
+  background: #080f19;
+  color: white;
+  border-radius: 14px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+/* CATEGORIES */
+
+.dz-categories {
+  background: #080f19;
+  padding: 80px 0;
+}
+
+.dz-section-title {
+  color: white;
+  font-size: 2.3rem;
+  font-weight: 800;
+}
+
+.dz-section-text {
+  color: #8c9aaa;
+}
+
+/* CATEGORY CARDS */
+
+.dz-category-link {
+  text-decoration: none;
+}
+
+.dz-category-card {
+  position: relative;
+  min-height: 190px;
+  padding: 30px;
+  background: #0d1826;
+  border: 1px solid #1c2a3b;
+  border-radius: 20px;
+  transition: 0.25s ease;
+}
+
+.dz-category-card:hover {
+  transform: translateY(-6px);
+  border-color: #c62828;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+}
+
+.dz-category-emoji {
+  font-size: 3rem;
+  margin-bottom: 15px;
+}
+
+.dz-category-card h5 {
+  color: white;
+  font-weight: 700;
+  margin-bottom: 7px;
+}
+
+.dz-category-card p {
+  color: #8c9aaa;
+  margin: 0;
+}
+
+.dz-arrow {
+  position: absolute;
+  right: 22px;
+  bottom: 22px;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #c62828;
+  color: white;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+/* MOBILE */
+
+@media (max-width: 768px) {
+  .dz-hero {
+    padding-bottom: 40px;
+  }
+
+  .dz-hero-title {
+    font-size: 2.7rem;
+    letter-spacing: -1px;
+  }
+
+  .dz-hero-image {
+    height: 350px;
+  }
+
+  .dz-delivery-badge {
+    left: 15px;
+    bottom: 15px;
+  }
+
+  .dz-secure-badge {
+    top: 15px;
+    right: 15px;
+  }
+
+  .dz-categories {
+    padding: 60px 0;
+  }
+}
+
+===== C:\Users\MEI\Desktop\react-04\dzshop\src\LandingPage.jsx =====
+import { Link } from 'react-router-dom'
+import './LandingPage.css'
+
+function LandingPage() {
+  return (
+    <>
+      <section className="dz-hero">
+        <div className="container py-5">
+          <div className="row align-items-center g-5 py-lg-4">
+
+            <div className="col-lg-6">
+
+              <span className="dz-collection-badge">
+                ✨ Discover our collection
+              </span>
+
+              <h1 className="dz-hero-title">
+                Find what you need,
+                <span> simply.</span>
+              </h1>
+
+              <p className="dz-hero-text">
+                Discover our carefully selected products,
+                enjoy great prices and get your order delivered
+                directly to your home.
+              </p>
+
+              <div className="d-flex flex-wrap gap-3 mb-5">
+
+                <Link to="/produits" className="dz-main-button">
+                  🛍️ Our Products
+                </Link>
+
+                <Link to="/categories" className="dz-outline-button">
+                  View Categories
+                </Link>
+
+              </div>
+
+              <div className="row g-3">
+
+                <div className="col-md-4">
+                  <div className="dz-feature-card">
+                    <div className="dz-feature-icon">🚚</div>
+                    <h6>Delivery to 69 wilayas</h6>
+                    <small>
+                      Receive your order anywhere in Algeria.
+                    </small>
+                  </div>
+                </div>
+
+                <div className="col-md-4">
+                  <div className="dz-feature-card">
+                    <div className="dz-feature-icon">💵</div>
+                    <h6>Cash on delivery</h6>
+                    <small>
+                      Pay only when you receive your order.
+                    </small>
+                  </div>
+                </div>
+
+                <div className="col-md-4">
+                  <div className="dz-feature-card">
+                    <div className="dz-feature-icon">↩️</div>
+                    <h6>7-day returns</h6>
+                    <small>
+                      Return your order within 7 days.
+                    </small>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <div className="col-lg-6">
+
+              <div className="dz-image-wrapper">
+
+                <img
+                  src="https://images.unsplash.com/photo-1607082349566-187342175e2f?auto=format&fit=crop&w=1000&q=80"
+                  className="dz-hero-image"
+                  alt="Our products"
+                />
+
+                <div className="dz-delivery-badge">
+
+                  <div className="dz-delivery-icon">
+                    🚚
+                  </div>
+
+                  <div>
+                    <strong>Delivery everywhere</strong>
+                    <small>
+                      69 wilayas 🇩🇿
+                    </small>
+                  </div>
+
+                </div>
+
+                <div className="dz-secure-badge">
+                  ✓ Secure Shopping
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </section>
+    </>
+  )
+}
+
+export default LandingPage
+
+===== C:\Users\MEI\Desktop\react-04\dzshop\src\LoginPage.jsx =====
+import { useState } from 'react'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { FaEye, FaEyeSlash, FaArrowRight } from 'react-icons/fa'
+import { useAuth } from './AuthContext'
+import GoogleSignInButton from './GoogleSignInButton'
+
+function LoginPage() {
+  const { login, loginGoogle } = useAuth()
+  const navigate = useNavigate()
+  const location = useLocation()
+
+  const [telephone, setTelephone] = useState('')
+  const [motDePasse, setMotDePasse] = useState('')
+  const [erreur, setErreur] = useState('')
+  const [envoi, setEnvoi] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
+
+  const destination = (location.state && location.state.from) || '/'
+
+  async function handleSubmit(e) {
+    e.preventDefault()
+    setErreur('')
+    setEnvoi(true)
+
+    try {
+      await login(telephone, motDePasse)
+      navigate(destination, { replace: true })
+    } catch (err) {
+      setErreur(err.message)
+    }
+
+    setEnvoi(false)
+  }
+
+  async function connexionGoogle(credential) {
+    setErreur('')
+
+    try {
+      await loginGoogle(credential)
+      navigate(destination, { replace: true })
+    } catch (err) {
+      setErreur(err.message)
+    }
+  }
+
+  return (
+    <div
+      style={{
+        minHeight: 'calc(100vh - 70px)',
+        background: 'linear-gradient(135deg, #f8f8f8 0%, #ffffff 50%, #fff5f5 100%)',
+        padding: '60px 20px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}
+    >
+      <div
+        style={{
+          width: '100%',
+          maxWidth: '1050px',
+          minHeight: '610px',
+          background: '#ffffff',
+          borderRadius: '28px',
+          overflow: 'hidden',
+          boxShadow: '0 20px 60px rgba(0, 0, 0, 0.10)',
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr'
+        }}
+      >
+        <div
+          style={{
+            background: 'linear-gradient(145deg, #111111 0%, #1c1c1c 60%, #b40000 100%)',
+            color: '#ffffff',
+            padding: '55px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            position: 'relative',
+            overflow: 'hidden'
+          }}
+        >
+          <div
+            style={{
+              position: 'absolute',
+              width: '260px',
+              height: '260px',
+              borderRadius: '50%',
+              background: 'rgba(255, 0, 0, 0.12)',
+              top: '-80px',
+              right: '-80px'
+            }}
+          />
+
+          <div
+            style={{
+              position: 'absolute',
+              width: '180px',
+              height: '180px',
+              borderRadius: '50%',
+              background: 'rgba(255, 255, 255, 0.04)',
+              bottom: '-60px',
+              left: '-60px'
+            }}
+          />
+
+          <div style={{ position: 'relative', zIndex: 2 }}>
+            <div
+              style={{
+                fontSize: '15px',
+                fontWeight: '700',
+                letterSpacing: '3px',
+                color: '#ff3b3b',
+                marginBottom: '18px'
+              }}
+            >
+              DZSHOP
+            </div>
+
+            <h1
+              style={{
+                fontSize: '44px',
+                fontWeight: '800',
+                lineHeight: '1.1',
+                marginBottom: '20px'
+              }}
+            >
+              Welcome
+              <br />
+              Back.
+            </h1>
+
+            <p
+              style={{
+                color: '#d5d5d5',
+                fontSize: '16px',
+                lineHeight: '1.7',
+                maxWidth: '380px',
+                margin: 0
+              }}
+            >
+              Sign in to your account and continue shopping with DZShop.
+            </p>
+
+            <div
+              style={{
+                marginTop: '45px',
+                width: '55px',
+                height: '4px',
+                borderRadius: '10px',
+                background: '#e00000'
+              }}
+            />
+          </div>
+        </div>
+
+        <div
+          style={{
+            padding: '55px 60px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center'
+          }}
+        >
+          <div style={{ marginBottom: '32px' }}>
+            <h2
+              style={{
+                fontSize: '30px',
+                fontWeight: '800',
+                color: '#111111',
+                marginBottom: '8px'
+              }}
+            >
+              Sign In
+            </h2>
+
+            <p
+              style={{
+                color: '#777777',
+                margin: 0,
+                fontSize: '14px'
+              }}
+            >
+              Enter your details to access your account.
+            </p>
+          </div>
+
+          {erreur && (
+            <div
+              style={{
+                background: '#fff1f1',
+                border: '1px solid #ffcaca',
+                color: '#c00000',
+                borderRadius: '12px',
+                padding: '12px 15px',
+                marginBottom: '20px',
+                fontSize: '14px'
+              }}
+            >
+              {erreur}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit}>
+            <div style={{ marginBottom: '22px' }}>
+              <label
+                style={{
+                  display: 'block',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  color: '#222222',
+                  marginBottom: '8px'
+                }}
+              >
+                Phone number
+              </label>
+
+              <input
+                type="tel"
+                placeholder="Your number"
+                value={telephone}
+                onChange={(e) => setTelephone(e.target.value)}
+                required
+                style={{
+                  width: '100%',
+                  height: '52px',
+                  border: '1px solid #dddddd',
+                  borderRadius: '12px',
+                  padding: '0 16px',
+                  fontSize: '14px',
+                  outline: 'none',
+                  background: '#fafafa',
+                  boxSizing: 'border-box'
+                }}
+              />
+            </div>
+
+            <div style={{ marginBottom: '26px' }}>
+              <label
+                style={{
+                  display: 'block',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  color: '#222222',
+                  marginBottom: '8px'
+                }}
+              >
+                Password
+              </label>
+
+              <div style={{ position: 'relative' }}>
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="Your password"
+                  value={motDePasse}
+                  onChange={(e) => setMotDePasse(e.target.value)}
+                  required
+                  style={{
+                    width: '100%',
+                    height: '52px',
+                    border: '1px solid #dddddd',
+                    borderRadius: '12px',
+                    padding: '0 50px 0 16px',
+                    fontSize: '14px',
+                    outline: 'none',
+                    background: '#fafafa',
+                    boxSizing: 'border-box'
+                  }}
+                />
+
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{
+                    position: 'absolute',
+                    right: '10px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    width: '38px',
+                    height: '38px',
+                    border: 'none',
+                    background: 'transparent',
+                    color: '#777777',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </button>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={envoi}
+              style={{
+                width: '100%',
+                height: '52px',
+                border: 'none',
+                borderRadius: '12px',
+                background: '#111111',
+                color: '#ffffff',
+                fontSize: '15px',
+                fontWeight: '700',
+                cursor: envoi ? 'not-allowed' : 'pointer',
+                opacity: envoi ? 0.7 : 1,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '10px',
+                transition: '0.2s ease'
+              }}
+            >
+              {envoi ? 'Connexion...' : 'Sign In'}
+              {!envoi && <FaArrowRight size={13} />}
+            </button>
+
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '14px',
+                margin: '27px 0'
+              }}
+            >
+              <div
+                style={{
+                  flex: 1,
+                  height: '1px',
+                  background: '#e5e5e5'
+                }}
+              />
+
+              <span
+                style={{
+                  color: '#999999',
+                  fontSize: '12px',
+                  fontWeight: '700'
+                }}
+              >
+                OR
+              </span>
+
+              <div
+                style={{
+                  flex: 1,
+                  height: '1px',
+                  background: '#e5e5e5'
+                }}
+              />
+            </div>
+
+            <GoogleSignInButton onCredential={connexionGoogle} />
+
+            <p
+              style={{
+                textAlign: 'center',
+                marginTop: '25px',
+                marginBottom: 0,
+                color: '#777777',
+                fontSize: '14px'
+              }}
+            >
+              Don't have an account?{' '}
+              <Link
+                to="/signup"
+                style={{
+                  color: '#c00000',
+                  fontWeight: '700',
+                  textDecoration: 'none'
+                }}
+              >
+                Create an account
+              </Link>
+            </p>
+          </form>
+        </div>
+      </div>
+
+      <style>
+        {`
+          @media (max-width: 768px) {
+            .login-page-layout {
+              grid-template-columns: 1fr !important;
+            }
+          }
+
+          input:focus {
+            border-color: #c00000 !important;
+            box-shadow: 0 0 0 3px rgba(192, 0, 0, 0.08);
+          }
+        `}
+      </style>
+    </div>
+  )
+}
+
+export default LoginPage
+
+===== C:\Users\MEI\Desktop\react-04\dzshop\src\navbar.css =====
+.dz-navbar {
+  background: #080f19;
+  border-bottom: 1px solid #1d2937;
+  min-height: 88px;
+  display: flex;
+  align-items: center;
+}
+
+.dz-navbar-container {
+  width: 100%;
+  padding: 0 5%;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* LOGO */
+
+.dz-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.dz-logo-mark {
+  width: 50px;
+  height: 50px;
+
+  border-radius: 14px;
+
+  background: #c62828;
+  color: white;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 1.25rem;
+  font-weight: 900;
+
+  box-shadow: 0 6px 18px rgba(198, 40, 40, 0.25);
+}
+
+.dz-logo-text {
+  line-height: 1;
+}
+
+.dz-shop-name {
+  color: white;
+
+  font-size: 1.8rem;
+  font-weight: 800;
+
+  letter-spacing: -1px;
+}
+
+.dz-shop-name span {
+  color: #c62828;
+}
+
+.dz-tagline {
+  margin-top: 6px;
+
+  color: #8290a3;
+
+  font-size: 0.58rem;
+  letter-spacing: 2px;
+}
+
+/* NAVIGATION */
+
+.dz-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.dz-nav-link {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 32px 0 27px;
+
+  color: #e9edf2;
+  text-decoration: none;
+
+  font-size: 0.95rem;
+  font-weight: 500;
+
+  transition: 0.2s ease;
+}
+
+.dz-nav-link svg {
+  font-size: 1.1rem;
+}
+
+.dz-nav-link:hover,
+.dz-nav-link.active {
+  color: #c62828;
+}
+
+.dz-nav-link.active::after {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  right: 0;
+  bottom: 11px;
+
+  height: 3px;
+
+  border-radius: 10px;
+
+  background: #c62828;
+}
+
+/* CART */
+
+.cart-icon-wrapper {
+  position: relative;
+  display: flex;
+}
+
+.cart-badge {
+  position: absolute;
+
+  top: -10px;
+  right: -12px;
+
+  min-width: 19px;
+  height: 19px;
+
+  padding: 0 5px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #c62828;
+  color: white;
+
+  font-size: 0.65rem;
+  font-weight: 700;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 900px) {
+
+  .dz-navbar-container {
+    flex-direction: column;
+    gap: 10px;
+    padding: 15px;
+  }
+
+  .dz-nav-links {
+    gap: 18px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .dz-nav-link {
+    padding: 8px 0;
+  }
+
+  .dz-nav-link.active::after {
+    bottom: 0;
+  }
+}
+
+===== C:\Users\MEI\Desktop\react-04\dzshop\src\navbar.jsx =====
+import { NavLink, Link } from 'react-router-dom'
+import {
+  FaHome,
+  FaShoppingBag,
+  FaShoppingCart,
+  FaPhone,
+  FaUserPlus,
+  FaUser
+} from 'react-icons/fa'
+import { useCart } from './CartContext'
+import { useAuth } from './AuthContext'
+import './navbar.css'
+
+function Navbar() {
+  const { cartItems } = useCart()
+  const { user, logout } = useAuth()
+
+  const cartCount = cartItems.reduce(function (total, item) {
+    return total + item.quantity
+  }, 0)
+
+  return (
+    <nav className="dz-navbar">
+      <div className="dz-navbar-container">
+
+        <Link to="/" className="dz-logo">
+          <div className="dz-logo-mark">
+            DZ
+          </div>
+
+          <div className="dz-logo-text">
+            <div className="dz-shop-name">
+              DZ<span>Shop</span>
+            </div>
+
+            <div className="dz-tagline">
+              Qualité · Prix · Confiance
+            </div>
+          </div>
+        </Link>
+
+        <div className="dz-nav-links">
+
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              'dz-nav-link ' + (isActive ? 'active' : '')
+            }
+          >
+            <FaHome />
+            <span>Home</span>
+          </NavLink>
+
+          <NavLink
+            to="/produits"
+            className={({ isActive }) =>
+              'dz-nav-link ' + (isActive ? 'active' : '')
+            }
+          >
+            <FaShoppingBag />
+            <span>Produits</span>
+          </NavLink>
+
+          <NavLink
+            to="/contact"
+            className={({ isActive }) =>
+              'dz-nav-link ' + (isActive ? 'active' : '')
+            }
+          >
+            <FaPhone />
+            <span>Contact</span>
+          </NavLink>
+
+          <NavLink
+            to="/panier"
+            className={({ isActive }) =>
+              'dz-nav-link cart-link ' + (isActive ? 'active' : '')
+            }
+          >
+            <div className="cart-icon-wrapper">
+              <FaShoppingCart />
+
+              {cartCount > 0 && (
+                <span className="cart-badge">
+                  {cartCount}
+                </span>
+              )}
+            </div>
+
+            <span>Panier</span>
+          </NavLink>
+
+          {user ? (
+            <>
+              <span className="dz-nav-link">
+                <FaUser />
+                <span>{user.nom}</span>
+              </span>
+              <button
+                type="button"
+                className="dz-nav-link"
+                style={{ background: 'none', border: 'none' }}
+                onClick={logout}
+              >
+                Déconnexion
+              </button>
+            </>
+          ) : (
+            <>
+              <NavLink
+                to="/login"
+                className={({ isActive }) =>
+                  'dz-nav-link ' + (isActive ? 'active' : '')
+                }
+              >
+                <FaUser />
+                <span>Sign In</span>
+              </NavLink>
+
+              <NavLink
+                to="/signup"
+                className={({ isActive }) =>
+                  'dz-nav-link ' + (isActive ? 'active' : '')
+                }
+              >
+                <FaUserPlus />
+                <span>Sign Up</span>
+              </NavLink>
+            </>
+          )}
+
+        </div>
+      </div>
+    </nav>
+  )
+}
+
+export default Navbar ;
+
+===== C:\Users\MEI\Desktop\react-04\dzshop\src\ProductDetailPage.css =====
+.dz-detail-page {
+
+  min-height: 100vh;
+
+  background: #f8fafc;
+
+  padding: 35px 0 80px;
+
+}
+
+.dz-breadcrumb {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  margin-bottom: 30px;
+
+  color: #94a3b8;
+
+  font-size: 0.85rem;
+
+}
+
+.dz-breadcrumb a {
+
+  color: #64748b;
+
+  text-decoration: none;
+
+}
+
+.dz-breadcrumb a:hover {
+
+  color: #c62828;
+
+}
+
+.dz-detail-card {
+
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  background: white;
+
+  border: 1px solid #e8edf3;
+
+  border-radius: 28px;
+
+  overflow: hidden;
+
+  box-shadow: 0 10px 40px rgba(15, 23, 42, 0.07);
+
+}
+
+.dz-detail-image {
+
+  position: relative;
+
+  height: 550px;
+
+  background: #f8fafc;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  overflow: hidden;
+
+  padding: 0;
+
+}
+
+.dz-detail-image img {
+
+  width: 100%;
+
+  height: 100%;
+
+  object-fit: cover;
+
+  object-position: center;
+
+  display: block;
+
+}
+
+.dz-detail-no-image {
+
+  font-size: 7rem;
+
+}
+
+.dz-detail-category {
+
+  position: absolute;
+
+  top: 25px;
+
+  left: 25px;
+
+  padding: 9px 15px;
+
+  border-radius: 50px;
+
+  background: #080f19;
+
+  color: white;
+
+  font-size: 0.8rem;
+
+  font-weight: 700;
+
+}
+
+.dz-detail-info {
+
+  padding: 65px 55px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+}
+
+.dz-detail-label {
+
+  color: #c62828;
+
+  font-size: 0.8rem;
+
+  font-weight: 800;
+
+  text-transform: uppercase;
+
+  letter-spacing: 2px;
+
+  margin-bottom: 12px;
+
+}
+
+.dz-detail-info h1 {
+
+  color: #0b1624;
+
+  font-size: 2.8rem;
+
+  font-weight: 800;
+
+  line-height: 1.1;
+
+  margin-bottom: 18px;
+
+}
+
+.dz-detail-description {
+
+  color: #64748b;
+
+  font-size: 1rem;
+
+  line-height: 1.7;
+
+  max-width: 500px;
+
+}
+
+.dz-detail-divider {
+
+  width: 100%;
+
+  height: 1px;
+
+  background: #e8edf3;
+
+  margin: 25px 0;
+
+}
+
+.dz-detail-price {
+
+  color: #c62828;
+
+  font-size: 2rem;
+
+  font-weight: 800;
+
+  margin-bottom: 7px;
+
+}
+
+.dz-detail-stock {
+
+  color: #64748b;
+
+  font-size: 0.85rem;
+
+}
+
+.dz-quantity-section {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  margin-top: 30px;
+
+  max-width: 250px;
+
+}
+
+.dz-quantity-section > span {
+
+  color: #334155;
+
+  font-size: 0.9rem;
+
+  font-weight: 700;
+
+}
+
+.dz-quantity {
+
+  display: flex;
+
+  align-items: center;
+
+  border: 1px solid #dce3ea;
+
+  border-radius: 12px;
+
+  overflow: hidden;
+
+}
+
+.dz-quantity button {
+
+  width: 40px;
+
+  height: 40px;
+
+  border: none;
+
+  background: white;
+
+  color: #0b1624;
+
+  font-size: 1.3rem;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+
+}
+
+.dz-quantity button:hover:not(:disabled) {
+
+  background: #fdecec;
+
+  color: #c62828;
+
+}
+
+.dz-quantity button:disabled {
+
+  color: #cbd5e1;
+
+  cursor: not-allowed;
+
+}
+
+.dz-quantity strong {
+
+  width: 42px;
+
+  text-align: center;
+
+  color: #0b1624;
+
+}
+
+.dz-size-section {
+
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 30px;
+
+  margin-top: 22px;
+
+  max-width: 100%;
+
+}
+
+.dz-size-section > span {
+
+  min-width: 75px;
+
+  padding-top: 10px;
+
+  color: #334155;
+
+  font-size: 0.9rem;
+
+  font-weight: 700;
+
+}
+
+.dz-size-options {
+
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 9px;
+
+}
+
+.dz-size-options button {
+
+  min-width: 48px;
+
+  height: 40px;
+
+  padding: 0 12px;
+
+  border: 1px solid #dce3ea;
+
+  border-radius: 10px;
+
+  background: white;
+
+  color: #0b1624;
+
+  font-size: 0.85rem;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+
+}
+
+.dz-size-options button:hover {
+
+  border-color: #c62828;
+
+  color: #c62828;
+
+  background: #fff7f7;
+
+  transform: translateY(-1px);
+
+}
+
+.dz-size-options button.active {
+
+  border-color: #c62828;
+
+  background: #c62828;
+
+  color: white;
+
+  box-shadow: 0 5px 12px rgba(198, 40, 40, 0.18);
+
+}
+
+.dz-color-section {
+
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 30px;
+
+  margin-top: 22px;
+
+  max-width: 100%;
+
+}
+
+.dz-color-section > span {
+
+  min-width: 75px;
+
+  padding-top: 10px;
+
+  color: #334155;
+
+  font-size: 0.9rem;
+
+  font-weight: 700;
+
+}
+
+.dz-color-options {
+
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 9px;
+
+}
+
+.dz-color-options button {
+
+  min-width: 70px;
+
+  height: 40px;
+
+  padding: 0 14px;
+
+  border: 1px solid #dce3ea;
+
+  border-radius: 10px;
+
+  background: white;
+
+  color: #0b1624;
+
+  font-size: 0.85rem;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+
+}
+
+.dz-color-options button:hover {
+
+  border-color: #c62828;
+
+  color: #c62828;
+
+  background: #fff7f7;
+
+  transform: translateY(-1px);
+
+}
+
+.dz-color-options button.active {
+
+  border-color: #c62828;
+
+  background: #c62828;
+
+  color: white;
+
+  box-shadow: 0 5px 12px rgba(198, 40, 40, 0.18);
+
+}
+
+.dz-add-cart {
+
+  width: 100%;
+
+  margin-top: 30px;
+
+  padding: 15px 20px;
+
+  border: none;
+
+  border-radius: 13px;
+
+  background: #c62828;
+
+  color: white;
+
+  font-size: 1rem;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  box-shadow: 0 8px 20px rgba(198, 40, 40, 0.2);
+
+  transition: 0.2s ease;
+
+}
+
+.dz-add-cart:hover:not(:disabled) {
+
+  background: #a91f1f;
+
+  transform: translateY(-2px);
+
+}
+
+.dz-add-cart:disabled {
+
+  background: #94a3b8;
+
+  cursor: not-allowed;
+
+  box-shadow: none;
+
+}
+
+.dz-back-products {
+
+  margin-top: 18px;
+
+  color: #64748b;
+
+  text-align: center;
+
+  text-decoration: none;
+
+  font-size: 0.9rem;
+
+}
+
+.dz-back-products:hover {
+
+  color: #c62828;
+
+}
+
+.dz-detail-loading {
+
+  min-height: 70vh;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  color: #64748b;
+
+}
+
+.dz-spinner {
+
+  width: 40px;
+
+  height: 40px;
+
+  border: 4px solid #e5e7eb;
+
+  border-top-color: #c62828;
+
+  border-radius: 50%;
+
+  animation: dz-spin 0.8s linear infinite;
+
+  margin-bottom: 15px;
+
+}
+
+@keyframes dz-spin {
+
+  to {
+
+    transform: rotate(360deg);
+
+  }
+
+}
+
+.dz-not-found {
+
+  min-height: 70vh;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  text-align: center;
+
+}
+
+.dz-not-found-icon {
+
+  font-size: 4rem;
+
+  margin-bottom: 15px;
+
+}
+
+.dz-not-found h2 {
+
+  color: #0b1624;
+
+  font-weight: 800;
+
+}
+
+.dz-not-found p {
+
+  color: #64748b;
+
+}
+
+.dz-back-button {
+
+  margin-top: 15px;
+
+  padding: 12px 20px;
+
+  border-radius: 12px;
+
+  background: #c62828;
+
+  color: white;
+
+  text-decoration: none;
+
+  font-weight: 700;
+
+}
+
+@media (max-width: 900px) {
+
+  .dz-detail-card {
+
+    grid-template-columns: 1fr;
+
+  }
+
+  .dz-detail-image {
+
+    height: 400px;
+
+  }
+
+  .dz-detail-image img {
+
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+
+  }
+
+  .dz-detail-info {
+
+    padding: 40px 30px;
+
+  }
+
+  .dz-detail-info h1 {
+
+    font-size: 2.3rem;
+
+  }
+
+}
+
+@media (max-width: 500px) {
+
+  .dz-detail-page {
+
+    padding-top: 20px;
+
+  }
+
+  .dz-breadcrumb {
+
+    font-size: 0.75rem;
+
+  }
+
+  .dz-detail-image {
+
+    height: 320px;
+
+  }
+
+  .dz-detail-image img {
+
+    width: 100%;
+
+    height: 100%;
+
+  }
+
+  .dz-detail-info {
+
+    padding: 30px 22px;
+
+  }
+
+  .dz-size-section,
+
+  .dz-color-section {
+
+    gap: 15px;
+
+  }
+
+  .dz-size-section > span,
+
+  .dz-color-section > span {
+
+    min-width: 65px;
+
+  }
+
+}
+
+===== C:\Users\MEI\Desktop\react-04\dzshop\src\ProductDetailPage.jsx =====
+import { useState, useEffect } from 'react'
+import { useParams, Link } from 'react-router-dom'
+import { apiFetch } from './api'
+import { useCart } from './CartContext'
+import './ProductDetailPage.css'
+
+function ProductDetailPage() {
+  const { id } = useParams()
+  const { addToCart } = useCart()
+
+  const [produit, setProduit] = useState(null)
+  const [chargement, setChargement] = useState(true)
+  const [quantity, setQuantity] = useState(1)
+  const [taille, setTaille] = useState('')
+  const [couleur, setCouleur] = useState('')
+
+  useEffect(function () {
+    setChargement(true)
+    setQuantity(1)
+    setTaille('')
+    setCouleur('')
+
+    apiFetch('/api/products/' + id)
+      .then(function (res) {
+        return res.ok ? res.json() : null
+      })
+      .then(function (data) {
+        setProduit(data)
+
+        if (
+          data &&
+          Array.isArray(data.couleurs) &&
+          data.couleurs.length === 1
+        ) {
+          setCouleur(data.couleurs[0].nom)
+        }
+
+        setChargement(false)
+      })
+      .catch(function () {
+        setChargement(false)
+      })
+  }, [id])
+
+  if (chargement) {
+    return (
+      <div className="dz-detail-loading">
+        <div className="dz-spinner"></div>
+        <p>Chargement du produit...</p>
+      </div>
+    )
+  }
+
+  if (!produit) {
+    return (
+      <div className="dz-not-found">
+        <div className="dz-not-found-icon">
+          🛍️
+        </div>
+
+        <h2>Produit introuvable</h2>
+
+        <p>
+          Ce produit n'existe pas ou n'est plus disponible.
+        </p>
+
+        <Link
+          className="dz-back-button"
+          to="/produits"
+        >
+          ← Retour aux produits
+        </Link>
+      </div>
+    )
+  }
+
+  function diminuer() {
+    setQuantity(function (ancienne) {
+      return Math.max(1, ancienne - 1)
+    })
+  }
+
+  function augmenter() {
+    setQuantity(function (ancienne) {
+      return Math.min(produit.stock, ancienne + 1)
+    })
+  }
+
+  function choisirCouleur(option) {
+    setCouleur(option.nom)
+  }
+
+  function getImageProduit() {
+    if (
+      (produit.categorie === 'Vêtements' ||
+        produit.categorie === 'Chaussures') &&
+      couleur &&
+      Array.isArray(produit.couleurs)
+    ) {
+      const couleurSelectionnee = produit.couleurs.find(function (option) {
+        return option.nom === couleur
+      })
+
+      return couleurSelectionnee?.image || produit.image || ''
+    }
+
+    return produit.image || ''
+  }
+
+  function handleAddToCart() {
+    if (
+      (produit.categorie === 'Vêtements' ||
+        produit.categorie === 'Chaussures') &&
+      produit.tailles &&
+      produit.tailles.length > 0 &&
+      !taille
+    ) {
+      return
+    }
+
+    if (
+      (produit.categorie === 'Vêtements' ||
+        produit.categorie === 'Chaussures') &&
+      produit.couleurs &&
+      produit.couleurs.length > 0 &&
+      !couleur
+    ) {
+      return
+    }
+
+    addToCart(produit, quantity, taille, couleur)
+  }
+
+  const aDesTailles =
+    (produit.categorie === 'Vêtements' ||
+      produit.categorie === 'Chaussures') &&
+    Array.isArray(produit.tailles) &&
+    produit.tailles.length > 0
+
+  const aDesCouleurs =
+    (produit.categorie === 'Vêtements' ||
+      produit.categorie === 'Chaussures') &&
+    Array.isArray(produit.couleurs) &&
+    produit.couleurs.length > 0
+
+  const imageProduit = getImageProduit()
+
+  return (
+    <div className="dz-detail-page">
+
+      <div className="container">
+
+        <div className="dz-breadcrumb">
+
+          <Link to="/">
+            Accueil
+          </Link>
+
+          <span>›</span>
+
+          <Link to="/produits">
+            Produits
+          </Link>
+
+          <span>›</span>
+
+          <span>{produit.nom}</span>
+
+        </div>
+
+        <div className="dz-detail-card">
+
+          <div className="dz-detail-image">
+
+            {imageProduit ? (
+              <img
+                src={imageProduit}
+                alt={produit.nom + (couleur ? ` - ${couleur}` : '')}
+              />
+            ) : (
+              <div className="dz-detail-no-image"></div>
+            )}
+
+            {produit.categorie && (
+              <span className="dz-detail-category">
+                {produit.categorie}
+              </span>
+            )}
+
+          </div>
+
+          <div className="dz-detail-info">
+
+            <span className="dz-detail-label">
+              Produit
+            </span>
+
+            <h1>
+              {produit.nom}
+            </h1>
+
+            <p className="dz-detail-description">
+              {produit.description}
+            </p>
+
+            <div className="dz-detail-divider"></div>
+
+            <div className="dz-detail-price">
+              {produit.prix.toLocaleString('fr-FR')} DA
+            </div>
+
+            <div className="dz-detail-stock">
+              {produit.stock > 0
+                ? `✓ ${produit.stock} produits disponibles`
+                : '✕ Produit en rupture de stock'}
+            </div>
+
+            <div className="dz-quantity-section">
+
+              <span>
+                Quantité
+              </span>
+
+              <div className="dz-quantity">
+
+                <button
+                  type="button"
+                  onClick={diminuer}
+                  disabled={quantity <= 1}
+                >
+                  −
+                </button>
+
+                <strong>
+                  {quantity}
+                </strong>
+
+                <button
+                  type="button"
+                  onClick={augmenter}
+                  disabled={quantity >= produit.stock}
+                >
+                  +
+                </button>
+
+              </div>
+
+            </div>
+
+            {aDesTailles && (
+              <div className="dz-size-section">
+
+                <span>
+                  {produit.categorie === 'Chaussures'
+                    ? 'Pointure'
+                    : 'Taille'}
+                </span>
+
+                <div className="dz-size-options">
+
+                  {produit.tailles.map(function (option) {
+                    return (
+                      <button
+                        key={option}
+                        type="button"
+                        className={
+                          taille === option
+                            ? 'active'
+                            : ''
+                        }
+                        onClick={function () {
+                          setTaille(option)
+                        }}
+                      >
+                        {option}
+                      </button>
+                    )
+                  })}
+
+                </div>
+
+              </div>
+            )}
+
+            {aDesCouleurs && (
+              <div className="dz-color-section">
+
+                <span>
+                  Couleur
+                </span>
+
+                <div className="dz-color-options">
+
+                  {produit.couleurs.map(function (option) {
+                    return (
+                      <button
+                        key={option.nom}
+                        type="button"
+                        className={
+                          couleur === option.nom
+                            ? 'active'
+                            : ''
+                        }
+                        onClick={function () {
+                          choisirCouleur(option)
+                        }}
+                      >
+                        {option.nom}
+                      </button>
+                    )
+                  })}
+
+                </div>
+
+              </div>
+            )}
+
+            <button
+              className="dz-add-cart"
+              onClick={handleAddToCart}
+              disabled={
+                produit.stock === 0 ||
+                (aDesTailles && !taille) ||
+                (aDesCouleurs && !couleur)
+              }
+            >
+              🛒
+
+              {produit.stock === 0
+                ? ' Rupture de stock'
+                : aDesTailles && !taille
+                  ? ' Choisir une taille'
+                  : aDesCouleurs && !couleur
+                    ? ' Choisir une couleur'
+                    : ' Ajouter au panier'}
+            </button>
+
+            <Link
+              to="/produits"
+              className="dz-back-products"
+            >
+              ← Continuer mes achats
+            </Link>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  )
+}
+
+export default ProductDetailPage ;
+
+===== C:\Users\MEI\Desktop\react-04\dzshop\src\ProductsPage.css =====
+.dz-products-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 22px;
+  align-items: stretch;
+}
+
+.dz-product-item {
+  min-width: 0;
+  display: flex;
+}
+
+.dz-product-card {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dz-product-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+/* IMAGE */
+.dz-product-image {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: #f8f8f8;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.dz-product-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.dz-no-image {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: #9ca3af;
+}
+
+/* CATEGORY */
+.dz-category {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  padding: 4px 7px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 500;
+  color: #333;
+}
+
+/* CONTENT */
+.dz-product-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 12px;
+}
+
+/* PRODUCT NAME */
+.dz-product-content h3 {
+  margin: 0 0 6px;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+  color: #222;
+}
+
+/* DESCRIPTION */
+.dz-product-description {
+  margin: 0 0 8px;
+  font-size: 11px;
+  line-height: 15px;
+  color: #777;
+}
+
+/* PRICE */
+.dz-price {
+  margin-bottom: 5px;
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 600;
+  color: #111;
+}
+
+/* STOCK */
+.dz-stock {
+  margin-bottom: 10px;
+  font-size: 10px;
+  line-height: 14px;
+  color: #777;
+}
+
+/* BUTTON - ALWAYS AT THE BOTTOM */
+.dz-product-button {
+  align-self: flex-start;
+  margin-top: auto;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+
+  padding: 8px 12px;
+
+  border: 0;
+  border-radius: 6px;
+
+  background: #111;
+  color: #fff;
+
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 15px;
+
+  text-decoration: none;
+  cursor: pointer;
+
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.dz-product-button:hover {
+  background: #333;
+  color: #fff;
+}
+
+.dz-product-button strong {
+  font-size: 14px;
+  font-weight: 400;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1200px) {
+  .dz-products-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 992px) {
+  .dz-products-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .dz-products-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 576px) {
+  .dz-products-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+===== C:\Users\MEI\Desktop\react-04\dzshop\src\ProductsPage.jsx =====
+import { useState, useEffect } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
+import { apiFetch, lireJson } from './api'
+import './ProductsPage.css'
+
+function ProductsPage() {
+  const [products, setProducts] = useState([])
+  const [chargement, setChargement] = useState(true)
+
+  const [searchParams] = useSearchParams()
+  const categorie = searchParams.get('categorie')
+
+  useEffect(function () {
+    apiFetch('/api/products')
+      .then(lireJson)
+      .then(function (data) {
+        console.log('Produits API:', data)
+
+        data.forEach(function (p) {
+          if (p.categorie === 'Maquillage') {
+            console.log('Image Maquillage:', p.nom, p.image)
+          }
+        })
+
+        setProducts(data)
+      })
+      .catch(function (err) {
+        console.error(err)
+      })
+      .finally(function () {
+        setChargement(false)
+      })
+  }, [])
+
+  if (chargement) {
+    return (
+      <div className="dz-loading">
+        <div className="dz-spinner"></div>
+        <p>Chargement des produits...</p>
+      </div>
+    )
+  }
+
+  const produitsFiltres = categorie
+    ? products.filter(function (p) {
+        return p.categorie === categorie
+      })
+    : products
+
+  return (
+    <div className="dz-products-page">
+
+      <div className="container">
+
+        <div className="dz-products-header">
+
+          <div>
+            <span className="dz-products-badge">
+              🛍️ Notre collection
+            </span>
+
+            <h1>
+              {categorie ? categorie : 'Nos'} <span>produits</span>
+            </h1>
+
+            <p>
+              {categorie
+                ? `Découvrez nos produits de la catégorie ${categorie}.`
+                : 'Découvrez notre sélection de produits.'}
+            </p>
+          </div>
+
+        </div>
+
+        <div className="dz-products-grid">
+
+          {produitsFiltres.map(function (p) {
+            const imagePath =
+              p.categorie === 'Maquillage' && p.image
+                ? p.image.replace(
+                    '/images/products/makeup/',
+                    '/images/products/'
+                  )
+                : p.image
+
+            return (
+              <div
+                className="dz-product-item"
+                key={p._id}
+              >
+
+                <div className="dz-product-card">
+
+                  <div className="dz-product-image">
+
+                    {imagePath ? (
+                      <img
+                        src={imagePath}
+                        alt={p.nom}
+                        onError={function (e) {
+                          console.error(
+                            'Image impossible à charger:',
+                            p.nom,
+                            imagePath
+                          )
+                          e.currentTarget.style.display = 'none'
+                        }}
+                      />
+                    ) : (
+                      <div className="dz-no-image">
+                        🛍️
+                      </div>
+                    )}
+
+                    <span className="dz-category">
+                      {p.categorie}
+                    </span>
+
+                  </div>
+
+                  <div className="dz-product-content">
+
+                    <h3>
+                      {p.nom}
+                    </h3>
+
+                    <p className="dz-product-description">
+                      {p.description}
+                    </p>
+
+                    <div className="dz-price">
+                      {p.prix.toLocaleString('fr-FR')} DA
+                    </div>
+
+                    <div className="dz-stock">
+                      {p.stock > 0
+                        ? `✓ ${p.stock} disponibles`
+                        : '✕ Rupture de stock'}
+                    </div>
+
+                    <Link
+                      to={'/produit/' + p._id}
+                      className="dz-product-button"
+                    >
+                      <span>Voir le produit</span>
+                      <strong>→</strong>
+                    </Link>
+
+                  </div>
+
+                </div>
+
+              </div>
+            )
+          })}
+
+        </div>
+
+        {produitsFiltres.length === 0 && (
+          <div className="text-center py-5">
+            <h3>Aucun produit trouvé</h3>
+          </div>
+        )}
+
+      </div>
+
+    </div>
+  )
+}
+
+export default ProductsPage ;
+
+===== C:\Users\MEI\Desktop\react-04\dzshop\src\SignUp.jsx =====
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { FaEye, FaEyeSlash } from 'react-icons/fa'
+import { useAuth } from './AuthContext'
+
+function SignUp() {
+  const { register, loginGoogle } = useAuth()
+  const navigate = useNavigate()
+
+  const [nom, setNom] = useState('')
+  const [telephone, setTelephone] = useState('')
+  const [motDePasse, setMotDePasse] = useState('')
+  const [confirmation, setConfirmation] = useState('')
+  const [erreur, setErreur] = useState('')
+  const [envoi, setEnvoi] = useState(false)
+
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmation, setShowConfirmation] = useState(false)
+
+  async function handleSubmit(e) {
+    e.preventDefault()
+    setErreur('')
+
+    if (motDePasse.length < 6) {
+      setErreur('Le mot de passe doit faire au moins 6 caractères.')
+      return
+    }
+
+    if (motDePasse !== confirmation) {
+      setErreur('Les mots de passe ne correspondent pas.')
+      return
+    }
+
+    setEnvoi(true)
+    try {
+      await register(nom, telephone, motDePasse)
+      navigate('/')
+    } catch (err) {
+      setErreur(err.message)
+    }
+    setEnvoi(false)
+  }
+
+  async function handleGoogleSignUp() {
+    setErreur('')
+
+    if (!window.google) {
+      setErreur('Google Sign Up non disponible.')
+      return
+    }
+
+    try {
+      const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID
+
+      if (!clientId) {
+        setErreur('Google Sign Up non configuré.')
+        return
+      }
+
+      await new Promise((resolve, reject) => {
+        window.google.accounts.id.initialize({
+          client_id: clientId,
+          callback: async (response) => {
+            try {
+              await loginGoogle(response.credential)
+              resolve()
+            } catch (err) {
+              reject(err)
+            }
+          }
+        })
+
+        window.google.accounts.id.prompt((notification) => {
+          if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+            reject(new Error('Impossible d’ouvrir Google Sign Up.'))
+          }
+        })
+      })
+
+      navigate('/')
+    } catch (err) {
+      setErreur(err.message)
+    }
+  }
+
+  return (
+    <div
+      className="d-flex justify-content-center align-items-center"
+      style={{
+        minHeight: 'calc(100vh - 70px)',
+        background: '#ffffff',
+        padding: '50px 20px'
+      }}
+    >
+      <div
+        className="card shadow-lg p-4"
+        style={{
+          width: '100%',
+          maxWidth: '450px',
+          background: '#ffffff',
+          border: 'none',
+          borderRadius: '18px'
+        }}
+      >
+        <h2 className="text-center mb-4">Create an account</h2>
+
+        {erreur && <div className="alert alert-danger">{erreur}</div>}
+
+        <form onSubmit={handleSubmit}>
+          <div className="mb-3">
+            <label className="form-label">Name</label>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Your name"
+              value={nom}
+              onChange={(e) => setNom(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label">Phone number</label>
+            <input
+              type="tel"
+              className="form-control"
+              placeholder="Your number"
+              value={telephone}
+              onChange={(e) => setTelephone(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label">Password</label>
+
+            <div className="position-relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                className="form-control pe-5"
+                placeholder="Your password"
+                value={motDePasse}
+                onChange={(e) => setMotDePasse(e.target.value)}
+                required
+              />
+
+              <button
+                type="button"
+                className="btn position-absolute top-50 end-0 translate-middle-y border-0"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
+            </div>
+          </div>
+
+          <div className="mb-4">
+            <label className="form-label">Confirm password</label>
+
+            <div className="position-relative">
+              <input
+                type={showConfirmation ? 'text' : 'password'}
+                className="form-control pe-5"
+                placeholder="Confirm your password"
+                value={confirmation}
+                onChange={(e) => setConfirmation(e.target.value)}
+                required
+              />
+
+              <button
+                type="button"
+                className="btn position-absolute top-50 end-0 translate-middle-y border-0"
+                onClick={() => setShowConfirmation(!showConfirmation)}
+              >
+                {showConfirmation ? <FaEyeSlash /> : <FaEye />}
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" className="btn btn-dark w-100" disabled={envoi}>
+            {envoi ? 'Création...' : 'Sign Up'}
+          </button>
+
+          <div className="d-flex align-items-center gap-3 my-4">
+            <div className="flex-grow-1 border-top"></div>
+            <span className="text-muted small fw-semibold">OR</span>
+            <div className="flex-grow-1 border-top"></div>
+          </div>
+
+          <button
+            type="button"
+            onClick={handleGoogleSignUp}
+            className="w-100 d-flex align-items-center justify-content-center gap-3 bg-white border rounded-3 py-2"
+            style={{
+              minHeight: '48px',
+              fontWeight: '600',
+              color: '#202124',
+              borderColor: '#dadce0',
+              transition: '0.2s ease'
+            }}
+          >
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                fill="#4285F4"
+                d="M21.35 12.23c0-.72-.06-1.42-.18-2.09H12v3.96h5.24a4.48 4.48 0 0 1-1.94 2.94v2.45h3.14c1.84-1.7 2.91-4.2 2.91-7.26z"
+              />
+              <path
+                fill="#34A853"
+                d="M12 21.5c2.63 0 4.84-.87 6.45-2.35l-3.14-2.45c-.87.58-1.98.92-3.31.92-2.54 0-4.69-1.72-5.46-4.03H3.3v2.53A9.75 9.75 0 0 0 12 21.5z"
+              />
+              <path
+                fill="#FBBC05"
+                d="M6.54 13.59A5.86 5.86 0 0 1 6.23 12c0-.55.1-1.09.31-1.59V7.88H3.3A9.75 9.75 0 0 0 2.25 12c0 1.57.38 3.06 1.05 4.12l3.24-2.53z"
+              />
+              <path
+                fill="#EA4335"
+                d="M12 6.38c1.43 0 2.71.49 3.72 1.46l2.79-2.79C16.83 3.49 14.63 2.5 12 2.5a9.75 9.75 0 0 0-8.7 5.38l3.24 2.53C7.31 8.1 9.46 6.38 12 6.38z"
+              />
+            </svg>
+
+            Continue with Google
+          </button>
+        </form>
+      </div>
+    </div>
+  )
+}
+
+export default SignUp ;

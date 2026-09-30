@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { apiFetch } from './api'
 import { useCart } from './CartContext'
@@ -13,12 +13,17 @@ function ProductDetailPage() {
   const [quantity, setQuantity] = useState(1)
   const [taille, setTaille] = useState('')
   const [couleur, setCouleur] = useState('')
+  const [addedToBag, setAddedToBag] = useState(false)
+
+  const addLocked = useRef(false)
 
   useEffect(function () {
     setChargement(true)
     setQuantity(1)
     setTaille('')
     setCouleur('')
+    setAddedToBag(false)
+    addLocked.current = false
 
     apiFetch('/api/products/' + id)
       .then(function (res) {
@@ -46,7 +51,7 @@ function ProductDetailPage() {
     return (
       <div className="dz-detail-loading">
         <div className="dz-spinner"></div>
-        <p>Chargement du produit...</p>
+        <p>Loading product...</p>
       </div>
     )
   }
@@ -58,42 +63,120 @@ function ProductDetailPage() {
           🛍️
         </div>
 
-        <h2>Produit introuvable</h2>
+        <h2>Product not found</h2>
 
         <p>
-          Ce produit n'existe pas ou n'est plus disponible.
+          This product does not exist or is no longer available.
         </p>
 
         <Link
           className="dz-back-button"
           to="/produits"
         >
-          ← Retour aux produits
+          ← Back to Products
         </Link>
       </div>
     )
   }
 
+  function playButtonSound() {
+    try {
+      const AudioContext =
+        window.AudioContext || window.webkitAudioContext
+
+      if (!AudioContext) {
+        return
+      }
+
+      const context = new AudioContext()
+      const oscillator = context.createOscillator()
+      const gain = context.createGain()
+
+      oscillator.type = 'sine'
+      oscillator.frequency.value = 520
+
+      gain.gain.setValueAtTime(0.04, context.currentTime)
+      gain.gain.exponentialRampToValueAtTime(
+        0.001,
+        context.currentTime + 0.08
+      )
+
+      oscillator.connect(gain)
+      gain.connect(context.destination)
+
+      oscillator.start()
+      oscillator.stop(context.currentTime + 0.08)
+    } catch (error) {
+    }
+  }
+
+  function playSuccessSound() {
+    try {
+      const AudioContext =
+        window.AudioContext || window.webkitAudioContext
+
+      if (!AudioContext) {
+        return
+      }
+
+      const context = new AudioContext()
+
+      const oscillator = context.createOscillator()
+      const gain = context.createGain()
+
+      oscillator.type = 'sine'
+      oscillator.frequency.setValueAtTime(
+        620,
+        context.currentTime
+      )
+      oscillator.frequency.setValueAtTime(
+        820,
+        context.currentTime + 0.1
+      )
+
+      gain.gain.setValueAtTime(0.05, context.currentTime)
+      gain.gain.exponentialRampToValueAtTime(
+        0.001,
+        context.currentTime + 0.22
+      )
+
+      oscillator.connect(gain)
+      gain.connect(context.destination)
+
+      oscillator.start()
+      oscillator.stop(context.currentTime + 0.22)
+    } catch (error) {
+    }
+  }
+
   function diminuer() {
+    playButtonSound()
+
     setQuantity(function (ancienne) {
       return Math.max(1, ancienne - 1)
     })
   }
 
   function augmenter() {
+    playButtonSound()
+
     setQuantity(function (ancienne) {
       return Math.min(produit.stock, ancienne + 1)
     })
   }
 
   function choisirCouleur(option) {
+    playButtonSound()
     setCouleur(option.nom)
+  }
+
+  function choisirTaille(option) {
+    playButtonSound()
+    setTaille(option)
   }
 
   function getImageProduit() {
     if (
-      (produit.categorie === 'Vêtements' ||
-        produit.categorie === 'Chaussures') &&
       couleur &&
       Array.isArray(produit.couleurs)
     ) {
@@ -108,27 +191,33 @@ function ProductDetailPage() {
   }
 
   function handleAddToCart() {
+    if (addLocked.current) {
+      return
+    }
+
     if (
-      (produit.categorie === 'Vêtements' ||
-        produit.categorie === 'Chaussures') &&
-      produit.tailles &&
-      produit.tailles.length > 0 &&
+      aDesTailles &&
       !taille
     ) {
       return
     }
 
     if (
-      (produit.categorie === 'Vêtements' ||
-        produit.categorie === 'Chaussures') &&
-      produit.couleurs &&
-      produit.couleurs.length > 0 &&
+      aDesCouleurs &&
       !couleur
     ) {
       return
     }
 
-    addToCart(produit, quantity, taille, couleur)
+    addLocked.current = true
+
+    try {
+      addToCart(produit, quantity, taille, couleur)
+      setAddedToBag(true)
+      playSuccessSound()
+    } catch (error) {
+      addLocked.current = false
+    }
   }
 
   const aDesTailles =
@@ -138,12 +227,15 @@ function ProductDetailPage() {
     produit.tailles.length > 0
 
   const aDesCouleurs =
-    (produit.categorie === 'Vêtements' ||
-      produit.categorie === 'Chaussures') &&
     Array.isArray(produit.couleurs) &&
     produit.couleurs.length > 0
 
   const imageProduit = getImageProduit()
+
+  const colorLabel =
+    produit.categorie === 'Maquillage'
+      ? 'Shade'
+      : 'Color'
 
   return (
     <div className="dz-detail-page">
@@ -153,13 +245,13 @@ function ProductDetailPage() {
         <div className="dz-breadcrumb">
 
           <Link to="/">
-            Accueil
+            Home
           </Link>
 
           <span>›</span>
 
           <Link to="/produits">
-            Produits
+            Products
           </Link>
 
           <span>›</span>
@@ -192,7 +284,7 @@ function ProductDetailPage() {
           <div className="dz-detail-info">
 
             <span className="dz-detail-label">
-              Produit
+              Product
             </span>
 
             <h1>
@@ -211,14 +303,14 @@ function ProductDetailPage() {
 
             <div className="dz-detail-stock">
               {produit.stock > 0
-                ? `✓ ${produit.stock} produits disponibles`
-                : '✕ Produit en rupture de stock'}
+                ? `✓ ${produit.stock} items available`
+                : '✕ Out of Stock'}
             </div>
 
             <div className="dz-quantity-section">
 
               <span>
-                Quantité
+                Quantity
               </span>
 
               <div className="dz-quantity">
@@ -247,46 +339,11 @@ function ProductDetailPage() {
 
             </div>
 
-            {aDesTailles && (
-              <div className="dz-size-section">
-
-                <span>
-                  {produit.categorie === 'Chaussures'
-                    ? 'Pointure'
-                    : 'Taille'}
-                </span>
-
-                <div className="dz-size-options">
-
-                  {produit.tailles.map(function (option) {
-                    return (
-                      <button
-                        key={option}
-                        type="button"
-                        className={
-                          taille === option
-                            ? 'active'
-                            : ''
-                        }
-                        onClick={function () {
-                          setTaille(option)
-                        }}
-                      >
-                        {option}
-                      </button>
-                    )
-                  })}
-
-                </div>
-
-              </div>
-            )}
-
             {aDesCouleurs && (
               <div className="dz-color-section">
 
                 <span>
-                  Couleur
+                  {colorLabel}
                 </span>
 
                 <div className="dz-color-options">
@@ -315,31 +372,67 @@ function ProductDetailPage() {
               </div>
             )}
 
+            {aDesTailles && (
+              <div className="dz-size-section">
+
+                <span>
+                  {produit.categorie === 'Chaussures'
+                    ? 'Shoe Size'
+                    : 'Size'}
+                </span>
+
+                <div className="dz-size-options">
+
+                  {produit.tailles.map(function (option) {
+                    return (
+                      <button
+                        key={option}
+                        type="button"
+                        className={
+                          taille === option
+                            ? 'active'
+                            : ''
+                        }
+                        onClick={function () {
+                          choisirTaille(option)
+                        }}
+                      >
+                        {option}
+                      </button>
+                    )
+                  })}
+
+                </div>
+
+              </div>
+            )}
+
             <button
               className="dz-add-cart"
               onClick={handleAddToCart}
               disabled={
                 produit.stock === 0 ||
+                addedToBag ||
                 (aDesTailles && !taille) ||
                 (aDesCouleurs && !couleur)
               }
             >
-              🛒
-
               {produit.stock === 0
-                ? ' Rupture de stock'
-                : aDesTailles && !taille
-                  ? ' Choisir une taille'
-                  : aDesCouleurs && !couleur
-                    ? ' Choisir une couleur'
-                    : ' Ajouter au panier'}
+                ? '✕ Out of Stock'
+                : addedToBag
+                  ? '✓ Added to Bag'
+                  : aDesTailles && !taille
+                    ? 'Choose a Size'
+                    : aDesCouleurs && !couleur
+                      ? `Choose a ${colorLabel}`
+                      : 'Add to Bag'}
             </button>
 
             <Link
               to="/produits"
               className="dz-back-products"
             >
-              ← Continuer mes achats
+              ← Continue Shopping
             </Link>
 
           </div>

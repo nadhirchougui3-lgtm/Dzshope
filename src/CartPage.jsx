@@ -21,10 +21,10 @@ function CartPage() {
     return (
       <div className="dz-cart-empty">
         <FaShoppingCart className="dz-empty-icon" />
-        <h1>Ton panier est vide</h1>
-        <p>Ajoute des produits pour commencer tes achats.</p>
+        <h1>Your Shopping Bag Is Empty</h1>
+        <p>Add products to start shopping.</p>
         <Link to="/" className="dz-shop-btn">
-          Continuer mes achats
+          Continue Shopping
         </Link>
       </div>
     )
@@ -36,8 +36,8 @@ function CartPage() {
       <div className="dz-cart-header">
         <div>
           <span className="dz-cart-label">DZSHOP</span>
-          <h1>Votre panier</h1>
-          <p>{cartItems.length} produit(s) dans votre panier</p>
+          <h1>Your Shopping Bag</h1>
+          <p>{cartItems.length} item(s) in your shopping bag</p>
         </div>
 
         <FaShoppingCart className="dz-cart-header-icon" />
@@ -67,8 +67,8 @@ function CartPage() {
                   {item.taille && (
                     <div className="dz-cart-size">
                       {item.categorie === 'Chaussures'
-                        ? 'Pointure'
-                        : 'Taille'}: <strong>{item.taille}</strong>
+                        ? 'Shoe Size'
+                        : 'Size'}: <strong>{item.taille}</strong>
                     </div>
                   )}
 
@@ -143,18 +143,18 @@ function CartPage() {
 
           <div className="dz-summary-card">
 
-            <h2>Résumé</h2>
+            <h2>Summary</h2>
 
             <div className="dz-summary-line">
-              <span>Sous-total</span>
+              <span>Subtotal</span>
               <strong>
                 {total.toLocaleString('fr-FR')} DA
               </strong>
             </div>
 
             <div className="dz-summary-line">
-              <span>Livraison</span>
-              <span className="dz-free">GRATUITE</span>
+              <span>Shipping</span>
+              <span className="dz-free">FREE</span>
             </div>
 
             <hr />
@@ -179,17 +179,17 @@ function CartPage() {
 
             <div>
               <FaTruck />
-              <span>Livraison rapide</span>
+              <span>Fast Delivery</span>
             </div>
 
             <div>
               <FaShieldAlt />
-              <span>Paiement sécurisé</span>
+              <span>Secure Payment</span>
             </div>
 
             <div>
               <FaUndo />
-              <span>Retour facile</span>
+              <span>Easy Returns</span>
             </div>
 
           </div>

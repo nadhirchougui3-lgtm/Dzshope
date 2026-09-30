@@ -4,7 +4,6 @@ import { apiFetch, lireJson } from './api'
 const AuthContext = createContext()
 
 export function AuthProvider({ children }) {
-  // Au démarrage, on relit l'utilisateur sauvegardé : un F5 ne déconnecte plus
   const [user, setUser] = useState(function () {
     try {
       const sauvegarde = localStorage.getItem('user')
@@ -26,7 +25,6 @@ export function AuthProvider({ children }) {
     setUser(null)
   }
 
-  // Au démarrage, on vérifie que le token est encore valable
   useEffect(function () {
     if (!localStorage.getItem('token')) return
 
@@ -36,9 +34,7 @@ export function AuthProvider({ children }) {
         localStorage.setItem('user', JSON.stringify(data.user))
         setUser(data.user)
       })
-      .catch(function () {
-        // Le 401 est déjà géré par l'intercepteur de api.js
-      })
+      .catch(function () {})
   }, [])
 
   async function login(telephone, password) {
@@ -51,7 +47,6 @@ export function AuthProvider({ children }) {
     return data.user
   }
 
-  // Connexion avec Google : on envoie à l'API le jeton reçu de Google, elle le fait vérifier
   async function loginGoogle(credential) {
     const reponse = await apiFetch('/api/auth/google', {
       method: 'POST',

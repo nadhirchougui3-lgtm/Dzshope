@@ -14,11 +14,11 @@ function ProductsPage() {
     apiFetch('/api/products')
       .then(lireJson)
       .then(function (data) {
-        console.log('Produits API:', data)
+        console.log('Products API:', data)
 
         data.forEach(function (p) {
           if (p.categorie === 'Maquillage') {
-            console.log('Image Maquillage:', p.nom, p.image)
+            console.log('Makeup Image:', p.nom, p.image)
           }
         })
 
@@ -36,7 +36,7 @@ function ProductsPage() {
     return (
       <div className="dz-loading">
         <div className="dz-spinner"></div>
-        <p>Chargement des produits...</p>
+        <p>Loading products...</p>
       </div>
     )
   }
@@ -56,17 +56,17 @@ function ProductsPage() {
 
           <div>
             <span className="dz-products-badge">
-              🛍️ Notre collection
+              🛍️ Our Collection
             </span>
 
             <h1>
-              {categorie ? categorie : 'Nos'} <span>produits</span>
+              {categorie ? categorie : 'Our'} <span>Products</span>
             </h1>
 
             <p>
               {categorie
-                ? `Découvrez nos produits de la catégorie ${categorie}.`
-                : 'Découvrez notre sélection de produits.'}
+                ? `Discover our products in the ${categorie} category.`
+                : 'Discover our selection of products.'}
             </p>
           </div>
 
@@ -99,7 +99,7 @@ function ProductsPage() {
                         alt={p.nom}
                         onError={function (e) {
                           console.error(
-                            'Image impossible à charger:',
+                            'Image failed to load:',
                             p.nom,
                             imagePath
                           )
@@ -134,15 +134,15 @@ function ProductsPage() {
 
                     <div className="dz-stock">
                       {p.stock > 0
-                        ? `✓ ${p.stock} disponibles`
-                        : '✕ Rupture de stock'}
+                        ? `✓ ${p.stock} available`
+                        : '✕ Out of Stock'}
                     </div>
 
                     <Link
                       to={'/produit/' + p._id}
                       className="dz-product-button"
                     >
-                      <span>Voir le produit</span>
+                      <span>View Product</span>
                       <strong>→</strong>
                     </Link>
 
@@ -158,7 +158,7 @@ function ProductsPage() {
 
         {produitsFiltres.length === 0 && (
           <div className="text-center py-5">
-            <h3>Aucun produit trouvé</h3>
+            <h3>No products found</h3>
           </div>
         )}
 
