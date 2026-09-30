@@ -106,9 +106,6 @@ function CheckoutPage() {
     setChargement(true)
 
     try {
-      // On envoie SEULEMENT quel produit et combien : le SERVEUR retrouve les
-      // vrais prix dans la base et calcule le total. Jamais le prix ni le total :
-      // ils seraient modifiables depuis les outils du navigateur (F12).
       const produits = cartItems.map(function (item) {
         return {
           productId: item._id,
@@ -143,13 +140,13 @@ function CheckoutPage() {
 
         <Link to="/panier" className="dz-back-link">
           <FaArrowLeft />
-          Retour au panier
+          Back to Shopping Bag
         </Link>
 
         <div>
           <span className="dz-checkout-label">DZSHOP</span>
-          <h1>Finaliser la commande</h1>
-          <p>Complétez vos informations de livraison</p>
+          <h1>Complete Your Order</h1>
+          <p>Enter your delivery information</p>
         </div>
 
       </div>
@@ -166,26 +163,26 @@ function CheckoutPage() {
             <div className="dz-section-title">
               <div>
                 <span>01</span>
-                <h2>Informations de livraison</h2>
+                <h2>Delivery Information</h2>
               </div>
             </div>
 
             <div className="dz-checkout-fields">
 
               <div className="dz-field">
-                <label>Nom complet</label>
+                <label>Full Name</label>
                 <input
                   type="text"
                   name="nom"
                   value={form.nom}
                   onChange={handleChange}
-                  placeholder="Votre nom complet"
+                  placeholder="Your full name"
                   required
                 />
               </div>
 
               <div className="dz-field">
-                <label>Numéro de téléphone</label>
+                <label>Phone Number</label>
                 <input
                   type="tel"
                   name="telephone"
@@ -366,13 +363,13 @@ function CheckoutPage() {
             </div>
 
             <div className="dz-field dz-address-field">
-              <label>Adresse</label>
+              <label>Address</label>
 
               <textarea
                 name="adresse"
                 value={form.adresse}
                 onChange={handleChange}
-                placeholder="Votre adresse complète"
+                placeholder="Your full address"
                 required
               />
             </div>
@@ -380,7 +377,7 @@ function CheckoutPage() {
             <div className="dz-section-title dz-delivery-title">
               <div>
                 <span>02</span>
-                <h2>Mode de livraison</h2>
+                <h2>Delivery Method</h2>
               </div>
             </div>
 
@@ -407,8 +404,8 @@ function CheckoutPage() {
                 </strong>
 
                 <span>
-                  <b>Livraison à domicile</b>
-                  Livraison rapide à votre adresse
+                  <b>Home Delivery</b>
+                  Fast delivery to your address
                 </span>
               </button>
 
@@ -433,8 +430,8 @@ function CheckoutPage() {
                 </strong>
 
                 <span>
-                  <b>Livraison au bureau</b>
-                  Retrait auprès du transporteur
+                  <b>Office Delivery</b>
+                  Pickup from the carrier
                 </span>
               </button>
 
@@ -446,8 +443,8 @@ function CheckoutPage() {
               disabled={chargement || cartItems.length === 0}
             >
               {chargement
-                ? 'Création de la commande...'
-                : 'Confirmer la commande'}
+                ? 'Creating Order...'
+                : 'Confirm Order'}
             </button>
 
           </form>
@@ -458,7 +455,7 @@ function CheckoutPage() {
 
           <div className="dz-checkout-summary-card">
 
-            <h2>Votre commande</h2>
+            <h2>Your Order</h2>
 
             <div className="dz-checkout-items">
 
@@ -478,14 +475,14 @@ function CheckoutPage() {
                       <h3>{item.nom}</h3>
 
                       <span>
-                        Quantité : {item.quantity}
+                        Quantity: {item.quantity}
                       </span>
 
                       {item.taille && (
                         <span>
                           {item.categorie === 'Chaussures'
-                            ? 'Pointure'
-                            : 'Taille'} : {item.taille}
+                            ? 'Shoe Size'
+                            : 'Size'}: {item.taille}
                         </span>
                       )}
                     </div>
@@ -510,7 +507,7 @@ function CheckoutPage() {
 
             <div className="dz-secure-checkout">
               <FaLock />
-              <span>Paiement à la livraison</span>
+              <span>Cash on Delivery</span>
             </div>
 
           </div>
@@ -523,4 +520,4 @@ function CheckoutPage() {
   )
 }
 
-export default CheckoutPage ; 
+export default CheckoutPage ;

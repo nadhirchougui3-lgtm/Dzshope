@@ -52,9 +52,9 @@ function App() {
                   path="*"
                   element={
                     <div className="text-center py-5">
-                      <h1>404 - Page Non Trouvée</h1>
+                      <h1>404 - Page Not Found</h1>
                       <p className="text-muted">
-                        La page que vous cherchez n'existe pas.
+                        The page you are looking for does not exist.
                       </p>
                     </div>
                   }
@@ -72,4 +72,4 @@ function App() {
   )
 }
 
-export default App
+export default App ;

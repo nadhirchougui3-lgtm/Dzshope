@@ -153,7 +153,7 @@ function CategoriesPage() {
 
                 <div className="dz-category-content">
                   <span className="dz-category-name">
-                    {categorie.nom}
+                    {categorie.label}
                   </span>
 
                   <h2>
@@ -178,4 +178,4 @@ function CategoriesPage() {
   )
 }
 
-export default CategoriesPage 
+export default CategoriesPage ;

@@ -211,7 +211,7 @@ function LoginPage() {
                   marginBottom: '8px'
                 }}
               >
-                Phone number
+                Phone Number
               </label>
 
               <input
@@ -312,7 +312,7 @@ function LoginPage() {
                 transition: '0.2s ease'
               }}
             >
-              {envoi ? 'Connexion...' : 'Sign In'}
+              {envoi ? 'Signing In...' : 'Sign In'}
               {!envoi && <FaArrowRight size={13} />}
             </button>
 
@@ -396,4 +396,4 @@ function LoginPage() {
   )
 }
 
-export default LoginPage
+export default LoginPage ;

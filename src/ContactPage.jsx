@@ -8,42 +8,37 @@ function ContactPage() {
   return (
     <div className="bg-light min-vh-100 py-5">
       <Container>
-
-        {/* Header */}
         <div className="text-center mb-5">
           <p className="text-muted mb-2">DZSHOP</p>
 
           <h1 className="fw-bold display-5 mb-3">
-            Contactez-nous
+            Contact Us
           </h1>
 
           <p className="text-muted mx-auto" style={{ maxWidth: "600px" }}>
-            Une question, une commande ou besoin d'aide ?
-            Contactez-nous directement sur votre plateforme préférée.
+            Have a question, an order inquiry, or need help?
+            Contact us directly on your preferred platform.
           </p>
         </div>
 
         <Row className="g-4 align-items-stretch">
-
-          {/* LEFT SIDE */}
           <Col lg={5}>
             <div
               className="bg-dark text-white rounded-4 p-4 p-md-5 h-100 shadow"
             >
               <p className="text-white-50 mb-2">
-                BESOIN D'AIDE ?
+                NEED HELP?
               </p>
 
               <h2 className="fw-bold mb-4">
-                Parlons ensemble.
+                Let&apos;s talk.
               </h2>
 
               <p className="text-white-50 mb-5">
-                Nous sommes disponibles pour répondre à vos questions
-                concernant les produits, les commandes et la livraison.
+                We are available to answer your questions about products,
+                orders, and delivery.
               </p>
 
-              {/* WhatsApp */}
               <a
                 href="https://wa.me/213562997237"
                 target="_blank"
@@ -70,7 +65,7 @@ function ContactPage() {
                   <div>
                     <div className="fw-bold">WhatsApp</div>
                     <small className="text-muted">
-                      Chattez avec nous directement
+                      Chat with us directly
                     </small>
                   </div>
 
@@ -80,10 +75,7 @@ function ContactPage() {
                 </div>
               </a>
 
-              {/* Socials */}
               <div className="row g-3">
-
-                {/* Instagram */}
                 <div className="col-6">
                   <a
                     href="#"
@@ -99,7 +91,6 @@ function ContactPage() {
                   </a>
                 </div>
 
-                {/* Facebook */}
                 <div className="col-6">
                   <a
                     href="#"
@@ -115,7 +106,6 @@ function ContactPage() {
                   </a>
                 </div>
 
-                {/* TikTok */}
                 <div className="col-6">
                   <a
                     href="#"
@@ -131,7 +121,6 @@ function ContactPage() {
                   </a>
                 </div>
 
-                {/* Telegram */}
                 <div className="col-6">
                   <a
                     href="#"
@@ -146,40 +135,35 @@ function ContactPage() {
                     </div>
                   </a>
                 </div>
-
               </div>
             </div>
           </Col>
 
-          {/* RIGHT SIDE */}
           <Col lg={7}>
             <div className="bg-white rounded-4 shadow-sm p-4 p-md-5 h-100">
-
               <div className="mb-4">
                 <p className="text-muted mb-1">
                   MESSAGE
                 </p>
 
                 <h2 className="fw-bold mb-2">
-                  Envoyez-nous un message
+                  Send Us a Message
                 </h2>
 
                 <p className="text-muted">
-                  Remplissez le formulaire et nous vous répondrons
-                  dès que possible.
+                  Fill out the form and we will get back to you as soon as possible.
                 </p>
               </div>
 
               <Form>
-
                 <Row>
                   <Col md={6}>
                     <Form.Group className="mb-4">
-                      <Form.Label>Nom</Form.Label>
+                      <Form.Label>Name</Form.Label>
 
                       <Form.Control
                         type="text"
-                        placeholder="Votre nom"
+                        placeholder="Your name"
                         className="py-3"
                       />
                     </Form.Group>
@@ -191,7 +175,7 @@ function ContactPage() {
 
                       <Form.Control
                         type="email"
-                        placeholder="Votre email"
+                        placeholder="Your email"
                         className="py-3"
                       />
                     </Form.Group>
@@ -199,11 +183,11 @@ function ContactPage() {
                 </Row>
 
                 <Form.Group className="mb-4">
-                  <Form.Label>Sujet</Form.Label>
+                  <Form.Label>Subject</Form.Label>
 
                   <Form.Control
                     type="text"
-                    placeholder="De quoi souhaitez-vous parler ?"
+                    placeholder="What would you like to talk about?"
                     className="py-3"
                   />
                 </Form.Group>
@@ -214,7 +198,7 @@ function ContactPage() {
                   <Form.Control
                     as="textarea"
                     rows={7}
-                    placeholder="Écrivez votre message..."
+                    placeholder="Write your message..."
                     className="py-3"
                   />
                 </Form.Group>
@@ -224,15 +208,12 @@ function ContactPage() {
                   variant="dark"
                   className="w-100 py-3 fw-semibold"
                 >
-                  Envoyer le message →
+                  Send Message →
                 </Button>
-
               </Form>
             </div>
           </Col>
-
         </Row>
-
       </Container>
     </div>
   );
