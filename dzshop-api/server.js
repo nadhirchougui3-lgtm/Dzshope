@@ -18,6 +18,8 @@ const PORT = process.env.PORT || 5000
 const origines = [
   'http://localhost:5173',
   'http://localhost:5174',
+  'http://localhost:5175',
+
   process.env.FRONTEND_URL
 ].filter(Boolean)
 
