@@ -9,6 +9,7 @@ export function AuthProvider({ children }) {
       const sauvegarde = localStorage.getItem('user')
       return sauvegarde ? JSON.parse(sauvegarde) : null
     } catch (erreur) {
+      localStorage.removeItem('user')
       return null
     }
   })
@@ -26,7 +27,9 @@ export function AuthProvider({ children }) {
   }
 
   useEffect(function () {
-    if (!localStorage.getItem('token')) return
+    if (!localStorage.getItem('token')) {
+      return
+    }
 
     apiFetch('/api/auth/me')
       .then(lireJson)
@@ -34,14 +37,22 @@ export function AuthProvider({ children }) {
         localStorage.setItem('user', JSON.stringify(data.user))
         setUser(data.user)
       })
-      .catch(function () {})
+      .catch(function () {
+        localStorage.removeItem('token')
+        localStorage.removeItem('user')
+        setUser(null)
+      })
   }, [])
 
   async function login(telephone, password) {
     const reponse = await apiFetch('/api/auth/login', {
       method: 'POST',
-      body: JSON.stringify({ telephone: telephone, password: password }),
+      body: JSON.stringify({
+        telephone: telephone,
+        password: password
+      })
     })
+
     const data = await lireJson(reponse)
     sauvegarder(data)
     return data.user
@@ -50,8 +61,11 @@ export function AuthProvider({ children }) {
   async function loginGoogle(credential) {
     const reponse = await apiFetch('/api/auth/google', {
       method: 'POST',
-      body: JSON.stringify({ credential: credential }),
+      body: JSON.stringify({
+        credential: credential
+      })
     })
+
     const data = await lireJson(reponse)
     sauvegarder(data)
     return data.user
@@ -60,15 +74,28 @@ export function AuthProvider({ children }) {
   async function register(nom, telephone, password) {
     const reponse = await apiFetch('/api/auth/register', {
       method: 'POST',
-      body: JSON.stringify({ nom: nom, telephone: telephone, password: password }),
+      body: JSON.stringify({
+        nom: nom,
+        telephone: telephone,
+        password: password
+      })
     })
+
     const data = await lireJson(reponse)
     sauvegarder(data)
     return data.user
   }
 
   return (
-    <AuthContext.Provider value={{ user, login, loginGoogle, register, logout }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        login,
+        loginGoogle,
+        register,
+        logout
+      }}
+    >
       {children}
     </AuthContext.Provider>
   )
