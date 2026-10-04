@@ -1,17 +1,12 @@
 require('dotenv').config()
 
 const mongoose = require('mongoose')
-
 const fs = require('fs')
-
 const path = require('path')
-
 const https = require('https')
-
 const http = require('http')
 
 const ProductModule = require('./models/Product.js')
-
 const Product = ProductModule.default || ProductModule
 
 const imagesFolder = path.join(
@@ -279,6 +274,41 @@ function buildQueries(
     `"${productName}"${variant} high resolution`,
     `"${productName}"${variant} white background`
   ]
+
+  if (productName === 'Omega Speedmaster Moonwatch Professional') {
+    queries.push(
+      '"Omega Speedmaster Moonwatch Professional" site:omegawatches.com',
+      '"Omega Speedmaster Moonwatch Professional" site:omegawatches.com.hk',
+      '"Omega Speedmaster Moonwatch Professional" 310.30.42.50.01.001',
+      '"Omega Speedmaster Moonwatch Professional" 310.30.42.50.01.002',
+      '"Omega Speedmaster Moonwatch Professional" official Omega watch',
+      '"Omega Speedmaster Moonwatch Professional" official product photo'
+    )
+  }
+
+  if (productName === 'Rolex Datejust 41') {
+    queries.push(
+      '"Rolex Datejust 41" site:rolex.com',
+      '"Rolex Datejust 41" site:assets.rolex.com',
+      '"Rolex Datejust 41" site:content.rolex.com',
+      '"Rolex Datejust 41" 126300',
+      '"Rolex Datejust 41" 126334',
+      '"Rolex Datejust 41" official Rolex watch',
+      '"Rolex Datejust 41" official product photo'
+    )
+  }
+
+  if (productName === 'Rolex GMT-Master II') {
+    queries.push(
+      '"Rolex GMT-Master II" site:rolex.com',
+      '"Rolex GMT-Master II" site:assets.rolex.com',
+      '"Rolex GMT-Master II" site:content.rolex.com',
+      '"Rolex GMT-Master II" 126710BLNR',
+      '"Rolex GMT-Master II" 126710GRNR',
+      '"Rolex GMT-Master II" official Rolex watch',
+      '"Rolex GMT-Master II" official product photo'
+    )
+  }
 
   if (category === 'Maquillage') {
     queries.push(
@@ -901,15 +931,11 @@ async function seedImages() {
     }
 
     let productSuccess = 0
-
     let productFailed = 0
-
     let variantSuccess = 0
-
     let variantFailed = 0
 
     const failedProducts = []
-
     const failedVariants = []
 
     for (

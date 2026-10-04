@@ -1,222 +1,183 @@
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
+import {
+  FaWhatsapp,
+  FaInstagram,
+  FaFacebookF,
+  FaTiktok,
+  FaTelegramPlane,
+  FaArrowRight,
+  FaEnvelope,
+  FaPhone
+} from 'react-icons/fa'
+import './ContactPage.css'
 
 function ContactPage() {
   return (
-    <div className="bg-light min-vh-100 py-5">
-      <Container>
-        <div className="text-center mb-5">
-          <p className="text-muted mb-2">DZSHOP</p>
+    <main className="dz-contact-page">
+      <section className="dz-contact-hero">
+        <span>DZSHOP SUPPORT</span>
 
-          <h1 className="fw-bold display-5 mb-3">
-            Contact Us
-          </h1>
+        <h1>
+          How can <span>we help?</span>
+        </h1>
 
-          <p className="text-muted mx-auto" style={{ maxWidth: "600px" }}>
-            Have a question, an order inquiry, or need help?
-            Contact us directly on your preferred platform.
-          </p>
-        </div>
+        <p>
+          Questions about products, orders, delivery or
+          payment? Our team is here to help.
+        </p>
+      </section>
 
-        <Row className="g-4 align-items-stretch">
-          <Col lg={5}>
-            <div
-              className="bg-dark text-white rounded-4 p-4 p-md-5 h-100 shadow"
+      <section className="dz-contact-layout">
+        <div className="dz-contact-info">
+          <div className="dz-contact-info-inner">
+            <span className="dz-contact-kicker">
+              GET IN TOUCH
+            </span>
+
+            <h2>
+              Let&apos;s talk<span>.</span>
+            </h2>
+
+            <p>
+              Choose the channel that works best for
+              you and contact DZShop directly.
+            </p>
+
+            <a
+              href="https://wa.me/213562997237"
+              target="_blank"
+              rel="noreferrer"
+              className="dz-contact-whatsapp"
             >
-              <p className="text-white-50 mb-2">
-                NEED HELP?
-              </p>
+              <div className="dz-contact-social-icon">
+                <FaWhatsapp />
+              </div>
 
-              <h2 className="fw-bold mb-4">
-                Let&apos;s talk.
-              </h2>
+              <div>
+                <strong>WhatsApp</strong>
+                <span>Chat with us directly</span>
+              </div>
 
-              <p className="text-white-50 mb-5">
-                We are available to answer your questions about products,
-                orders, and delivery.
-              </p>
+              <FaArrowRight />
+            </a>
 
-              <a
-                href="https://wa.me/213562997237"
-                target="_blank"
-                rel="noreferrer"
-                className="text-decoration-none"
-              >
-                <div
-                  className="bg-white text-dark rounded-4 p-3 mb-4 d-flex align-items-center"
-                  style={{ transition: "0.2s" }}
-                >
-                  <div
-                    className="rounded-circle d-flex align-items-center justify-content-center me-3"
-                    style={{
-                      width: "52px",
-                      height: "52px",
-                      backgroundColor: "#25D366",
-                      color: "white",
-                      fontSize: "24px"
-                    }}
-                  >
-                    W
-                  </div>
+            <div className="dz-contact-social-grid">
+              <a href="#" className="dz-contact-social-card">
+                <FaInstagram />
 
-                  <div>
-                    <div className="fw-bold">WhatsApp</div>
-                    <small className="text-muted">
-                      Chat with us directly
-                    </small>
-                  </div>
-
-                  <div className="ms-auto fs-4">
-                    →
-                  </div>
+                <div>
+                  <strong>Instagram</strong>
+                  <span>@dzshop</span>
                 </div>
               </a>
 
-              <div className="row g-3">
-                <div className="col-6">
-                  <a
-                    href="#"
-                    className="text-decoration-none text-white"
-                  >
-                    <div className="border border-secondary rounded-4 p-3 h-100">
-                      <div className="fs-3 mb-2">◎</div>
-                      <div className="fw-semibold">Instagram</div>
-                      <small className="text-white-50">
-                        @dzshop
-                      </small>
-                    </div>
-                  </a>
-                </div>
+              <a href="#" className="dz-contact-social-card">
+                <FaFacebookF />
 
-                <div className="col-6">
-                  <a
-                    href="#"
-                    className="text-decoration-none text-white"
-                  >
-                    <div className="border border-secondary rounded-4 p-3 h-100">
-                      <div className="fs-3 mb-2">f</div>
-                      <div className="fw-semibold">Facebook</div>
-                      <small className="text-white-50">
-                        DZShop
-                      </small>
-                    </div>
-                  </a>
+                <div>
+                  <strong>Facebook</strong>
+                  <span>DZShop</span>
                 </div>
+              </a>
 
-                <div className="col-6">
-                  <a
-                    href="#"
-                    className="text-decoration-none text-white"
-                  >
-                    <div className="border border-secondary rounded-4 p-3 h-100">
-                      <div className="fs-3 mb-2">♪</div>
-                      <div className="fw-semibold">TikTok</div>
-                      <small className="text-white-50">
-                        @dzshop
-                      </small>
-                    </div>
-                  </a>
-                </div>
+              <a href="#" className="dz-contact-social-card">
+                <FaTiktok />
 
-                <div className="col-6">
-                  <a
-                    href="#"
-                    className="text-decoration-none text-white"
-                  >
-                    <div className="border border-secondary rounded-4 p-3 h-100">
-                      <div className="fs-3 mb-2">➤</div>
-                      <div className="fw-semibold">Telegram</div>
-                      <small className="text-white-50">
-                        DZShop
-                      </small>
-                    </div>
-                  </a>
+                <div>
+                  <strong>TikTok</strong>
+                  <span>@dzshop</span>
                 </div>
-              </div>
+              </a>
+
+              <a href="#" className="dz-contact-social-card">
+                <FaTelegramPlane />
+
+                <div>
+                  <strong>Telegram</strong>
+                  <span>DZShop</span>
+                </div>
+              </a>
             </div>
-          </Col>
 
-          <Col lg={7}>
-            <div className="bg-white rounded-4 shadow-sm p-4 p-md-5 h-100">
-              <div className="mb-4">
-                <p className="text-muted mb-1">
-                  MESSAGE
-                </p>
+            <div className="dz-contact-direct">
+              <a href="tel:0562997237">
+                <FaPhone />
+                <span>0562 99 72 37</span>
+              </a>
 
-                <h2 className="fw-bold mb-2">
-                  Send Us a Message
-                </h2>
+              <a href="mailto:dzshop@gmail.com">
+                <FaEnvelope />
+                <span>dzshop@gmail.com</span>
+              </a>
+            </div>
+          </div>
+        </div>
 
-                <p className="text-muted">
-                  Fill out the form and we will get back to you as soon as possible.
-                </p>
+        <div className="dz-contact-form-card">
+          <div className="dz-contact-form-header">
+            <span className="dz-contact-kicker">
+              MESSAGE
+            </span>
+
+            <h2>Send us a message</h2>
+
+            <p className="dz-contact-form-description">
+              Fill in the form and we&apos;ll get back to
+              you as soon as possible.
+            </p>
+          </div>
+
+          <form className="dz-contact-form">
+            <div className="dz-contact-row">
+              <div className="dz-contact-field">
+                <label>Name</label>
+
+                <input
+                  type="text"
+                  placeholder="Your name"
+                  required
+                />
               </div>
 
-              <Form>
-                <Row>
-                  <Col md={6}>
-                    <Form.Group className="mb-4">
-                      <Form.Label>Name</Form.Label>
+              <div className="dz-contact-field">
+                <label>Email</label>
 
-                      <Form.Control
-                        type="text"
-                        placeholder="Your name"
-                        className="py-3"
-                      />
-                    </Form.Group>
-                  </Col>
-
-                  <Col md={6}>
-                    <Form.Group className="mb-4">
-                      <Form.Label>Email</Form.Label>
-
-                      <Form.Control
-                        type="email"
-                        placeholder="Your email"
-                        className="py-3"
-                      />
-                    </Form.Group>
-                  </Col>
-                </Row>
-
-                <Form.Group className="mb-4">
-                  <Form.Label>Subject</Form.Label>
-
-                  <Form.Control
-                    type="text"
-                    placeholder="What would you like to talk about?"
-                    className="py-3"
-                  />
-                </Form.Group>
-
-                <Form.Group className="mb-4">
-                  <Form.Label>Message</Form.Label>
-
-                  <Form.Control
-                    as="textarea"
-                    rows={7}
-                    placeholder="Write your message..."
-                    className="py-3"
-                  />
-                </Form.Group>
-
-                <Button
-                  type="submit"
-                  variant="dark"
-                  className="w-100 py-3 fw-semibold"
-                >
-                  Send Message →
-                </Button>
-              </Form>
+                <input
+                  type="email"
+                  placeholder="Your email"
+                  required
+                />
+              </div>
             </div>
-          </Col>
-        </Row>
-      </Container>
-    </div>
-  );
+
+            <div className="dz-contact-field">
+              <label>Subject</label>
+
+              <input
+                type="text"
+                placeholder="What would you like to talk about?"
+                required
+              />
+            </div>
+
+            <div className="dz-contact-field">
+              <label>Message</label>
+
+              <textarea
+                rows="6"
+                placeholder="Write your message..."
+                required
+              />
+            </div>
+
+            <button type="submit">
+              <span>Send Message</span>
+              <FaArrowRight />
+            </button>
+          </form>
+        </div>
+      </section>
+    </main>
+  )
 }
 
-export default ContactPage;
+export default ContactPage 

@@ -10,6 +10,7 @@ import ProductDetailPage from './ProductDetailPage'
 import CategoriesPage from './CategoriesPage'
 import CartPage from './CartPage'
 import CheckoutPage from './CheckoutPage'
+import OrderSuccessPage from './OrderSuccessPage'
 import SignUp from './SignUp'
 import LoginPage from './LoginPage'
 import ContactPage from './ContactPage'
@@ -21,12 +22,10 @@ function App() {
       <AuthProvider>
         <CartProvider>
           <div className="d-flex flex-column min-vh-100">
-
             <Navbar />
 
-            <main className="flex-grow-1 container py-4">
+            <main className="dz-main-content flex-grow-1">
               <Routes>
-
                 <Route path="/" element={<LandingPage />} />
 
                 <Route path="/produits" element={<ProductsPage />} />
@@ -44,6 +43,15 @@ function App() {
                   }
                 />
 
+                <Route
+                  path="/commande/:id"
+                  element={
+                    <PrivateRoute>
+                      <OrderSuccessPage />
+                    </PrivateRoute>
+                  }
+                />
+
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/contact" element={<ContactPage />} />
@@ -51,20 +59,19 @@ function App() {
                 <Route
                   path="*"
                   element={
-                    <div className="text-center py-5">
-                      <h1>404 - Page Not Found</h1>
-                      <p className="text-muted">
+                    <div className="dz-not-found-route">
+                      <h1>404</h1>
+                      <h2>Page Not Found</h2>
+                      <p>
                         The page you are looking for does not exist.
                       </p>
                     </div>
                   }
                 />
-
               </Routes>
             </main>
 
             <Footer />
-
           </div>
         </CartProvider>
       </AuthProvider>

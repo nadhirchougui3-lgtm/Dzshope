@@ -6,11 +6,7 @@ import {
   FaMapMarkerAlt,
   FaPhone,
   FaEnvelope,
-  FaTruck,
-  FaShieldAlt,
-  FaHeadset,
   FaCcVisa,
-  FaCcMastercard,
   FaMoneyBillWave
 } from 'react-icons/fa'
 import './Footer.css'
@@ -19,48 +15,21 @@ function Footer() {
   return (
     <footer className="dz-footer">
 
-      <div className="dz-footer-services">
-
-        <div className="dz-footer-service">
-          <div className="dz-footer-service-icon">
-            <FaTruck />
-          </div>
-          <div>
-            <strong>Fast Delivery</strong>
-            <span>Throughout Algeria</span>
-          </div>
-        </div>
-
-        <div className="dz-footer-service">
-          <div className="dz-footer-service-icon">
-            <FaShieldAlt />
-          </div>
-          <div>
-            <strong>Secure Payment</strong>
-            <span>Buy with confidence</span>
-          </div>
-        </div>
-
-        <div className="dz-footer-service">
-          <div className="dz-footer-service-icon">
-            <FaHeadset />
-          </div>
-          <div>
-            <strong>Customer Service</strong>
-            <span>A team ready to help you</span>
-          </div>
-        </div>
-
-      </div>
-
       <div className="dz-footer-main">
 
         <div className="dz-footer-brand">
 
           <Link to="/" className="dz-footer-logo">
-            <span className="dz-footer-logo-box">DZ</span>
+            <span className="dz-footer-logo-mark">DZ</span>
+
             <span className="dz-footer-logo-text">
-              DZ<span>Shop</span>
+              <span className="dz-footer-shop-name">
+                DZ<span>Shop</span>
+              </span>
+
+              <span className="dz-footer-tagline">
+                Quality · Price · Trust
+              </span>
             </span>
           </Link>
 
@@ -73,9 +42,11 @@ function Footer() {
             <a href="#" aria-label="Facebook">
               <FaFacebookF />
             </a>
+
             <a href="#" aria-label="Instagram">
               <FaInstagram />
             </a>
+
             <a href="#" aria-label="TikTok">
               <FaTiktok />
             </a>
@@ -140,27 +111,52 @@ function Footer() {
       <div className="dz-footer-payment">
 
         <div className="dz-payment-title">
-          Payment methods
+          Payment Methods
         </div>
 
-        <div className="dz-payment-method">
-          <FaMoneyBillWave />
-          <span>Cash on delivery</span>
+        <div className="dz-payment-item">
+          <a
+            href=""
+            className="dz-payment-logo dz-payment-cash-logo"
+            aria-label="Cash on Delivery"
+          >
+            <FaMoneyBillWave />
+          </a>
+
+          <span className="dz-payment-name">
+            Cash on Delivery
+          </span>
         </div>
 
-        <div className="dz-payment-method">
-          <FaCcVisa />
-          <span>Visa</span>
+        <div className="dz-payment-item">
+          <a
+            href=""
+            className="dz-payment-logo dz-payment-visa-logo"
+            aria-label="Visa"
+          >
+            <FaCcVisa />
+          </a>
+
+          <span className="dz-payment-name">
+            Visa
+          </span>
         </div>
 
-        <div className="dz-payment-method">
-          <FaCcMastercard />
-          <span>MasterCard</span>
-        </div>
+        <div className="dz-payment-item">
+          <a
+            href=""
+            className="dz-payment-logo dz-payment-mastercard-logo"
+            aria-label="Mastercard"
+          >
+            <span className="dz-mastercard-mark" aria-hidden="true">
+              <span className="dz-mastercard-circle dz-mastercard-red"></span>
+              <span className="dz-mastercard-circle dz-mastercard-yellow"></span>
+            </span>
+          </a>
 
-        <div className="dz-delivery-note">
-          <FaTruck />
-          <span>Delivery to all 69 wilayas</span>
+          <span className="dz-payment-name">
+            Mastercard
+          </span>
         </div>
 
       </div>
@@ -187,4 +183,4 @@ function Footer() {
   )
 }
 
-export default Footer ;
+export default Footer

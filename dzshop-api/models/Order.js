@@ -1,9 +1,7 @@
 import mongoose from 'mongoose'
 
 const orderSchema = new mongoose.Schema(
-
   {
-    // À qui appartient la commande
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
@@ -13,32 +11,44 @@ const orderSchema = new mongoose.Schema(
 
     nom: {
       type: String,
-      required: true
+      required: true,
+      trim: true
     },
 
     telephone: {
       type: String,
-      required: true
+      required: true,
+      trim: true
     },
 
     wilaya: {
       type: String,
-      required: true
+      required: true,
+      trim: true
     },
 
     commune: {
       type: String,
-      required: true
+      required: true,
+      trim: true
     },
 
     adresse: {
       type: String,
-      required: true
+      required: true,
+      trim: true
     },
 
     livraison: {
       type: String,
       enum: ['domicile', 'bureau'],
+      required: true
+    },
+
+    paiement: {
+      type: String,
+      enum: ['cash_on_delivery'],
+      default: 'cash_on_delivery',
       required: true
     },
 
@@ -56,19 +66,27 @@ const orderSchema = new mongoose.Schema(
 
         prix: {
           type: Number,
-          required: true
+          required: true,
+          min: 0
         },
 
         quantity: {
           type: Number,
-          required: true
+          required: true,
+          min: 1
         },
 
         image: {
-          type: String
+          type: String,
+          default: ''
         },
 
         taille: {
+          type: String,
+          default: ''
+        },
+
+        couleur: {
           type: String,
           default: ''
         }
@@ -77,16 +95,23 @@ const orderSchema = new mongoose.Schema(
 
     total: {
       type: Number,
-      required: true
+      required: true,
+      min: 0
     },
 
     statut: {
       type: String,
-      default: 'en attente'
+      enum: [
+        'en attente',
+        'confirmee',
+        'expediee',
+        'livree',
+        'annulee'
+      ],
+      default: 'en attente',
+      index: true
     }
-
   },
-
   {
     timestamps: true
   }

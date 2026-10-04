@@ -2,7 +2,14 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useCart } from './CartContext'
 import { apiFetch, lireJson } from './api'
-import { FaArrowLeft, FaLock, FaTruck, FaChevronDown, FaSearch } from 'react-icons/fa'
+import {
+  FaArrowLeft,
+  FaLock,
+  FaTruck,
+  FaChevronDown,
+  FaSearch,
+  FaMoneyBillWave
+} from 'react-icons/fa'
 import wilayas from './data/wilaya-commune.json'
 import './CheckoutPage.css'
 
@@ -16,7 +23,8 @@ function CheckoutPage() {
     wilaya: '',
     commune: '',
     adresse: '',
-    livraison: 'domicile'
+    livraison: 'domicile',
+    paiement: 'cash_on_delivery'
   })
 
   const [chargement, setChargement] = useState(false)
@@ -110,7 +118,8 @@ function CheckoutPage() {
         return {
           productId: item._id,
           quantity: item.quantity,
-          taille: item.taille || ''
+          taille: item.taille || '',
+          couleur: item.couleur || ''
         }
       })
 
@@ -122,10 +131,11 @@ function CheckoutPage() {
         })
       })
 
-      await lireJson(reponse)
+      const data = await lireJson(reponse)
 
       clearCart()
-      navigate('/panier')
+
+      navigate('/commande/' + data.order._id)
     } catch (error) {
       alert(error.message)
     } finally {
@@ -437,6 +447,34 @@ function CheckoutPage() {
 
             </div>
 
+            <div className="dz-section-title dz-payment-title">
+              <div>
+                <span>03</span>
+                <h2>Payment Method</h2>
+              </div>
+            </div>
+
+            <div className="dz-payment-options">
+
+              <div className="dz-payment-option active">
+
+                <strong>
+                  <FaMoneyBillWave />
+                </strong>
+
+                <span>
+                  <b>Cash on Delivery</b>
+                  Pay when your order arrives
+                </span>
+
+                <i>
+                  <FaLock />
+                </i>
+
+              </div>
+
+            </div>
+
             <button
               type="submit"
               className="dz-confirm-order-btn"
@@ -462,7 +500,7 @@ function CheckoutPage() {
               {cartItems.map(function (item) {
                 return (
                   <div
-                    key={item._id + '-' + item.taille}
+                    key={item._id + '-' + item.taille + '-' + item.couleur}
                     className="dz-checkout-item"
                   >
 
@@ -483,6 +521,12 @@ function CheckoutPage() {
                           {item.categorie === 'Chaussures'
                             ? 'Shoe Size'
                             : 'Size'}: {item.taille}
+                        </span>
+                      )}
+
+                      {item.couleur && (
+                        <span>
+                          Color: {item.couleur}
                         </span>
                       )}
                     </div>
@@ -507,7 +551,7 @@ function CheckoutPage() {
 
             <div className="dz-secure-checkout">
               <FaLock />
-              <span>Cash on Delivery</span>
+              <span>Secure Cash on Delivery</span>
             </div>
 
           </div>
