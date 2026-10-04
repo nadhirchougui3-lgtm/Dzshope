@@ -211,6 +211,7 @@
   color: #77777a;
   font-size: 0.62rem;
   line-height: 1.5;
+  line-clamp: 2;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
 }
