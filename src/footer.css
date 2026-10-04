@@ -1,59 +1,9 @@
 .dz-footer {
   width: 100%;
   margin-top: 70px;
-  background: #080f19;
-  color: #ffffff;
+  background: #1c1c1e;
+  color: #faf9f7;
   overflow: hidden;
-}
-
-.dz-footer-services {
-  width: 100%;
-  min-height: 98px;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  background: #101b29;
-  border-top: 1px solid rgba(255,255,255,0.06);
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-}
-
-.dz-footer-service {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 15px;
-  padding: 20px 30px;
-  border-right: 1px solid rgba(255,255,255,0.08);
-}
-
-.dz-footer-service:last-child {
-  border-right: none;
-}
-
-.dz-footer-service-icon {
-  width: 46px;
-  height: 46px;
-  min-width: 46px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background: rgba(239,68,68,0.11);
-  color: #ef4444;
-  font-size: 18px;
-}
-
-.dz-footer-service strong {
-  display: block;
-  margin-bottom: 5px;
-  color: #ffffff;
-  font-size: 13px;
-  font-weight: 700;
-}
-
-.dz-footer-service span {
-  display: block;
-  color: #8491a3;
-  font-size: 11px;
 }
 
 .dz-footer-main {
@@ -62,7 +12,7 @@
   display: grid;
   grid-template-columns: 1.55fr 1fr 1fr 1fr 1.2fr;
   gap: 42px;
-  background: #080f19;
+  background: #1c1c1e;
 }
 
 .dz-footer-brand {
@@ -70,46 +20,60 @@
 }
 
 .dz-footer-logo {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 9px;
+  width: fit-content;
   margin-bottom: 20px;
-  color: #ffffff;
   text-decoration: none;
 }
 
-.dz-footer-logo-box {
-  width: 50px;
-  height: 50px;
+.dz-footer-logo-mark {
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 12px;
-  background: #ef1f2f;
+  border-radius: 10px;
+  background: #8b1e2d;
   color: #ffffff;
-  font-size: 16px;
-  font-weight: 900;
-  letter-spacing: -1px;
-  box-shadow: 0 8px 22px rgba(239,31,47,0.2);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: -0.4px;
+  box-shadow: 0 6px 16px rgba(139, 30, 45, 0.18);
 }
 
 .dz-footer-logo-text {
-  color: #ffffff;
-  font-size: 27px;
+  display: flex;
+  flex-direction: column;
   line-height: 1;
-  font-weight: 800;
-  letter-spacing: -1px;
 }
 
-.dz-footer-logo-text span {
-  color: #ef4444;
+.dz-footer-shop-name {
+  color: #ffffff;
+  font-size: 21px;
+  font-weight: 800;
+  letter-spacing: -0.7px;
+}
+
+.dz-footer-shop-name span {
+  color: #8b1e2d;
+}
+
+.dz-footer-tagline {
+  margin-top: 5px;
+  color: #888683;
+  font-size: 7px;
+  font-weight: 600;
+  letter-spacing: 1.35px;
 }
 
 .dz-footer-description {
-  max-width: 310px;
-  margin: 0 0 23px;
-  color: #8995a6;
-  font-size: 12px;
+  max-width: 300px;
+  margin: 0 0 22px;
+  color: rgba(250, 249, 247, 0.48);
+  font-size: 11px;
   line-height: 1.8;
 }
 
@@ -120,23 +84,40 @@
 }
 
 .dz-footer-socials a {
-  width: 38px;
-  height: 38px;
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  min-height: 36px;
+  max-width: 36px;
+  max-height: 36px;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid #263444;
-  border-radius: 50%;
-  background: #111c2a;
-  color: #b8c1cc;
-  font-size: 14px;
+  border: 1px solid rgba(250, 249, 247, 0.13);
+  border-radius: 50% !important;
+  background: transparent;
+  color: rgba(250, 249, 247, 0.55);
+  font-size: 12px;
+  line-height: 1;
   text-decoration: none;
-  transition: all 0.25s ease;
+  transition:
+    background 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.25s ease;
 }
 
 .dz-footer-socials a:hover {
-  background: rgba(239,68,68,0.12);
-  transform: translateY(-3px);
+  background: rgba(139, 30, 45, 0.3);
+  border-color: rgba(139, 30, 45, 0.7);
+  color: #ffffff;
+  box-shadow: 0 0 14px rgba(139, 30, 45, 0.2);
+  transform: translateY(-2px);
 }
 
 .dz-footer-column {
@@ -147,42 +128,38 @@
 }
 
 .dz-footer-column h3 {
-  margin: 0 0 22px;
-  color: #ffffff;
-  font-size: 13px;
-  font-weight: 700;
+  margin: 0 0 20px;
+  color: #faf9f7;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
 }
 
 .dz-footer-column h3::after {
   content: "";
   display: block;
-  width: 27px;
-  height: 2px;
-  margin-top: 9px;
-  border-radius: 2px;
-  background: #ef1f2f;
+  width: 20px;
+  height: 1px;
+  margin-top: 8px;
+  background: #8b1e2d;
 }
 
 .dz-footer-column > a {
-  margin-bottom: 13px;
-  color: #8491a3;
-  font-size: 11.5px;
+  margin-bottom: 11px;
+  color: rgba(250, 249, 247, 0.46);
+  font-size: 11px;
   line-height: 1.5;
   text-decoration: none;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease;
 }
 
 .dz-footer-column > a:hover {
-  color: #ffffff;
-  transform: translateX(4px);
+  color: #faf9f7;
 }
 
 .dz-footer-contact {
   padding-left: 4px;
-}
-
-.dz-footer-contact h3 {
-  font-size: 15px;
 }
 
 .dz-contact-item {
@@ -190,128 +167,203 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 17px;
-  color: #8491a3;
-  font-size: 11.5px;
+  margin-bottom: 15px;
+  color: rgba(250, 249, 247, 0.5);
+  font-size: 11px;
 }
 
 .dz-contact-item svg {
-  min-width: 15px;
-  color: #ef1f2f;
-  font-size: 14px;
+  min-width: 14px;
+  color: #8b1e2d;
+  font-size: 12px;
 }
 
 .dz-contact-item a {
-  color: #8491a3;
+  color: rgba(250, 249, 247, 0.5);
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 .dz-contact-item a:hover {
-  color: #ffffff;
+  color: #faf9f7;
 }
 
 .dz-contact-note {
   margin-top: 1px;
-  color: #596779;
-  font-size: 10px;
+  color: rgba(250, 249, 247, 0.3);
+  font-size: 9px;
 }
 
 .dz-footer-payment {
   width: 100%;
-  min-height: 82px;
-  padding: 18px 6%;
+  min-height: 68px;
+  padding: 14px 6%;
   display: flex;
   align-items: center;
-  gap: 16px;
-  background: #101a27;
-  border-top: 1px solid rgba(255,255,255,0.07);
-  border-bottom: 1px solid rgba(255,255,255,0.07);
+  gap: 24px;
+  background: #242426;
+  border-top: 1px solid rgba(250, 249, 247, 0.06);
+  border-bottom: 1px solid rgba(250, 249, 247, 0.06);
 }
 
 .dz-payment-title {
-  margin-right: 7px;
-  color: #ffffff;
-  font-size: 12px;
+  margin-right: 6px;
+  color: rgba(250, 249, 247, 0.72);
+  font-size: 11px;
   font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   white-space: nowrap;
 }
 
-.dz-payment-method {
+.dz-payment-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
   min-height: 40px;
-  padding: 0 15px;
+}
+
+.dz-payment-logo {
+  width: 40px;
+  height: 30px;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
-  gap: 8px;
-  border: 1px solid #283647;
+  justify-content: center;
+  border: 1px solid rgba(250, 249, 247, 0.1);
   border-radius: 7px;
-  background: #0a121d;
-  color: #8d99a9;
+  background: #1c1c1e;
+  text-decoration: none;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.dz-payment-logo:hover {
+  transform: translateY(-2px);
+  border-color: rgba(250, 249, 247, 0.28);
+  background: #202022;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.18);
+}
+
+.dz-payment-logo:active {
+  transform: translateY(0);
+}
+
+.dz-payment-cash-logo {
+  color: #c9364c;
+}
+
+.dz-payment-cash-logo svg {
+  display: block;
+  font-size: 17px;
+}
+
+.dz-payment-visa-logo {
+  width: 40px;
+  height: 30px;
+  padding: 0;
+  background: transparent;
+  border-color: transparent;
+}
+
+.dz-payment-visa-logo:hover {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.dz-payment-visa-logo svg {
+  display: block;
+  color: #1a1f71;
+  font-size: 24px;
+}
+
+.dz-payment-mastercard-logo {
+  width: 40px;
+  height: 30px;
+  background: transparent;
+  border-color: transparent;
+}
+
+.dz-payment-mastercard-logo:hover {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.dz-mastercard-mark {
+  position: relative;
+  width: 28px;
+  height: 19px;
+  display: block;
+}
+
+.dz-mastercard-circle {
+  position: absolute;
+  top: 0;
+  width: 19px;
+  height: 19px;
+  border-radius: 50%;
+}
+
+.dz-mastercard-red {
+  left: 0;
+  background: #eb001b;
+}
+
+.dz-mastercard-yellow {
+  right: 0;
+  background: #f79e1b;
+}
+
+.dz-payment-name {
+  color: rgba(250, 249, 247, 0.68);
   font-size: 10px;
+  font-weight: 600;
+  line-height: 1;
   white-space: nowrap;
-}
-
-.dz-payment-method svg {
-  color: #d5dbe2;
-  font-size: 20px;
-}
-
-.dz-payment-method:first-of-type svg {
-  color: #ef4444;
-}
-
-.dz-delivery-note {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #8491a3;
-  font-size: 10.5px;
-  white-space: nowrap;
-}
-
-.dz-delivery-note svg {
-  color: #ef1f2f;
-  font-size: 15px;
 }
 
 .dz-footer-bottom {
   width: 100%;
-  min-height: 66px;
+  min-height: 58px;
   padding: 0 6%;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 25px;
-  background: #050a10;
+  background: #171719;
 }
 
 .dz-footer-bottom p {
   margin: 0;
-  color: #596779;
-  font-size: 10px;
+  color: rgba(250, 249, 247, 0.28);
+  font-size: 9px;
 }
 
 .dz-footer-bottom-links {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 22px;
 }
 
 .dz-footer-bottom-links a {
-  color: #596779;
-  font-size: 10px;
+  color: rgba(250, 249, 247, 0.3);
+  font-size: 9px;
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 .dz-footer-bottom-links a:hover {
-  color: #ef4444;
+  color: #b62c40;
 }
 
 .dz-footer-country {
-  color: #596779;
-  font-size: 10px;
+  color: rgba(250, 249, 247, 0.3);
+  font-size: 9px;
   white-space: nowrap;
 }
 
@@ -325,27 +377,9 @@
     grid-column: span 2;
     padding-left: 0;
   }
-
-  .dz-delivery-note {
-    display: none;
-  }
 }
 
 @media (max-width: 850px) {
-  .dz-footer-services {
-    grid-template-columns: 1fr;
-  }
-
-  .dz-footer-service {
-    justify-content: flex-start;
-    border-right: none;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-  }
-
-  .dz-footer-service:last-child {
-    border-bottom: none;
-  }
-
   .dz-footer-main {
     grid-template-columns: 1fr 1fr;
     padding: 45px 7%;
@@ -361,12 +395,14 @@
   }
 
   .dz-footer-payment {
-    padding: 20px 7%;
+    padding: 18px 7%;
     flex-wrap: wrap;
+    gap: 14px 22px;
   }
 
   .dz-payment-title {
     width: 100%;
+    margin-right: 0;
   }
 
   .dz-footer-bottom {
@@ -381,6 +417,7 @@
 @media (max-width: 500px) {
   .dz-footer-main {
     grid-template-columns: 1fr;
+    padding: 40px 7%;
   }
 
   .dz-footer-brand,
@@ -388,17 +425,48 @@
     grid-column: span 1;
   }
 
-  .dz-footer-service {
-    padding: 18px 7%;
+  .dz-footer-logo-mark {
+    width: 36px;
+    height: 36px;
+    font-size: 11px;
+  }
+
+  .dz-footer-shop-name {
+    font-size: 19px;
+  }
+
+  .dz-footer-tagline {
+    font-size: 6.5px;
+    letter-spacing: 1.2px;
   }
 
   .dz-footer-payment {
-    padding: 20px 7%;
+    padding: 18px 7%;
+    align-items: center;
+    gap: 14px 18px;
   }
 
-  .dz-payment-method {
-    flex: 1;
-    justify-content: center;
+  .dz-payment-item {
+    width: auto;
+  }
+
+  .dz-payment-name {
+    font-size: 9px;
+  }
+
+  .dz-payment-logo {
+    width: 38px;
+    height: 28px;
+  }
+
+  .dz-payment-visa-logo,
+  .dz-payment-mastercard-logo {
+    width: 38px;
+    height: 28px;
+  }
+
+  .dz-payment-visa-logo svg {
+    font-size: 22px;
   }
 
   .dz-footer-bottom {

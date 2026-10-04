@@ -14,8 +14,20 @@
   left: 50%;
   width: 100vw;
   transform: translateX(-50%);
-  background: #080f19;
+  background: #1c1c1e;
   z-index: -1;
+}
+
+.dz-categories-page::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -94px;
+  width: 100vw;
+  height: 1px;
+  transform: translateX(-50%);
+  background: rgba(139, 30, 45, 0.45);
+  z-index: 1;
 }
 
 .dz-categories-header {
@@ -28,7 +40,7 @@
 .dz-categories-label {
   display: inline-block;
   margin-bottom: 10px;
-  color: #c62828;
+  color: #8b1e2d;
   font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 2px;
@@ -37,22 +49,24 @@
 
 .dz-categories-header h1 {
   margin: 0 0 8px;
-  color: #fff;
+  color: #ffffff;
   font-size: 2.2rem;
   font-weight: 800;
 }
 
 .dz-categories-header h1 span {
-  color: #c62828;
+  color: #8b1e2d;
 }
 
 .dz-categories-header p {
   margin: 0;
-  color: #8c9aaa;
+  color: #e9e8e6;
   font-size: 0.9rem;
 }
 
 .dz-categories-grid {
+  width: calc(100% - 80px);
+  margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
@@ -67,15 +81,15 @@
 .dz-category-card {
   overflow: hidden;
   height: 100%;
-  background: #0d1826;
-  border: 1px solid #1c2a3b;
+  background: #242426;
+  border: 1px solid #3a3a3c;
   border-radius: 16px;
   transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
 .dz-category-card:hover {
   transform: translateY(-5px);
-  border-color: #c62828;
+  border-color: #8b1e2d;
   box-shadow: 0 14px 30px rgba(0, 0, 0, 0.25);
 }
 
@@ -83,7 +97,7 @@
   position: relative;
   height: 195px;
   overflow: hidden;
-  background: #111c2a;
+  background: #1c1c1e;
 }
 
 .dz-category-image img {
@@ -117,10 +131,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(8, 15, 25, 0.88);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(28, 28, 30, 0.88);
+  border: 1px solid rgba(250, 249, 247, 0.12);
   border-radius: 50%;
-  color: #fff;
+  color: #ffffff;
   font-size: 0.7rem;
   font-weight: 800;
 }
@@ -132,7 +146,7 @@
 .dz-category-name {
   display: block;
   margin-bottom: 5px;
-  color: #c62828;
+  color: #8b1e2d;
   font-size: 0.68rem;
   font-weight: 800;
   letter-spacing: 1.3px;
@@ -141,7 +155,7 @@
 
 .dz-category-content h2 {
   margin: 0 0 7px;
-  color: #fff;
+  color: #faf9f7;
   font-size: 1.2rem;
   font-weight: 700;
 }
@@ -149,7 +163,7 @@
 .dz-category-content p {
   min-height: 40px;
   margin: 0 0 16px;
-  color: #8c9aaa;
+  color: #e9e8e6;
   font-size: 0.84rem;
   line-height: 1.5;
 }
@@ -159,14 +173,14 @@
   align-items: center;
   justify-content: space-between;
   padding-top: 13px;
-  border-top: 1px solid #1c2a3b;
-  color: #fff;
+  border-top: 1px solid #3a3a3c;
+  color: #faf9f7;
   font-size: 0.76rem;
   font-weight: 700;
 }
 
 .dz-category-action strong {
-  color: #c62828;
+  color: #8b1e2d;
   font-size: 1.1rem;
   transition: transform 0.25s ease;
 }
@@ -191,8 +205,12 @@
   }
 
   .dz-categories-grid {
-    grid-template-columns: 1fr;
-    gap: 16px;
+    width: calc(100% - 200px);
+    margin-left: auto;
+    margin-right: auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
   }
 
   .dz-category-image {
