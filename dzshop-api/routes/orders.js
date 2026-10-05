@@ -2,7 +2,7 @@ import express from 'express'
 import mongoose from 'mongoose'
 import Order from '../models/Order.js'
 import Product from '../models/Product.js'
-import { protect } from '../middleware/auth.js'
+import { protect, isAdmin } from '../middleware/auth.js'
 
 const router = express.Router()
 
@@ -242,6 +242,68 @@ router.get('/:id', protect, async function (req, res) {
       _id: req.params.id,
       user: req.user._id
     })
+
+    if (!commande) {
+      return res.status(404).json({
+        message: 'Commande introuvable'
+      })
+    }
+
+    res.json(commande)
+  } catch (error) {
+    res.status(500).json({
+      message: error.message
+    })
+  }
+})
+
+router.get('/', protect, isAdmin, async function (req, res) {
+  try {
+    const commandes = await Order.find().sort({
+      createdAt: -1
+    })
+
+    res.json(commandes)
+  } catch (error) {
+    res.status(500).json({
+      message: error.message
+    })
+  }
+})
+
+const STATUTS_VALIDES = [
+  'en attente',
+  'confirmee',
+  'expediee',
+  'livree',
+  'annulee'
+]
+
+router.patch('/:id/statut', protect, isAdmin, async function (req, res) {
+  try {
+    const { statut } = req.body
+
+    if (!STATUTS_VALIDES.includes(statut)) {
+      return res.status(400).json({
+        message: 'Statut invalide'
+      })
+    }
+
+    if (!mongoose.isValidObjectId(req.params.id)) {
+      return res.status(404).json({
+        message: 'Commande introuvable'
+      })
+    }
+
+    const commande = await Order.findByIdAndUpdate(
+      req.params.id,
+      {
+        statut: statut
+      },
+      {
+        returnDocument: 'after'
+      }
+    )
 
     if (!commande) {
       return res.status(404).json({
