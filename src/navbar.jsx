@@ -10,7 +10,8 @@ import {
   FaTimes,
   FaHistory,
   FaTrash,
-  FaSignOutAlt
+  FaSignOutAlt,
+  FaTools
 } from 'react-icons/fa'
 import { useCart } from './CartContext'
 import { useAuth } from './AuthContext'
@@ -710,6 +711,20 @@ function Navbar() {
 
             <span>Bag</span>
           </NavLink>
+
+          {/* ADMIN : ce lien n'apparaît QUE pour un admin (la vraie sécurité est côté serveur !) */}
+          {user && user.role === 'admin' && (
+            <NavLink
+              to="/admin"
+              className={({ isActive }) =>
+                'dz-nav-link ' +
+                (isActive ? 'active' : '')
+              }
+            >
+              <FaTools />
+              <span>Admin</span>
+            </NavLink>
+          )}
 
           {user ? (
             <>
