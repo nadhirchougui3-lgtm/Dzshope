@@ -1,7 +1,7 @@
 function Chargement() {
   return (
-    <div className="text-center py-5">
-      <div className="spinner-border text-primary" role="status">
+    <div className="admin-loading" role="status">
+      <div className="admin-spinner">
         <span className="visually-hidden">Chargement...</span>
       </div>
     </div>

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { apiFetch, lireJson } from '../../api'
 import Chargement from '../../components/Chargement'
+import StatutBadge from '../../components/StatutBadge'
 import { formatDate, formatPrix, referenceCommande, STATUTS } from '../../utils/format'
 
 function AdminOrders() {
@@ -22,7 +23,9 @@ function AdminOrders() {
         method: 'PATCH',
         body: JSON.stringify({ statut: statut }),
       })
+
       const commande = await lireJson(reponse)
+
       setCommandes(function (anciennes) {
         return anciennes.map(function (c) {
           return c._id === id ? commande : c
@@ -37,67 +40,105 @@ function AdminOrders() {
 
   return (
     <>
-      <h1 className="h3 mb-4">Commandes ({commandes.length})</h1>
-      {erreur && <div className="alert alert-danger">{erreur}</div>}
+      <div className="admin-page-header">
+        <h1 className="admin-page-title">
+          Commandes ({commandes.length})
+        </h1>
 
-      <div className="table-responsive bg-white rounded-3 shadow-sm">
-        <table className="table align-middle mb-0">
-          <thead>
-            <tr>
-              <th>Commande</th>
-              <th>Client</th>
-              <th>Livraison</th>
-              <th>Articles</th>
-              <th>Total</th>
-              <th>Statut</th>
-            </tr>
-          </thead>
-          <tbody>
-            {commandes.map(function (c) {
-              return (
-                <tr key={c._id}>
-                  <td>
-                    <b>{referenceCommande(c._id)}</b>
-                    <div className="text-muted small">{formatDate(c.createdAt)}</div>
-                  </td>
-                  <td>
-                    {c.nom}
-                    <div className="text-muted small">{c.telephone}</div>
-                  </td>
-                  <td className="small">
-                    {c.wilaya} ({c.livraison})
-                    <div className="text-muted">{c.adresse}</div>
-                  </td>
-                  <td className="small">
-                    {c.produits
-                      .map(function (l) {
-                        return l.nom + ' × ' + l.quantity
-                      })
-                      .join(', ')}
-                  </td>
-                  <td className="fw-semibold">{formatPrix(c.total)}</td>
-                  <td>
-                    <select
-                      className="form-select form-select-sm"
-                      value={c.statut}
-                      onChange={function (e) {
-                        changerStatut(c._id, e.target.value)
-                      }}
-                    >
-                      {STATUTS.map(function (s) {
-                        return (
-                          <option key={s.valeur} value={s.valeur}>
-                            {s.libelle}
-                          </option>
-                        )
-                      })}
-                    </select>
-                  </td>
-                </tr>
-              )
-            })}
-          </tbody>
-        </table>
+        <p className="admin-page-description">
+          Consultez et gérez les commandes de votre boutique
+        </p>
+      </div>
+
+      {erreur && (
+        <div className="admin-alert admin-alert-danger">
+          {erreur}
+        </div>
+      )}
+
+      <div className="admin-card">
+        <div className="admin-table-wrapper">
+          <table className="admin-table">
+            <thead>
+              <tr>
+                <th>Commande</th>
+                <th>Client</th>
+                <th>Livraison</th>
+                <th>Articles</th>
+                <th>Total</th>
+                <th>Statut</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {commandes.map(function (c) {
+                return (
+                  <tr key={c._id}>
+                    <td>
+                      <strong>{referenceCommande(c._id)}</strong>
+                      <div className="text-muted small">
+                        {formatDate(c.createdAt)}
+                      </div>
+                    </td>
+
+                    <td>
+                      {c.nom}
+                      <div className="text-muted small">
+                        {c.telephone}
+                      </div>
+                    </td>
+
+                    <td>
+                      <div>
+                        {c.wilaya} ({c.livraison})
+                      </div>
+
+                      <div className="text-muted small">
+                        {c.adresse}
+                      </div>
+                    </td>
+
+                    <td>
+                      <div className="small">
+                        {c.produits
+                          .map(function (l) {
+                            return l.nom + ' × ' + l.quantity
+                          })
+                          .join(', ')}
+                      </div>
+                    </td>
+
+                    <td>
+                      <strong>{formatPrix(c.total)}</strong>
+                    </td>
+
+                    <td>
+                      <div className="d-flex flex-column gap-2">
+                        <StatutBadge statut={c.statut} />
+
+                        <select
+                          className="admin-status-select"
+                          value={c.statut}
+                          onChange={function (e) {
+                            changerStatut(c._id, e.target.value)
+                          }}
+                        >
+                          {STATUTS.map(function (s) {
+                            return (
+                              <option key={s.valeur} value={s.valeur}>
+                                {s.libelle}
+                              </option>
+                            )
+                          })}
+                        </select>
+                      </div>
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+        </div>
       </div>
     </>
   )

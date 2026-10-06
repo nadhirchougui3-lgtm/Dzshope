@@ -6,10 +6,18 @@ function StatutBadge(props) {
   })
 
   if (!statut) {
-    return <span className="badge text-bg-secondary">{props.statut}</span>
+    return (
+      <span className="admin-badge admin-badge-secondary">
+        {props.statut}
+      </span>
+    )
   }
 
-  return <span className={'badge text-bg-' + statut.couleur}>{statut.libelle}</span>
+  return (
+    <span className={'admin-badge admin-badge-' + statut.couleur}>
+      {statut.libelle}
+    </span>
+  )
 }
 
 export default StatutBadge

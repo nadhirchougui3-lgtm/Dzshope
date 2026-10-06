@@ -15,46 +15,32 @@ import SignUp from './SignUp'
 import LoginPage from './LoginPage'
 import ContactPage from './ContactPage'
 import PrivateRoute from './PrivateRoute'
+
 import AdminLayout from './components/admin/AdminLayout'
 import AdminDashboard from './pages/admin/AdminDashboard'
 import AdminOrders from './pages/admin/AdminOrders'
 import AdminProducts from './pages/admin/AdminProducts'
 
+function StoreLayout({ children }) {
+  return (
+    <div className="d-flex flex-column min-vh-100">
+      <Navbar />
+
+      <main className="dz-main-content flex-grow-1">
+        {children}
+      </main>
+
+      <Footer />
+    </div>
+  )
+}
+
 function App() {
-return ( <BrowserRouter> <AuthProvider> <CartProvider> <div className="d-flex flex-column min-vh-100"> <Navbar />
-
-        <main className="dz-main-content flex-grow-1">
+  return (
+    <BrowserRouter>
+      <AuthProvider>
+        <CartProvider>
           <Routes>
-            <Route path="/" element={<LandingPage />} />
-
-            <Route path="/produits" element={<ProductsPage />} />
-            <Route path="/produit/:id" element={<ProductDetailPage />} />
-            <Route path="/categories" element={<CategoriesPage />} />
-
-            <Route path="/panier" element={<CartPage />} />
-
-            <Route
-              path="/checkout"
-              element={
-                <PrivateRoute>
-                  <CheckoutPage />
-                </PrivateRoute>
-              }
-            />
-
-            <Route
-              path="/commande/:id"
-              element={
-                <PrivateRoute>
-                  <OrderSuccessPage />
-                </PrivateRoute>
-              }
-            />
-
-            <Route path="/signup" element={<SignUp />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/contact" element={<ContactPage />} />
-
             <Route
               path="/admin"
               element={
@@ -69,28 +55,118 @@ return ( <BrowserRouter> <AuthProvider> <CartProvider> <div className="d-flex fl
             </Route>
 
             <Route
+              path="/"
+              element={
+                <StoreLayout>
+                  <LandingPage />
+                </StoreLayout>
+              }
+            />
+
+            <Route
+              path="/produits"
+              element={
+                <StoreLayout>
+                  <ProductsPage />
+                </StoreLayout>
+              }
+            />
+
+            <Route
+              path="/produit/:id"
+              element={
+                <StoreLayout>
+                  <ProductDetailPage />
+                </StoreLayout>
+              }
+            />
+
+            <Route
+              path="/categories"
+              element={
+                <StoreLayout>
+                  <CategoriesPage />
+                </StoreLayout>
+              }
+            />
+
+            <Route
+              path="/panier"
+              element={
+                <StoreLayout>
+                  <CartPage />
+                </StoreLayout>
+              }
+            />
+
+            <Route
+              path="/checkout"
+              element={
+                <PrivateRoute>
+                  <StoreLayout>
+                    <CheckoutPage />
+                  </StoreLayout>
+                </PrivateRoute>
+              }
+            />
+
+            <Route
+              path="/commande/:id"
+              element={
+                <PrivateRoute>
+                  <StoreLayout>
+                    <OrderSuccessPage />
+                  </StoreLayout>
+                </PrivateRoute>
+              }
+            />
+
+            <Route
+              path="/signup"
+              element={
+                <StoreLayout>
+                  <SignUp />
+                </StoreLayout>
+              }
+            />
+
+            <Route
+              path="/login"
+              element={
+                <StoreLayout>
+                  <LoginPage />
+                </StoreLayout>
+              }
+            />
+
+            <Route
+              path="/contact"
+              element={
+                <StoreLayout>
+                  <ContactPage />
+                </StoreLayout>
+              }
+            />
+
+            <Route
               path="*"
               element={
-                <div className="dz-not-found-route">
-                  <h1>404</h1>
-                  <h2>Page Not Found</h2>
-                  <p>
-                    The page you are looking for does not exist.
-                  </p>
-                </div>
+                <StoreLayout>
+                  <div className="dz-not-found-route">
+                    <h1>404</h1>
+                    <h2>Page Not Found</h2>
+                    <p>
+                      The page you are looking for does not exist.
+                    </p>
+                  </div>
+                </StoreLayout>
               }
             />
           </Routes>
-        </main>
-
-        <Footer />
-      </div>
-    </CartProvider>
-  </AuthProvider>
-</BrowserRouter>
-
-
-)
+        </CartProvider>
+      </AuthProvider>
+    </BrowserRouter>
+  )
 }
 
 export default App
