@@ -55,6 +55,11 @@ router.post('/login', async function (req, res) {
       return res.status(401).json({ message: 'Téléphone ou mot de passe incorrect' })
     }
 
+    // Compte bloqué par un admin : on refuse la connexion tout de suite
+    if (user.actif === false) {
+      return res.status(403).json({ message: 'Ce compte a été bloqué' })
+    }
+
     res.json({ token: creerToken(user), user: user.versPublic() })
   } catch (erreur) {
     res.status(500).json({ message: erreur.message })
@@ -102,6 +107,11 @@ router.post('/google', async function (req, res) {
       await user.save()
     }
 
+    // Compte bloqué par un admin : on refuse la connexion tout de suite
+    if (user.actif === false) {
+      return res.status(403).json({ message: 'Ce compte a été bloqué' })
+    }
+
     res.json({ token: creerToken(user), user: user.versPublic() })
   } catch (erreur) {
     console.error('Erreur Google Auth :', erreur.message)
@@ -114,4 +124,4 @@ router.get('/me', protect, function (req, res) {
   res.json({ user: req.user.versPublic() })
 })
 
-export default router ;
+export default router

@@ -1,9 +1,28 @@
-import { createContext, useContext, useState } from 'react'
+import { createContext, useContext, useState, useEffect } from 'react'
 
 const CartContext = createContext()
 
+// Relit le panier sauvegardé dans le navigateur (localStorage), s'il existe.
+// Si jamais le contenu est corrompu ou absent, on repart d'un panier vide
+// (mieux vaut un panier vide qu'un site qui plante à l'ouverture).
+function panierSauvegarde() {
+  try {
+    const brut = localStorage.getItem('dzshop-panier')
+    return brut ? JSON.parse(brut) : []
+  } catch (erreur) {
+    return []
+  }
+}
+
 export function CartProvider({ children }) {
-  const [cartItems, setCartItems] = useState([])
+  // On donne une FONCTION à useState (pas un tableau direct) : elle n'est
+  // exécutée qu'UNE SEULE FOIS, au tout premier rendu.
+  const [cartItems, setCartItems] = useState(panierSauvegarde)
+
+  // À chaque changement du panier, on le réenregistre dans le navigateur.
+  useEffect(function () {
+    localStorage.setItem('dzshop-panier', JSON.stringify(cartItems))
+  }, [cartItems])
 
   function addToCart(
     product,
@@ -135,3 +154,4 @@ export function CartProvider({ children }) {
 export function useCart() {
   return useContext(CartContext)
 }
+

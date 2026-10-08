@@ -42,8 +42,11 @@ const userSchema = new mongoose.Schema(
     provider: { type: String, enum: ['local', 'google'], default: 'local' },
     googleId: { type: String, default: null },
 
-    // "client" par défaut. On ne devient admin que dans la base (séance suivante)
+    // "client" par défaut. On ne devient admin que dans la base (guide « espace admin »)
     role: { type: String, enum: ['client', 'admin'], default: 'client' },
+
+    // Un compte bloqué (actif: false) ne peut plus se connecter
+    actif: { type: Boolean, default: true },
   },
   { timestamps: true }
 )
@@ -63,7 +66,14 @@ userSchema.methods.verifierMotDePasse = function (motDePasse) {
 
 // Ce qu'on a le droit de renvoyer au navigateur : JAMAIS le mot de passe
 userSchema.methods.versPublic = function () {
-  return { id: this._id, nom: this.nom, telephone: this.telephone, email: this.email, role: this.role }
+  return {
+    id: this._id,
+    nom: this.nom,
+    telephone: this.telephone,
+    email: this.email,
+    role: this.role,
+    actif: this.actif
+  }
 }
 
 export default mongoose.model('User', userSchema)
