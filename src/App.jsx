@@ -20,6 +20,7 @@ import AdminLayout from './components/admin/AdminLayout'
 import AdminDashboard from './pages/admin/AdminDashboard'
 import AdminOrders from './pages/admin/AdminOrders'
 import AdminProducts from './pages/admin/AdminProducts'
+import AdminUsers from './pages/admin/AdminUsers'
 
 function StoreLayout({ children }) {
   return (
@@ -52,6 +53,7 @@ function App() {
               <Route index element={<AdminDashboard />} />
               <Route path="commandes" element={<AdminOrders />} />
               <Route path="produits" element={<AdminProducts />} />
+              <Route path="utilisateurs" element={<AdminUsers />} />
             </Route>
 
             <Route

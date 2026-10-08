@@ -38,6 +38,11 @@ function AdminLayout() {
               <span className="admin-nav-icon">□</span>
               <span>Produits</span>
             </NavLink>
+
+            <NavLink className={classeLien} to="/admin/utilisateurs">
+              <span className="admin-nav-icon">☺</span>
+              <span>Utilisateurs</span>
+            </NavLink>
           </nav>
         </div>
 

@@ -13,10 +13,16 @@ export async function protect(req, res, next) {
   try {
     const contenu = jwt.verify(token, process.env.JWT_SECRET)
 
-    // On relit l'utilisateur en base à chaque requête : si son rôle change, c'est pris en compte tout de suite
+    // On relit l'utilisateur en base à chaque requête : si son rôle (ou son
+    // blocage) change, c'est pris en compte tout de suite, sans attendre
+    // que son ancien token expire.
     const user = await User.findById(contenu.id)
     if (!user) {
       return res.status(401).json({ message: 'Compte introuvable' })
+    }
+
+    if (!user.actif) {
+      return res.status(403).json({ message: 'Ce compte a été bloqué' })
     }
 
     req.user = user
@@ -32,4 +38,4 @@ export function isAdmin(req, res, next) {
     return res.status(403).json({ message: "Accès réservé à l'admin" })
   }
   next()
-} 
+}
