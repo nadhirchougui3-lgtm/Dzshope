@@ -1,3 +1,4 @@
+
 .dz-categories-page {
   position: relative;
   z-index: 0;
@@ -68,12 +69,13 @@
   width: calc(100% - 80px);
   margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 20px;
 }
 
 .dz-category-link {
   display: block;
+  min-width: 0;
   color: inherit;
   text-decoration: none;
 }
@@ -189,31 +191,95 @@
   transform: translateX(4px);
 }
 
+/* Tablettes */
 @media (max-width: 1000px) {
   .dz-categories-grid {
-    grid-template-columns: repeat(2, 1fr);
+    width: calc(100% - 40px);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
+/* Téléphones */
 @media (max-width: 768px) {
   .dz-categories-header {
-    margin-bottom: 30px;
+    margin: 0 16px 24px;
+    padding-top: 8px;
+  }
+
+  .dz-categories-label {
+    font-size: 0.65rem;
+    letter-spacing: 1.5px;
   }
 
   .dz-categories-header h1 {
-    font-size: 1.9rem;
+    font-size: 1.7rem;
+  }
+
+  .dz-categories-header p {
+    font-size: 0.82rem;
+    line-height: 1.5;
   }
 
   .dz-categories-grid {
-    width: calc(100% - 200px);
-    margin-left: auto;
-    margin-right: auto;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+    width: calc(100% - 24px);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
   }
 
   .dz-category-image {
-    height: 205px;
+    height: 125px;
+  }
+
+  .dz-category-content {
+    padding: 12px;
+  }
+
+  .dz-category-name {
+    font-size: 0.58rem;
+    letter-spacing: 0.5px;
+    overflow-wrap: anywhere;
+  }
+
+  .dz-category-content h2 {
+    font-size: 0.95rem;
+  }
+
+  .dz-category-content p {
+    min-height: 55px;
+    font-size: 0.74rem;
+    line-height: 1.4;
+    margin-bottom: 12px;
+  }
+
+  .dz-category-action {
+    padding-top: 10px;
+    font-size: 0.65rem;
+  }
+
+  .dz-category-index {
+    top: 8px;
+    right: 8px;
+    width: 27px;
+    height: 27px;
+    font-size: 0.62rem;
+  }
+}
+
+/* Petits téléphones */
+@media (max-width: 380px) {
+  .dz-categories-grid {
+    gap: 9px;
+  }
+
+  .dz-category-content {
+    padding: 9px;
+  }
+
+  .dz-category-image {
+    height: 110px;
+  }
+
+  .dz-category-content p {
+    font-size: 0.7rem;
   }
 }

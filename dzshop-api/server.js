@@ -1,3 +1,4 @@
+
 import express from 'express'
 import cors from 'cors'
 import mongoose from 'mongoose'
@@ -22,9 +23,9 @@ const origines = [
   'http://localhost:5173',
   'http://localhost:5174',
   'http://localhost:5175',
-  'http://192.168.1.12:5173',
-  'http://192.168.1.12:5174',
-  'http://192.168.1.12:5175',
+  'http://192.168.1.2:5173',
+  'http://192.168.1.2:5174',
+  'http://192.168.1.2:5175',
   process.env.FRONTEND_URL
 ].filter(Boolean)
 
@@ -51,7 +52,7 @@ mongoose
 
     app.listen(PORT, '0.0.0.0', function () {
       console.log('Serveur sur http://localhost:' + PORT)
-      console.log('Serveur réseau sur http://192.168.1.12:' + PORT)
+      console.log('Serveur réseau sur http://192.168.1.2:' + PORT)
     })
   })
   .catch(function (err) {

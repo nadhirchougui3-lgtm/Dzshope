@@ -521,13 +521,14 @@
 
 @media (max-width: 900px) {
   .dz-navbar {
-    position: relative;
-    padding: 13px 0;
+    position: sticky;
+    padding: 12px 0;
   }
 
   .dz-navbar-container {
     flex-wrap: wrap;
     justify-content: space-between;
+    gap: 10px;
   }
 
   .dz-search-wrapper {
@@ -542,7 +543,7 @@
   }
 
   .dz-nav-link {
-    min-height: 40px;
+    min-height: 38px;
   }
 
   .dz-nav-link.active::after {
@@ -550,23 +551,28 @@
   }
 
   .dz-auth-actions {
-    min-height: 40px;
+    min-height: 38px;
   }
 
   .dz-signin-link,
   .dz-signup-button {
-    min-height: 36px;
+    min-height: 34px;
   }
 }
 
 @media (max-width: 520px) {
   .dz-navbar-container {
-    padding: 0 14px;
-    gap: 12px;
+    padding: 0 12px;
+    gap: 10px;
+  }
+
+  .dz-logo {
+    gap: 7px;
   }
 
   .dz-shop-name {
-    font-size: 20px;
+    font-size: 18px;
+    letter-spacing: -0.5px;
   }
 
   .dz-tagline {
@@ -574,22 +580,41 @@
   }
 
   .dz-logo-mark {
-    width: 39px;
-    height: 39px;
+    width: 35px;
+    height: 35px;
+    border-radius: 10px;
   }
 
   .dz-nav-links {
-    gap: 10px;
+    flex: 1;
+    justify-content: flex-end;
+    gap: clamp(10px, 3.5vw, 16px);
+  }
+
+  .dz-nav-link {
+    min-height: 36px;
+    flex-shrink: 0;
+    gap: 4px;
+  }
+
+  .dz-nav-link svg {
+    font-size: 15px;
   }
 
   .dz-nav-link:nth-child(2),
   .dz-nav-link:nth-child(3) {
-    display: none;
+    display: flex;
   }
 
   .dz-auth-actions {
     gap: 6px;
-    padding-left: 8px;
+    padding-left: 7px;
+  }
+
+  .dz-search {
+    height: 41px;
+    border-radius: 12px;
+    padding: 0 11px;
   }
 
   .dz-search input {
@@ -597,6 +622,117 @@
   }
 
   .dz-search-dropdown {
-    max-height: 420px;
+    max-height: min(420px, 65vh);
+    border-radius: 13px;
   }
+
+  .dz-search-result {
+    min-height: 62px;
+    gap: 9px;
+    padding: 8px 10px;
+  }
+
+  .dz-search-image {
+    width: 43px;
+    height: 43px;
+  }
+
+  .dz-search-result-info strong {
+    font-size: 11px;
+  }
+
+  .dz-search-price {
+    font-size: 10px;
+  }
+
+  .dz-search-heading {
+    padding: 0 12px;
+  }
+
+  .dz-history-item > button:first-child {
+    gap: 9px;
+    padding: 11px 12px;
+  }
+
+  .dz-history-delete {
+    width: 34px;
+    height: 36px;
+  }
+}
+
+@media (max-width: 380px) {
+  .dz-navbar-container {
+    padding: 0 9px;
+    gap: 7px;
+  }
+
+  .dz-logo {
+    gap: 5px;
+  }
+
+  .dz-logo-mark {
+    width: 31px;
+    height: 31px;
+    font-size: 12px;
+  }
+
+  .dz-shop-name {
+    font-size: 16px;
+  }
+
+  .dz-nav-links {
+    gap: 9px;
+  }
+
+  .dz-nav-link {
+    gap: 3px;
+  }
+
+  .dz-nav-link svg {
+    font-size: 14px;
+  }
+
+  .dz-auth-actions {
+    gap: 4px;
+    padding-left: 5px;
+  }
+}
+
+/* ================================
+   FAVORITES — DZShop
+================================ */
+
+.favorites-link .favorites-icon-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.favorites-link .favorites-icon-wrapper > svg {
+  color: #8b1e2d;
+  transition: transform 0.2s ease;
+}
+
+.favorites-link:hover .favorites-icon-wrapper > svg {
+  transform: scale(1.1);
+}
+
+.favorites-badge {
+  position: absolute;
+  top: -9px;
+  right: -10px;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #faf9f7;
+  border-radius: 50%;
+  background: #8b1e2d;
+  color: #ffffff;
+  font-size: 9px;
+  font-weight: 800;
+  line-height: 1;
 }

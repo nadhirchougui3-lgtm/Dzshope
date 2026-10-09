@@ -1,9 +1,10 @@
+
 const API_URL_LOCAL = 'http://localhost:5000'
-const API_URL_RESEAU = 'http://192.168.1.12:5000'
+const API_URL_RESEAU = 'http://192.168.1.2:5000'
 
 export const API_URL =
   import.meta.env.VITE_API_URL ||
-  (window.location.hostname === '192.168.1.12'
+  (window.location.hostname === '192.168.1.2'
     ? API_URL_RESEAU
     : API_URL_LOCAL)
 
