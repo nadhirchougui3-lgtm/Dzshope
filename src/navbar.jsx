@@ -11,10 +11,12 @@ import {
   FaHistory,
   FaTrash,
   FaSignOutAlt,
-  FaTools
+  FaTools,
+  FaHeart
 } from 'react-icons/fa'
 import { useCart } from './CartContext'
 import { useAuth } from './AuthContext'
+import { useFavorites } from './FavoritesContext'
 import './navbar.css'
 
 const API_URL =
@@ -234,8 +236,7 @@ function productMatches(product, query) {
             fieldWord
           )
 
-          const limit =
-            word.length <= 4 ? 1 : 2
+          const limit = word.length <= 4 ? 1 : 2
 
           return distance <= limit
         }
@@ -284,6 +285,7 @@ function getProductScore(product, query) {
 function Navbar() {
   const { cartItems } = useCart()
   const { user, logout } = useAuth()
+  const { favoriteCount } = useFavorites()
   const navigate = useNavigate()
 
   const [products, setProducts] = useState([])
@@ -348,7 +350,6 @@ function Navbar() {
           'Unable to load products for search:',
           error
         )
-
         setProducts([])
       }
     }
@@ -476,7 +477,6 @@ function Navbar() {
   return (
     <nav className="dz-navbar">
       <div className="dz-navbar-container">
-
         <Link to="/" className="dz-logo">
           <div className="dz-logo-mark">
             DZ
@@ -539,9 +539,7 @@ function Navbar() {
                   <>
                     <div className="dz-search-heading">
                       <span>Suggestions</span>
-                      <span>
-                        {suggestions.length}
-                      </span>
+                      <span>{suggestions.length}</span>
                     </div>
 
                     {suggestions.map((product) => (
@@ -574,8 +572,7 @@ function Navbar() {
                           </strong>
 
                           <span>
-                            {product.categorie ||
-                              'Product'}
+                            {product.categorie || 'Product'}
                           </span>
                         </div>
 
@@ -597,8 +594,7 @@ function Navbar() {
                     </strong>
 
                     <span>
-                      Try another product, brand or
-                      category.
+                      Try another product, brand or category.
                     </span>
                   </div>
                 )
@@ -658,7 +654,6 @@ function Navbar() {
         </div>
 
         <div className="dz-nav-links">
-
           <NavLink
             to="/"
             className={({ isActive }) =>
@@ -692,6 +687,29 @@ function Navbar() {
             <span>Contact</span>
           </NavLink>
 
+          {/* Favorites */}
+          <NavLink
+            to="/favoris"
+            className={({ isActive }) =>
+              'dz-nav-link favorites-link ' +
+              (isActive ? 'active' : '')
+            }
+          >
+            <div className="favorites-icon-wrapper">
+              <FaHeart />
+
+              {favoriteCount > 0 && (
+                <span className="favorites-badge">
+                  {favoriteCount > 99
+                    ? '99+'
+                    : favoriteCount}
+                </span>
+              )}
+            </div>
+
+            <span>Favorites</span>
+          </NavLink>
+
           <NavLink
             to="/panier"
             className={({ isActive }) =>
@@ -712,7 +730,7 @@ function Navbar() {
             <span>Bag</span>
           </NavLink>
 
-          {/* ADMIN : ce lien n'apparaît QUE pour un admin (la vraie sécurité est côté serveur !) */}
+          {/* ADMIN: only visible to admins; server authorization is still required */}
           {user && user.role === 'admin' && (
             <NavLink
               to="/admin"
@@ -766,11 +784,10 @@ function Navbar() {
               </NavLink>
             </div>
           )}
-
         </div>
       </div>
     </nav>
   )
 }
 
-export default Navbar 
+export default Navbar
