@@ -1,46 +1,48 @@
 import { NavLink, Outlet, Link } from 'react-router-dom'
 import './Admin.css'
 
-function classeLien(info) {
-  return 'admin-nav-link' + (info.isActive ? ' active' : '')
+function classeLien({ isActive }) {
+  return `admin-nav-link${isActive ? ' active' : ''}`
 }
 
 function AdminLayout() {
   return (
     <div className="admin-layout">
       <aside className="admin-sidebar">
-        <div className="admin-sidebar-header">
+        <Link to="/" className="admin-sidebar-header">
           <div className="admin-brand-mark">DZ</div>
 
-          <div>
+          <div className="admin-brand-info">
             <h2 className="admin-sidebar-title">
               DZ<span className="admin-sidebar-shop">Shop</span>
             </h2>
             <p className="admin-sidebar-subtitle">Administration</p>
           </div>
-        </div>
+        </Link>
 
         <div className="admin-sidebar-section">
-          <span className="admin-sidebar-section-label">MENU PRINCIPAL</span>
+          <span className="admin-sidebar-section-label">
+            MENU PRINCIPAL
+          </span>
 
           <nav className="admin-nav">
             <NavLink className={classeLien} to="/admin" end>
-              <span className="admin-nav-icon">▦</span>
+              <span className="admin-nav-icon" aria-hidden="true">▦</span>
               <span>Tableau de bord</span>
             </NavLink>
 
             <NavLink className={classeLien} to="/admin/commandes">
-              <span className="admin-nav-icon">≡</span>
+              <span className="admin-nav-icon" aria-hidden="true">≡</span>
               <span>Commandes</span>
             </NavLink>
 
             <NavLink className={classeLien} to="/admin/produits">
-              <span className="admin-nav-icon">□</span>
+              <span className="admin-nav-icon" aria-hidden="true">□</span>
               <span>Produits</span>
             </NavLink>
 
             <NavLink className={classeLien} to="/admin/utilisateurs">
-              <span className="admin-nav-icon">☺</span>
+              <span className="admin-nav-icon" aria-hidden="true">♙</span>
               <span>Utilisateurs</span>
             </NavLink>
           </nav>
@@ -55,11 +57,16 @@ function AdminLayout() {
               <span>Accès sécurisé</span>
             </div>
 
-            <span className="admin-account-status"></span>
+            <span
+              className="admin-account-status"
+              aria-label="Compte actif"
+            />
           </div>
 
           <Link className="admin-store-link" to="/">
-            <span>←</span>
+            <span className="admin-store-link-icon" aria-hidden="true">
+              ←
+            </span>
             <span>Retour à la boutique</span>
           </Link>
         </div>
@@ -70,15 +77,17 @@ function AdminLayout() {
           <div className="admin-topbar-left">
             <div>
               <span className="admin-topbar-label">ESPACE ADMIN</span>
-              <h1 className="admin-topbar-title">Gestion de la boutique</h1>
+              <h1 className="admin-topbar-title">
+                Gestion de la boutique
+              </h1>
             </div>
           </div>
 
           <div className="admin-topbar-right">
             <div className="admin-live-status">
-              <span className="admin-status-dot"></span>
+              <span className="admin-status-dot" />
 
-              <div>
+              <div className="admin-live-status-info">
                 <strong>Administration</strong>
                 <span>Système actif</span>
               </div>
