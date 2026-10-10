@@ -1,12 +1,20 @@
 
 import { createContext, useContext, useEffect, useState } from 'react'
+import { useAuth } from './AuthContext'
 
 const FavoritesContext = createContext(null)
-const FAVORITES_KEY = 'dzshop_favorites'
+const LEGACY_FAVORITES_KEY = 'dzshop_favorites'
 
-function readFavorites() {
+function getUserKey(user) {
+  const id = user?._id || user?.id || user?.telephone || user?.email
+  return id ? `dzshop_favorites_${String(id)}` : null
+}
+
+function readFavorites(key) {
+  if (!key) return []
+
   try {
-    const saved = localStorage.getItem(FAVORITES_KEY)
+    const saved = localStorage.getItem(key)
     const parsed = saved ? JSON.parse(saved) : []
 
     return Array.isArray(parsed)
@@ -22,39 +30,68 @@ function productId(product) {
 }
 
 export function FavoritesProvider({ children }) {
-  const [favorites, setFavorites] = useState(readFavorites)
+  const { user } = useAuth()
+  const userKey = getUserKey(user)
+
+  const [favorites, setFavorites] = useState([])
+  const [loadedUserKey, setLoadedUserKey] = useState(null)
 
   useEffect(() => {
+    if (!userKey) {
+      setFavorites([])
+      setLoadedUserKey(null)
+
+      try {
+        localStorage.removeItem(LEGACY_FAVORITES_KEY)
+      } catch {
+        // Ignore storage errors.
+      }
+
+      return
+    }
+
+    setFavorites(readFavorites(userKey))
+    setLoadedUserKey(userKey)
+  }, [userKey])
+
+  useEffect(() => {
+    if (!userKey || loadedUserKey !== userKey) return
+
     try {
-      localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites))
+      localStorage.setItem(userKey, JSON.stringify(favorites))
     } catch (error) {
       console.error('Unable to save favorites:', error)
     }
-  }, [favorites])
+  }, [favorites, userKey, loadedUserKey])
+
+  const visibleFavorites =
+    userKey && loadedUserKey === userKey ? favorites : []
 
   function isFavorite(product) {
     const id = productId(product)
-    return Boolean(id) && favorites.some((item) => productId(item) === id)
+
+    return Boolean(userKey && id) &&
+      visibleFavorites.some((item) => productId(item) === id)
   }
 
   function toggleFavorite(product) {
     const id = productId(product)
-    if (!id) return
+
+    if (!userKey || loadedUserKey !== userKey || !id) return
 
     setFavorites((current) => {
       const exists = current.some((item) => productId(item) === id)
 
-      if (exists) {
-        return current.filter((item) => productId(item) !== id)
-      }
-
-      return [product, ...current]
+      return exists
+        ? current.filter((item) => productId(item) !== id)
+        : [product, ...current]
     })
   }
 
   function removeFavorite(product) {
     const id = productId(product)
-    if (!id) return
+
+    if (!userKey || loadedUserKey !== userKey || !id) return
 
     setFavorites((current) =>
       current.filter((item) => productId(item) !== id)
@@ -64,8 +101,8 @@ export function FavoritesProvider({ children }) {
   return (
     <FavoritesContext.Provider
       value={{
-        favorites,
-        favoriteCount: favorites.length,
+        favorites: visibleFavorites,
+        favoriteCount: visibleFavorites.length,
         isFavorite,
         toggleFavorite,
         removeFavorite
