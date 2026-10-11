@@ -1,6 +1,5 @@
-
 import { useState, useEffect } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { Link, useSearchParams, useNavigate, useLocation } from 'react-router-dom'
 import {
   FaArrowRight,
   FaShoppingBag,
@@ -9,6 +8,7 @@ import {
 } from 'react-icons/fa'
 import { apiFetch, lireJson } from './api'
 import { useFavorites } from './FavoritesContext'
+import { useAuth } from './AuthContext'
 import './ProductsPage.css'
 
 const aliases = {
@@ -162,6 +162,10 @@ function ProductsPage() {
   const [products, setProducts] = useState([])
   const [chargement, setChargement] = useState(true)
   const [searchParams] = useSearchParams()
+  const navigate = useNavigate()
+  const location = useLocation()
+
+  const { user } = useAuth()
   const { isFavorite, toggleFavorite } = useFavorites()
 
   const categorie = searchParams.get('categorie') || ''
@@ -242,6 +246,19 @@ function ProductsPage() {
     productRows.push(produitsFiltres.slice(i, i + 10))
   }
 
+  function handleFavoriteClick(product) {
+    if (!user) {
+      navigate('/login', {
+        state: {
+          from: `${location.pathname}${location.search}${location.hash}`
+        }
+      })
+      return
+    }
+
+    toggleFavorite(product)
+  }
+
   function renderProductCard(p, duplicate = false) {
     const productUrl = `/produit/${p._id}`
     const favorite = isFavorite(p)
@@ -298,7 +315,7 @@ function ProductsPage() {
               'dz-product-favorite' +
               (favorite ? ' is-favorite' : '')
             }
-            onClick={() => toggleFavorite(p)}
+            onClick={() => handleFavoriteClick(p)}
             aria-label={
               favorite
                 ? `Remove ${p.nom} from favorites`
@@ -438,4 +455,4 @@ function ProductsPage() {
   )
 }
 
-export default ProductsPage
+export default ProductsPage ;
