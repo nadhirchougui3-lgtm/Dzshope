@@ -1,3 +1,4 @@
+
 import { useEffect, useRef, useState } from 'react'
 import { NavLink, Link, useNavigate } from 'react-router-dom'
 import {
@@ -12,10 +13,12 @@ import {
   FaTrash,
   FaSignOutAlt,
   FaTools,
-  FaThLarge
+  FaThLarge,
+  FaHeart
 } from 'react-icons/fa'
 import { useCart } from './CartContext'
 import { useAuth } from './AuthContext'
+import { useFavorites } from './FavoritesContext'
 import './navbar.css'
 
 const API_URL =
@@ -242,6 +245,7 @@ function getProductScore(product, query) {
 function Navbar() {
   const { cartItems } = useCart()
   const { user, logout } = useAuth()
+  const { favorites } = useFavorites()
   const navigate = useNavigate()
 
   const [products, setProducts] = useState([])
@@ -255,6 +259,8 @@ function Navbar() {
     (total, item) => total + item.quantity,
     0
   )
+
+  const favoritesCount = favorites.length
 
   useEffect(() => {
     try {
@@ -564,6 +570,25 @@ function Navbar() {
           </NavLink>
 
           <NavLink
+            to="/favoris"
+            className={({ isActive }) =>
+              'dz-nav-link favorites-link ' + (isActive ? 'active' : '')
+            }
+            aria-label={`Favorites${favoritesCount ? `, ${favoritesCount} products` : ''}`}
+          >
+            <span className="favorites-icon-wrapper">
+              <FaHeart />
+
+              {favoritesCount > 0 && (
+                <span className="favorites-badge">
+                  {favoritesCount > 99 ? '99+' : favoritesCount}
+                </span>
+              )}
+            </span>
+            <span>Favorites</span>
+          </NavLink>
+
+          <NavLink
             to="/contact"
             className={({ isActive }) =>
               'dz-nav-link ' + (isActive ? 'active' : '')
@@ -663,6 +688,27 @@ function Navbar() {
           >
             <FaShoppingBag />
             <span>Products</span>
+          </NavLink>
+
+          <NavLink
+            to="/favoris"
+            className={({ isActive }) =>
+              'dz-mobile-nav-link favorites-mobile-link ' +
+              (isActive ? 'active' : '')
+            }
+            aria-label={`Favorites${favoritesCount ? `, ${favoritesCount} products` : ''}`}
+          >
+            <span className="dz-mobile-icon-wrapper">
+              <FaHeart />
+
+              {favoritesCount > 0 && (
+                <span className="dz-mobile-badge">
+                  {favoritesCount > 99 ? '99+' : favoritesCount}
+                </span>
+              )}
+            </span>
+
+            <span>Favorites</span>
           </NavLink>
 
           <NavLink

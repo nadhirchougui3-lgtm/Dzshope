@@ -817,3 +817,47 @@
     font-size: 8px;
   }
 }
+
+/* Favorites link and count badge */
+.favorites-icon-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.favorites-badge {
+  position: absolute;
+  top: -9px;
+  right: -11px;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #faf9f7;
+  border-radius: 20px;
+  background: #8b1e2d;
+  color: #ffffff;
+  font-size: 8px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.favorites-link .favorites-icon-wrapper > svg {
+  color: inherit;
+}
+
+.favorites-link:hover .favorites-icon-wrapper > svg,
+.favorites-link.active .favorites-icon-wrapper > svg {
+  color: #8b1e2d;
+}
+
+/* Keep the favorites icon aligned in the mobile navigation */
+.favorites-mobile-link .dz-mobile-icon-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
