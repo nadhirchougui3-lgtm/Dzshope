@@ -9,7 +9,6 @@ import {
   FaCcVisa,
   FaMoneyBillWave
 } from 'react-icons/fa'
-import './Footer.css'
 
 function Footer() {
   return (
