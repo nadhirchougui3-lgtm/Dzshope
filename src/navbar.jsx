@@ -31,7 +31,6 @@ const API_URL =
 const HISTORY_KEY = 'dzshop_search_history'
 const MAX_HISTORY = 12
 
-// English labels for display; French values remain unchanged for filtering.
 const categories = [
   { label: 'All', value: 'Tout' },
   { label: 'Clothing', value: 'Vêtements' },
@@ -481,490 +480,477 @@ function Navbar() {
     : []
 
   return (
-    <nav className="dz-navbar">
-      <div className="dz-navbar-container">
-        <Link to="/" className="dz-logo">
-          <div className="dz-logo-mark">DZ</div>
+    <>
+      <nav className="dz-navbar">
+        <div className="dz-navbar-container">
+          <Link to="/" className="dz-logo">
+            <div className="dz-logo-mark">DZ</div>
 
-          <div className="dz-logo-text">
-            <div className="dz-shop-name">
-              DZ<span>Shop</span>
+            <div className="dz-logo-text">
+              <div className="dz-shop-name">
+                DZ<span>Shop</span>
+              </div>
+
+              <div className="dz-tagline">
+                Quality · Price · Trust
+              </div>
             </div>
+          </Link>
 
-            <div className="dz-tagline">
-              Quality · Price · Trust
-            </div>
-          </div>
-        </Link>
-
-        <div
-          className="dz-search-wrapper"
-          ref={searchRef}
-        >
-          <form
-            className="dz-search"
-            onSubmit={(event) => {
-              event.preventDefault()
-              submitSearch()
-            }}
+          <div
+            className="dz-search-wrapper"
+            ref={searchRef}
           >
-            <FaSearch />
-
-            <input
-              type="search"
-              value={search}
-              placeholder="Search products, brands or categories..."
-              onFocus={() => setSearchOpen(true)}
-              onChange={(event) => {
-                setSearch(event.target.value)
-                setSearchOpen(true)
+            <form
+              className="dz-search"
+              onSubmit={(event) => {
+                event.preventDefault()
+                submitSearch()
               }}
-            />
+            >
+              <FaSearch />
 
-            {search && (
-              <button
-                type="button"
-                className="dz-search-clear"
-                onClick={() => {
-                  setSearch('')
+              <input
+                type="search"
+                value={search}
+                placeholder="Search products, brands or categories..."
+                onFocus={() => setSearchOpen(true)}
+                onChange={(event) => {
+                  setSearch(event.target.value)
                   setSearchOpen(true)
                 }}
-                aria-label="Clear search"
-              >
-                <FaTimes />
-              </button>
-            )}
-          </form>
+              />
 
-          {searchOpen && (
-            <div className="dz-search-dropdown">
-              {search.trim() ? (
-                suggestions.length > 0 ? (
+              {search && (
+                <button
+                  type="button"
+                  className="dz-search-clear"
+                  onClick={() => {
+                    setSearch('')
+                    setSearchOpen(true)
+                  }}
+                  aria-label="Clear search"
+                >
+                  <FaTimes />
+                </button>
+              )}
+            </form>
+
+            {searchOpen && (
+              <div className="dz-search-dropdown">
+                {search.trim() ? (
+                  suggestions.length > 0 ? (
+                    <>
+                      <div className="dz-search-heading">
+                        <span>Suggestions</span>
+                        <span>{suggestions.length}</span>
+                      </div>
+
+                      {suggestions.map((product) => (
+                        <button
+                          type="button"
+                          className="dz-search-result"
+                          key={product._id}
+                          onClick={() => openProduct(product)}
+                        >
+                          <div className="dz-search-image">
+                            {product.image ? (
+                              <img
+                                src={product.image}
+                                alt={product.nom}
+                                onError={(event) => {
+                                  event.currentTarget.style.display =
+                                    'none'
+                                }}
+                              />
+                            ) : (
+                              <FaShoppingBag />
+                            )}
+                          </div>
+
+                          <div className="dz-search-result-info">
+                            <strong>{product.nom}</strong>
+                            <span>
+                              {product.categorie || 'Product'}
+                            </span>
+                          </div>
+
+                          <span className="dz-search-price">
+                            {Number(
+                              product.prix || 0
+                            ).toLocaleString('fr-DZ')}{' '}
+                            DA
+                          </span>
+                        </button>
+                      ))}
+                    </>
+                  ) : (
+                    <div className="dz-search-empty">
+                      <FaSearch />
+                      <strong>No products found</strong>
+                      <span>
+                        Try another product, brand or category.
+                      </span>
+                    </div>
+                  )
+                ) : history.length > 0 ? (
                   <>
                     <div className="dz-search-heading">
-                      <span>Suggestions</span>
-                      <span>{suggestions.length}</span>
-                    </div>
-
-                    {suggestions.map((product) => (
+                      <span>Recent searches</span>
                       <button
                         type="button"
-                        className="dz-search-result"
-                        key={product._id}
-                        onClick={() =>
-                          openProduct(product)
-                        }
+                        onClick={clearHistory}
                       >
-                        <div className="dz-search-image">
-                          {product.image ? (
-                            <img
-                              src={product.image}
-                              alt={product.nom}
-                              onError={(event) => {
-                                event.currentTarget.style.display =
-                                  'none'
-                              }}
-                            />
-                          ) : (
-                            <FaShoppingBag />
-                          )}
-                        </div>
-
-                        <div className="dz-search-result-info">
-                          <strong>{product.nom}</strong>
-                          <span>
-                            {product.categorie || 'Product'}
-                          </span>
-                        </div>
-
-                        <span className="dz-search-price">
-                          {Number(
-                            product.prix || 0
-                          ).toLocaleString('fr-DZ')}{' '}
-                          DA
-                        </span>
+                        Clear all
                       </button>
+                    </div>
+
+                    {history.map((item) => (
+                      <div
+                        className="dz-history-item"
+                        key={item}
+                      >
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSearch(item)
+                            setSearchOpen(true)
+                          }}
+                        >
+                          <FaHistory />
+                          <span>{item}</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          className="dz-history-delete"
+                          onClick={() => deleteHistoryItem(item)}
+                          aria-label={`Delete ${item}`}
+                        >
+                          <FaTrash />
+                        </button>
+                      </div>
                     ))}
                   </>
                 ) : (
-                  <div className="dz-search-empty">
+                  <div className="dz-search-empty dz-search-empty-small">
                     <FaSearch />
-                    <strong>No products found</strong>
                     <span>
-                      Try another product, brand or category.
+                      Search by product, brand or category.
                     </span>
                   </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          {showMobileCategories && (
+            <div
+              className="dz-mobile-categories"
+              aria-label="Product categories"
+            >
+              {categories.map((category) => {
+                const isActive =
+                  category.value === 'Tout'
+                    ? !selectedCategory
+                    : selectedCategory === category.value
+
+                return (
+                  <button
+                    key={category.value}
+                    type="button"
+                    className={
+                      'dz-mobile-category' +
+                      (isActive ? ' active' : '')
+                    }
+                    onClick={() =>
+                      selectMobileCategory(category)
+                    }
+                    aria-pressed={isActive}
+                  >
+                    {category.label}
+                  </button>
                 )
-              ) : history.length > 0 ? (
-                <>
-                  <div className="dz-search-heading">
-                    <span>Recent searches</span>
-                    <button
-                      type="button"
-                      onClick={clearHistory}
-                    >
-                      Clear all
-                    </button>
-                  </div>
-
-                  {history.map((item) => (
-                    <div
-                      className="dz-history-item"
-                      key={item}
-                    >
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setSearch(item)
-                          setSearchOpen(true)
-                        }}
-                      >
-                        <FaHistory />
-                        <span>{item}</span>
-                      </button>
-
-                      <button
-                        type="button"
-                        className="dz-history-delete"
-                        onClick={() =>
-                          deleteHistoryItem(item)
-                        }
-                        aria-label={`Delete ${item}`}
-                      >
-                        <FaTrash />
-                      </button>
-                    </div>
-                  ))}
-                </>
-              ) : (
-                <div className="dz-search-empty dz-search-empty-small">
-                  <FaSearch />
-                  <span>
-                    Search by product, brand or category.
-                  </span>
-                </div>
-              )}
+              })}
             </div>
           )}
-        </div>
 
-        {/* Mobile category strip: Home and Products only */}
-        {showMobileCategories && (
-          <div
-            className="dz-mobile-categories"
-            aria-label="Product categories"
-          >
-            {categories.map((category) => {
-              const isActive =
-                category.value === 'Tout'
-                  ? !selectedCategory
-                  : selectedCategory === category.value
-
-              return (
-                <button
-                  key={category.value}
-                  type="button"
-                  className={
-                    'dz-mobile-category' +
-                    (isActive ? ' active' : '')
-                  }
-                  onClick={() =>
-                    selectMobileCategory(category)
-                  }
-                  aria-pressed={isActive}
-                >
-                  {category.label}
-                </button>
-              )
-            })}
-          </div>
-        )}
-
-        {/* Desktop navigation */}
-        <div className="dz-nav-links">
-          <NavLink
-            to="/"
-            className={({ isActive }) =>
-              'dz-nav-link ' +
-              (isActive ? 'active' : '')
-            }
-          >
-            <FaHome />
-            <span>Home</span>
-          </NavLink>
-
-          <NavLink
-            to="/produits"
-            className={({ isActive }) =>
-              'dz-nav-link ' +
-              (isActive ? 'active' : '')
-            }
-          >
-            <FaShoppingBag />
-            <span>Products</span>
-          </NavLink>
-
-          <NavLink
-            to="/favoris"
-            className={({ isActive }) =>
-              'dz-nav-link favorites-link ' +
-              (isActive ? 'active' : '')
-            }
-            aria-label={`Favorites${
-              favoritesCount
-                ? `, ${favoritesCount} products`
-                : ''
-            }`}
-          >
-            <span className="favorites-icon-wrapper">
-              <FaHeart />
-
-              {favoritesCount > 0 && (
-                <span className="favorites-badge">
-                  {favoritesCount > 99
-                    ? '99+'
-                    : favoritesCount}
-                </span>
-              )}
-            </span>
-
-            <span>Favorites</span>
-          </NavLink>
-
-          <NavLink
-            to="/contact"
-            className={({ isActive }) =>
-              'dz-nav-link ' +
-              (isActive ? 'active' : '')
-            }
-          >
-            <FaPhone />
-            <span>Contact</span>
-          </NavLink>
-
-          <NavLink
-            to="/panier"
-            className={({ isActive }) =>
-              'dz-nav-link cart-link ' +
-              (isActive ? 'active' : '')
-            }
-          >
-            <div className="cart-icon-wrapper">
-              <FaShoppingCart />
-
-              {cartCount > 0 && (
-                <span className="cart-badge">
-                  {cartCount}
-                </span>
-              )}
-            </div>
-
-            <span>Bag</span>
-          </NavLink>
-
-          {user && user.role === 'admin' && (
+          {/* Desktop navigation */}
+          <div className="dz-nav-links">
             <NavLink
-              to="/admin"
+              to="/"
               className={({ isActive }) =>
-                'dz-nav-link ' +
-                (isActive ? 'active' : '')
+                'dz-nav-link ' + (isActive ? 'active' : '')
               }
             >
-              <FaTools />
-              <span>Admin</span>
+              <FaHome />
+              <span>Home</span>
             </NavLink>
-          )}
 
-          {user ? (
-            <>
-              <span className="dz-nav-link dz-account-link">
-                <FaUser />
-                <span>Account</span>
+            <NavLink
+              to="/produits"
+              className={({ isActive }) =>
+                'dz-nav-link ' + (isActive ? 'active' : '')
+              }
+            >
+              <FaShoppingBag />
+              <span>Products</span>
+            </NavLink>
+
+            <NavLink
+              to="/favoris"
+              className={({ isActive }) =>
+                'dz-nav-link favorites-link ' +
+                (isActive ? 'active' : '')
+              }
+              aria-label={`Favorites${
+                favoritesCount
+                  ? `, ${favoritesCount} products`
+                  : ''
+              }`}
+            >
+              <span className="favorites-icon-wrapper">
+                <FaHeart />
+
+                {favoritesCount > 0 && (
+                  <span className="favorites-badge">
+                    {favoritesCount > 99
+                      ? '99+'
+                      : favoritesCount}
+                  </span>
+                )}
               </span>
 
-              <button
-                type="button"
-                className="dz-signout-button"
-                onClick={logout}
-              >
-                <FaSignOutAlt />
-                <span>Sign Out</span>
-              </button>
-            </>
-          ) : (
-            <div className="dz-auth-actions">
-              <NavLink
-                to="/login"
-                className={({ isActive }) =>
-                  'dz-signin-link ' +
-                  (isActive ? 'active' : '')
-                }
-              >
-                <FaUser />
-                <span>Sign In</span>
-              </NavLink>
+              <span>Favorites</span>
+            </NavLink>
 
-              <NavLink
-                to="/signup"
-                className={({ isActive }) =>
-                  'dz-signup-button ' +
-                  (isActive ? 'active' : '')
-                }
-              >
-                <span>Sign Up</span>
-              </NavLink>
-            </div>
-          )}
-        </div>
-
-        {/* Mobile bottom navigation */}
-        <div className="dz-mobile-nav">
-          <NavLink
-            to="/"
-            end
-            className={({ isActive }) =>
-              'dz-mobile-nav-link ' +
-              (isActive ? 'active' : '')
-            }
-          >
-            <FaHome />
-            <span>Home</span>
-          </NavLink>
-
-          <NavLink
-            to="/produits"
-            className={({ isActive }) =>
-              'dz-mobile-nav-link ' +
-              (isActive ? 'active' : '')
-            }
-          >
-            <FaShoppingBag />
-            <span>Products</span>
-          </NavLink>
-
-          <NavLink
-            to="/favoris"
-            className={({ isActive }) =>
-              'dz-mobile-nav-link favorites-mobile-link ' +
-              (isActive ? 'active' : '')
-            }
-            aria-label={`Favorites${
-              favoritesCount
-                ? `, ${favoritesCount} products`
-                : ''
-            }`}
-          >
-            <span className="dz-mobile-icon-wrapper">
-              <FaHeart />
-
-              {favoritesCount > 0 && (
-                <span className="dz-mobile-badge">
-                  {favoritesCount > 99
-                    ? '99+'
-                    : favoritesCount}
-                </span>
-              )}
-            </span>
-
-            <span>Favorites</span>
-          </NavLink>
-
-          <NavLink
-            to="/categories"
-            className={({ isActive }) =>
-              'dz-mobile-nav-link ' +
-              (isActive ? 'active' : '')
-            }
-          >
-            <FaThLarge />
-            <span>Categories</span>
-          </NavLink>
-
-          <NavLink
-            to="/panier"
-            className={({ isActive }) =>
-              'dz-mobile-nav-link ' +
-              (isActive ? 'active' : '')
-            }
-          >
-            <span className="dz-mobile-icon-wrapper">
-              <FaShoppingCart />
-
-              {cartCount > 0 && (
-                <span className="dz-mobile-badge">
-                  {cartCount > 99
-                    ? '99+'
-                    : cartCount}
-                </span>
-              )}
-            </span>
-
-            <span>Bag</span>
-          </NavLink>
-
-          <NavLink
-            to="/contact"
-            className={({ isActive }) =>
-              'dz-mobile-nav-link ' +
-              (isActive ? 'active' : '')
-            }
-          >
-            <FaPhone />
-            <span>Contact</span>
-          </NavLink>
-
-          {user && user.role === 'admin' && (
             <NavLink
-              to="/admin"
+              to="/contact"
               className={({ isActive }) =>
-                'dz-mobile-nav-link ' +
+                'dz-nav-link ' + (isActive ? 'active' : '')
+              }
+            >
+              <FaPhone />
+              <span>Contact</span>
+            </NavLink>
+
+            <NavLink
+              to="/panier"
+              className={({ isActive }) =>
+                'dz-nav-link cart-link ' +
                 (isActive ? 'active' : '')
               }
             >
-              <FaTools />
-              <span>Admin</span>
+              <div className="cart-icon-wrapper">
+                <FaShoppingCart />
+
+                {cartCount > 0 && (
+                  <span className="cart-badge">
+                    {cartCount}
+                  </span>
+                )}
+              </div>
+
+              <span>Bag</span>
             </NavLink>
-          )}
 
-          {user ? (
-            <button
-              type="button"
-              className="dz-mobile-nav-link dz-mobile-account"
-              onClick={logout}
-              aria-label="Sign out"
-              title="Sign out"
-            >
-              <FaSignOutAlt />
-              <span>Sign Out</span>
-            </button>
-          ) : (
-            <>
+            {user && user.role === 'admin' && (
               <NavLink
-                to="/login"
+                to="/admin"
                 className={({ isActive }) =>
-                  'dz-mobile-nav-link dz-mobile-signin ' +
-                  (isActive ? 'active' : '')
+                  'dz-nav-link ' + (isActive ? 'active' : '')
                 }
               >
-                <FaUser />
-                <span>Sign In</span>
+                <FaTools />
+                <span>Admin</span>
               </NavLink>
+            )}
 
-              <NavLink
-                to="/signup"
-                className={({ isActive }) =>
-                  'dz-mobile-nav-link dz-mobile-signup ' +
-                  (isActive ? 'active' : '')
-                }
-              >
-                <FaUser />
-                <span>Sign Up</span>
-              </NavLink>
-            </>
-          )}
+            {user ? (
+              <>
+                <span className="dz-nav-link dz-account-link">
+                  <FaUser />
+                  <span>Account</span>
+                </span>
+
+                <button
+                  type="button"
+                  className="dz-signout-button"
+                  onClick={logout}
+                >
+                  <FaSignOutAlt />
+                  <span>Sign Out</span>
+                </button>
+              </>
+            ) : (
+              <div className="dz-auth-actions">
+                <NavLink
+                  to="/login"
+                  className={({ isActive }) =>
+                    'dz-signin-link ' +
+                    (isActive ? 'active' : '')
+                  }
+                >
+                  <FaUser />
+                  <span>Sign In</span>
+                </NavLink>
+
+                <NavLink
+                  to="/signup"
+                  className={({ isActive }) =>
+                    'dz-signup-button ' +
+                    (isActive ? 'active' : '')
+                  }
+                >
+                  <span>Sign Up</span>
+                </NavLink>
+              </div>
+            )}
+          </div>
         </div>
+      </nav>
+
+      {/* Mobile bottom navigation moved outside the main nav */}
+      <div className="dz-mobile-nav">
+        <NavLink
+          to="/"
+          end
+          className={({ isActive }) =>
+            'dz-mobile-nav-link ' + (isActive ? 'active' : '')
+          }
+        >
+          <FaHome />
+          <span>Home</span>
+        </NavLink>
+
+        <NavLink
+          to="/produits"
+          className={({ isActive }) =>
+            'dz-mobile-nav-link ' + (isActive ? 'active' : '')
+          }
+        >
+          <FaShoppingBag />
+          <span>Products</span>
+        </NavLink>
+
+        <NavLink
+          to="/favoris"
+          className={({ isActive }) =>
+            'dz-mobile-nav-link favorites-mobile-link ' +
+            (isActive ? 'active' : '')
+          }
+          aria-label={`Favorites${
+            favoritesCount
+              ? `, ${favoritesCount} products`
+              : ''
+          }`}
+        >
+          <span className="dz-mobile-icon-wrapper">
+            <FaHeart />
+
+            {favoritesCount > 0 && (
+              <span className="dz-mobile-badge">
+                {favoritesCount > 99
+                  ? '99+'
+                  : favoritesCount}
+              </span>
+            )}
+          </span>
+
+          <span>Favorites</span>
+        </NavLink>
+
+        <NavLink
+          to="/categories"
+          className={({ isActive }) =>
+            'dz-mobile-nav-link ' + (isActive ? 'active' : '')
+          }
+        >
+          <FaThLarge />
+          <span>Categories</span>
+        </NavLink>
+
+        <NavLink
+          to="/panier"
+          className={({ isActive }) =>
+            'dz-mobile-nav-link ' + (isActive ? 'active' : '')
+          }
+        >
+          <span className="dz-mobile-icon-wrapper">
+            <FaShoppingCart />
+
+            {cartCount > 0 && (
+              <span className="dz-mobile-badge">
+                {cartCount > 99
+                  ? '99+'
+                  : cartCount}
+              </span>
+            )}
+          </span>
+
+          <span>Bag</span>
+        </NavLink>
+
+        <NavLink
+          to="/contact"
+          className={({ isActive }) =>
+            'dz-mobile-nav-link ' + (isActive ? 'active' : '')
+          }
+        >
+          <FaPhone />
+          <span>Contact</span>
+        </NavLink>
+
+        {user && user.role === 'admin' && (
+          <NavLink
+            to="/admin"
+            className={({ isActive }) =>
+              'dz-mobile-nav-link ' + (isActive ? 'active' : '')
+            }
+          >
+            <FaTools />
+            <span>Admin</span>
+          </NavLink>
+        )}
+
+        {user ? (
+          <button
+            type="button"
+            className="dz-mobile-nav-link dz-mobile-account"
+            onClick={logout}
+            aria-label="Sign out"
+            title="Sign out"
+          >
+            <FaSignOutAlt />
+            <span>Sign Out</span>
+          </button>
+        ) : (
+          <>
+            <NavLink
+              to="/login"
+              className={({ isActive }) =>
+                'dz-mobile-nav-link dz-mobile-signin ' +
+                (isActive ? 'active' : '')
+              }
+            >
+              <FaUser />
+              <span>Sign In</span>
+            </NavLink>
+
+            <NavLink
+              to="/signup"
+              className={({ isActive }) =>
+                'dz-mobile-nav-link dz-mobile-signup ' +
+                (isActive ? 'active' : '')
+              }
+            >
+              <FaUser />
+              <span>Sign Up</span>
+            </NavLink>
+          </>
+        )}
       </div>
-    </nav>
+    </>
   )
 }
 
