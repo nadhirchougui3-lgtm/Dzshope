@@ -1,6 +1,10 @@
-
 import { useEffect, useRef, useState } from 'react'
-import { NavLink, Link, useNavigate } from 'react-router-dom'
+import {
+  NavLink,
+  Link,
+  useNavigate,
+  useLocation
+} from 'react-router-dom'
 import {
   FaHome,
   FaShoppingBag,
@@ -26,6 +30,29 @@ const API_URL =
 
 const HISTORY_KEY = 'dzshop_search_history'
 const MAX_HISTORY = 12
+
+// English labels for display; French values remain unchanged for filtering.
+const categories = [
+  { label: 'All', value: 'Tout' },
+  { label: 'Clothing', value: 'Vêtements' },
+  { label: 'Shoes', value: 'Chaussures' },
+  { label: 'Bags', value: 'Sacs' },
+  { label: 'Watches', value: 'Montres' },
+  { label: 'Phones', value: 'Téléphones' },
+  { label: 'Audio', value: 'Audio' },
+  { label: 'Computers', value: 'Ordinateurs' },
+  { label: 'Gaming', value: 'Gaming' },
+  { label: 'Personal Care', value: 'Soins personnels' },
+  { label: 'Accessories', value: 'Accessoires' },
+  { label: 'Sports', value: 'Sport' },
+  { label: 'Makeup', value: 'Maquillage' },
+  { label: 'Home', value: 'Maison' },
+  { label: 'Camping', value: 'Camping' },
+  { label: 'Decor', value: 'Décoration' },
+  { label: 'Art & Crafts', value: 'Art & Création' },
+  { label: 'Reading', value: 'Lecture' },
+  { label: 'Office', value: 'Bureau' }
+]
 
 const aliases = {
   shoes: [
@@ -167,7 +194,11 @@ function getAliasesForQuery(query) {
   for (const group of Object.values(aliases)) {
     const normalizedAliases = group.map(normalizeText)
 
-    if (normalizedAliases.some((item) => item === normalizedQuery)) {
+    if (
+      normalizedAliases.some(
+        (item) => item === normalizedQuery
+      )
+    ) {
       return normalizedAliases
     }
   }
@@ -209,7 +240,10 @@ function productMatches(product, query) {
       const fieldWords = field.split(' ')
 
       return fieldWords.some((fieldWord) => {
-        if (fieldWord.includes(word) || word.includes(fieldWord)) {
+        if (
+          fieldWord.includes(word) ||
+          word.includes(fieldWord)
+        ) {
           return true
         }
 
@@ -229,7 +263,9 @@ function productMatches(product, query) {
 function getProductScore(product, query) {
   const normalizedQuery = normalizeText(query)
   const name = normalizeText(product?.nom)
-  const brand = normalizeText(product?.marque || product?.brand)
+  const brand = normalizeText(
+    product?.marque || product?.brand
+  )
   const category = normalizeText(product?.categorie)
 
   if (name === normalizedQuery) return 100
@@ -247,6 +283,7 @@ function Navbar() {
   const { user, logout } = useAuth()
   const { favorites } = useFavorites()
   const navigate = useNavigate()
+  const location = useLocation()
 
   const [products, setProducts] = useState([])
   const [search, setSearch] = useState('')
@@ -261,6 +298,24 @@ function Navbar() {
   )
 
   const favoritesCount = favorites.length
+
+  const showMobileCategories =
+    location.pathname === '/' ||
+    location.pathname === '/produits'
+
+  const selectedCategory =
+    new URLSearchParams(location.search).get('categorie') || ''
+
+  function selectMobileCategory(category) {
+    if (category.value === 'Tout') {
+      navigate('/produits')
+      return
+    }
+
+    navigate(
+      `/produits?categorie=${encodeURIComponent(category.value)}`
+    )
+  }
 
   useEffect(() => {
     try {
@@ -288,7 +343,9 @@ function Navbar() {
   useEffect(() => {
     async function loadProducts() {
       try {
-        const response = await fetch(`${API_URL}/api/products`)
+        const response = await fetch(
+          `${API_URL}/api/products`
+        )
 
         if (!response.ok) return
 
@@ -302,7 +359,10 @@ function Navbar() {
           setProducts([])
         }
       } catch (error) {
-        console.error('Unable to load products for search:', error)
+        console.error(
+          'Unable to load products for search:',
+          error
+        )
         setProducts([])
       }
     }
@@ -320,10 +380,16 @@ function Navbar() {
       }
     }
 
-    document.addEventListener('mousedown', handleOutsideClick)
+    document.addEventListener(
+      'mousedown',
+      handleOutsideClick
+    )
 
     return () => {
-      document.removeEventListener('mousedown', handleOutsideClick)
+      document.removeEventListener(
+        'mousedown',
+        handleOutsideClick
+      )
     }
   }, [])
 
@@ -335,26 +401,35 @@ function Navbar() {
     const updatedHistory = [
       cleaned,
       ...history.filter(
-        (item) => normalizeText(item) !== normalizeText(cleaned)
+        (item) =>
+          normalizeText(item) !== normalizeText(cleaned)
       )
     ].slice(0, MAX_HISTORY)
 
     setHistory(updatedHistory)
 
     try {
-      localStorage.setItem(HISTORY_KEY, JSON.stringify(updatedHistory))
+      localStorage.setItem(
+        HISTORY_KEY,
+        JSON.stringify(updatedHistory)
+      )
     } catch {
       return
     }
   }
 
   function deleteHistoryItem(value) {
-    const updatedHistory = history.filter((item) => item !== value)
+    const updatedHistory = history.filter(
+      (item) => item !== value
+    )
 
     setHistory(updatedHistory)
 
     try {
-      localStorage.setItem(HISTORY_KEY, JSON.stringify(updatedHistory))
+      localStorage.setItem(
+        HISTORY_KEY,
+        JSON.stringify(updatedHistory)
+      )
     } catch {
       return
     }
@@ -378,7 +453,9 @@ function Navbar() {
     saveSearch(cleaned)
     setSearchOpen(false)
 
-    navigate(`/produits?search=${encodeURIComponent(cleaned)}`)
+    navigate(
+      `/produits?search=${encodeURIComponent(cleaned)}`
+    )
   }
 
   function openProduct(product) {
@@ -392,7 +469,9 @@ function Navbar() {
 
   const suggestions = search.trim()
     ? products
-        .filter((product) => productMatches(product, search))
+        .filter((product) =>
+          productMatches(product, search)
+        )
         .sort(
           (a, b) =>
             getProductScore(b, search) -
@@ -418,7 +497,10 @@ function Navbar() {
           </div>
         </Link>
 
-        <div className="dz-search-wrapper" ref={searchRef}>
+        <div
+          className="dz-search-wrapper"
+          ref={searchRef}
+        >
           <form
             className="dz-search"
             onSubmit={(event) => {
@@ -469,7 +551,9 @@ function Navbar() {
                         type="button"
                         className="dz-search-result"
                         key={product._id}
-                        onClick={() => openProduct(product)}
+                        onClick={() =>
+                          openProduct(product)
+                        }
                       >
                         <div className="dz-search-image">
                           {product.image ? (
@@ -477,7 +561,8 @@ function Navbar() {
                               src={product.image}
                               alt={product.nom}
                               onError={(event) => {
-                                event.currentTarget.style.display = 'none'
+                                event.currentTarget.style.display =
+                                  'none'
                               }}
                             />
                           ) : (
@@ -487,11 +572,15 @@ function Navbar() {
 
                         <div className="dz-search-result-info">
                           <strong>{product.nom}</strong>
-                          <span>{product.categorie || 'Product'}</span>
+                          <span>
+                            {product.categorie || 'Product'}
+                          </span>
                         </div>
 
                         <span className="dz-search-price">
-                          {Number(product.prix || 0).toLocaleString('fr-DZ')}{' '}
+                          {Number(
+                            product.prix || 0
+                          ).toLocaleString('fr-DZ')}{' '}
                           DA
                         </span>
                       </button>
@@ -501,20 +590,28 @@ function Navbar() {
                   <div className="dz-search-empty">
                     <FaSearch />
                     <strong>No products found</strong>
-                    <span>Try another product, brand or category.</span>
+                    <span>
+                      Try another product, brand or category.
+                    </span>
                   </div>
                 )
               ) : history.length > 0 ? (
                 <>
                   <div className="dz-search-heading">
                     <span>Recent searches</span>
-                    <button type="button" onClick={clearHistory}>
+                    <button
+                      type="button"
+                      onClick={clearHistory}
+                    >
                       Clear all
                     </button>
                   </div>
 
                   {history.map((item) => (
-                    <div className="dz-history-item" key={item}>
+                    <div
+                      className="dz-history-item"
+                      key={item}
+                    >
                       <button
                         type="button"
                         onClick={() => {
@@ -529,7 +626,9 @@ function Navbar() {
                       <button
                         type="button"
                         className="dz-history-delete"
-                        onClick={() => deleteHistoryItem(item)}
+                        onClick={() =>
+                          deleteHistoryItem(item)
+                        }
                         aria-label={`Delete ${item}`}
                       >
                         <FaTrash />
@@ -540,19 +639,54 @@ function Navbar() {
               ) : (
                 <div className="dz-search-empty dz-search-empty-small">
                   <FaSearch />
-                  <span>Search by product, brand or category.</span>
+                  <span>
+                    Search by product, brand or category.
+                  </span>
                 </div>
               )}
             </div>
           )}
         </div>
 
+        {/* Mobile category strip: Home and Products only */}
+        {showMobileCategories && (
+          <div
+            className="dz-mobile-categories"
+            aria-label="Product categories"
+          >
+            {categories.map((category) => {
+              const isActive =
+                category.value === 'Tout'
+                  ? !selectedCategory
+                  : selectedCategory === category.value
+
+              return (
+                <button
+                  key={category.value}
+                  type="button"
+                  className={
+                    'dz-mobile-category' +
+                    (isActive ? ' active' : '')
+                  }
+                  onClick={() =>
+                    selectMobileCategory(category)
+                  }
+                  aria-pressed={isActive}
+                >
+                  {category.label}
+                </button>
+              )
+            })}
+          </div>
+        )}
+
         {/* Desktop navigation */}
         <div className="dz-nav-links">
           <NavLink
             to="/"
             className={({ isActive }) =>
-              'dz-nav-link ' + (isActive ? 'active' : '')
+              'dz-nav-link ' +
+              (isActive ? 'active' : '')
             }
           >
             <FaHome />
@@ -562,7 +696,8 @@ function Navbar() {
           <NavLink
             to="/produits"
             className={({ isActive }) =>
-              'dz-nav-link ' + (isActive ? 'active' : '')
+              'dz-nav-link ' +
+              (isActive ? 'active' : '')
             }
           >
             <FaShoppingBag />
@@ -572,26 +707,35 @@ function Navbar() {
           <NavLink
             to="/favoris"
             className={({ isActive }) =>
-              'dz-nav-link favorites-link ' + (isActive ? 'active' : '')
+              'dz-nav-link favorites-link ' +
+              (isActive ? 'active' : '')
             }
-            aria-label={`Favorites${favoritesCount ? `, ${favoritesCount} products` : ''}`}
+            aria-label={`Favorites${
+              favoritesCount
+                ? `, ${favoritesCount} products`
+                : ''
+            }`}
           >
             <span className="favorites-icon-wrapper">
               <FaHeart />
 
               {favoritesCount > 0 && (
                 <span className="favorites-badge">
-                  {favoritesCount > 99 ? '99+' : favoritesCount}
+                  {favoritesCount > 99
+                    ? '99+'
+                    : favoritesCount}
                 </span>
               )}
             </span>
+
             <span>Favorites</span>
           </NavLink>
 
           <NavLink
             to="/contact"
             className={({ isActive }) =>
-              'dz-nav-link ' + (isActive ? 'active' : '')
+              'dz-nav-link ' +
+              (isActive ? 'active' : '')
             }
           >
             <FaPhone />
@@ -601,14 +745,17 @@ function Navbar() {
           <NavLink
             to="/panier"
             className={({ isActive }) =>
-              'dz-nav-link cart-link ' + (isActive ? 'active' : '')
+              'dz-nav-link cart-link ' +
+              (isActive ? 'active' : '')
             }
           >
             <div className="cart-icon-wrapper">
               <FaShoppingCart />
 
               {cartCount > 0 && (
-                <span className="cart-badge">{cartCount}</span>
+                <span className="cart-badge">
+                  {cartCount}
+                </span>
               )}
             </div>
 
@@ -619,7 +766,8 @@ function Navbar() {
             <NavLink
               to="/admin"
               className={({ isActive }) =>
-                'dz-nav-link ' + (isActive ? 'active' : '')
+                'dz-nav-link ' +
+                (isActive ? 'active' : '')
               }
             >
               <FaTools />
@@ -648,7 +796,8 @@ function Navbar() {
               <NavLink
                 to="/login"
                 className={({ isActive }) =>
-                  'dz-signin-link ' + (isActive ? 'active' : '')
+                  'dz-signin-link ' +
+                  (isActive ? 'active' : '')
                 }
               >
                 <FaUser />
@@ -658,7 +807,8 @@ function Navbar() {
               <NavLink
                 to="/signup"
                 className={({ isActive }) =>
-                  'dz-signup-button ' + (isActive ? 'active' : '')
+                  'dz-signup-button ' +
+                  (isActive ? 'active' : '')
                 }
               >
                 <span>Sign Up</span>
@@ -667,13 +817,14 @@ function Navbar() {
           )}
         </div>
 
-        {/* Mobile navigation */}
+        {/* Mobile bottom navigation */}
         <div className="dz-mobile-nav">
           <NavLink
             to="/"
             end
             className={({ isActive }) =>
-              'dz-mobile-nav-link ' + (isActive ? 'active' : '')
+              'dz-mobile-nav-link ' +
+              (isActive ? 'active' : '')
             }
           >
             <FaHome />
@@ -683,7 +834,8 @@ function Navbar() {
           <NavLink
             to="/produits"
             className={({ isActive }) =>
-              'dz-mobile-nav-link ' + (isActive ? 'active' : '')
+              'dz-mobile-nav-link ' +
+              (isActive ? 'active' : '')
             }
           >
             <FaShoppingBag />
@@ -696,14 +848,20 @@ function Navbar() {
               'dz-mobile-nav-link favorites-mobile-link ' +
               (isActive ? 'active' : '')
             }
-            aria-label={`Favorites${favoritesCount ? `, ${favoritesCount} products` : ''}`}
+            aria-label={`Favorites${
+              favoritesCount
+                ? `, ${favoritesCount} products`
+                : ''
+            }`}
           >
             <span className="dz-mobile-icon-wrapper">
               <FaHeart />
 
               {favoritesCount > 0 && (
                 <span className="dz-mobile-badge">
-                  {favoritesCount > 99 ? '99+' : favoritesCount}
+                  {favoritesCount > 99
+                    ? '99+'
+                    : favoritesCount}
                 </span>
               )}
             </span>
@@ -714,7 +872,8 @@ function Navbar() {
           <NavLink
             to="/categories"
             className={({ isActive }) =>
-              'dz-mobile-nav-link ' + (isActive ? 'active' : '')
+              'dz-mobile-nav-link ' +
+              (isActive ? 'active' : '')
             }
           >
             <FaThLarge />
@@ -724,7 +883,8 @@ function Navbar() {
           <NavLink
             to="/panier"
             className={({ isActive }) =>
-              'dz-mobile-nav-link ' + (isActive ? 'active' : '')
+              'dz-mobile-nav-link ' +
+              (isActive ? 'active' : '')
             }
           >
             <span className="dz-mobile-icon-wrapper">
@@ -732,7 +892,9 @@ function Navbar() {
 
               {cartCount > 0 && (
                 <span className="dz-mobile-badge">
-                  {cartCount > 99 ? '99+' : cartCount}
+                  {cartCount > 99
+                    ? '99+'
+                    : cartCount}
                 </span>
               )}
             </span>
@@ -743,7 +905,8 @@ function Navbar() {
           <NavLink
             to="/contact"
             className={({ isActive }) =>
-              'dz-mobile-nav-link ' + (isActive ? 'active' : '')
+              'dz-mobile-nav-link ' +
+              (isActive ? 'active' : '')
             }
           >
             <FaPhone />
@@ -754,7 +917,8 @@ function Navbar() {
             <NavLink
               to="/admin"
               className={({ isActive }) =>
-                'dz-mobile-nav-link ' + (isActive ? 'active' : '')
+                'dz-mobile-nav-link ' +
+                (isActive ? 'active' : '')
               }
             >
               <FaTools />

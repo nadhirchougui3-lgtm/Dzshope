@@ -637,6 +637,13 @@ const STYLE_FOOTER = `
     margin-right: 6px;
   }
 }
+
+/* Mobile only: hide the footer. Desktop remains unchanged. */
+@media (max-width: 767px) {
+  .dz-footer {
+    display: none !important;
+  }
+}
 `
 
 function Footer() {

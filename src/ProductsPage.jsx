@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react'
 import {
   Link,
@@ -33,6 +34,32 @@ const aliases = {
   camping: ['camping', 'outdoor', 'plein air', 'تخييم', 'رحلات']
 }
 
+const categoryTranslations = {
+  chaussures: 'Shoes',
+  chaussure: 'Shoes',
+  vetements: 'Clothing',
+  vetement: 'Clothing',
+  maquillage: 'Makeup',
+  sacs: 'Bags',
+  sac: 'Bags',
+  montres: 'Watches',
+  montre: 'Watches',
+  accessoires: 'Accessories',
+  accessoire: 'Accessories',
+  bureau: 'Office Supplies',
+  'fournitures de bureau': 'Office Supplies',
+  livres: 'Books',
+  livre: 'Books',
+  maison: 'Home & Decor',
+  decoration: 'Home & Decor',
+  'soins personnels': 'Personal Care',
+  'soins de la peau': 'Skincare',
+  camping: 'Camping & Outdoors',
+  'plein air': 'Camping & Outdoors',
+  'art & creation': 'Art & Crafts',
+  lecture: 'Reading'
+}
+
 function normalizeText(value = '') {
   return String(value)
     .normalize('NFD')
@@ -45,6 +72,11 @@ function normalizeText(value = '') {
     .replace(/[^\p{L}\p{N}\s]/gu, ' ')
     .replace(/\s+/g, ' ')
     .trim()
+}
+
+function displayCategory(category = '') {
+  const normalized = normalizeText(category)
+  return categoryTranslations[normalized] || category
 }
 
 function levenshtein(a, b) {
@@ -110,7 +142,6 @@ function getProductFields(product) {
 
 function productMatches(product, query) {
   const normalizedQuery = normalizeText(query)
-
   if (!normalizedQuery) return true
 
   const fields = getProductFields(product)
@@ -140,7 +171,6 @@ function productMatches(product, query) {
         if (word.length >= 3 && fieldWord.length >= 3) {
           const distance = levenshtein(word, fieldWord)
           const limit = word.length <= 4 ? 1 : 2
-
           return distance <= limit
         }
 
@@ -252,6 +282,7 @@ function ProductsPage() {
   )
 
   const startIndex = (safeCurrentPage - 1) * PRODUCTS_PER_PAGE
+
   const endIndex = Math.min(
     startIndex + PRODUCTS_PER_PAGE,
     produitsFiltres.length
@@ -273,16 +304,18 @@ function ProductsPage() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
+  const categoryTitle = categorie ? displayCategory(categorie) : ''
+
   const title = searchQuery.trim()
-    ? 'Search results'
+    ? 'Search Results'
     : categorie
-      ? categorie
+      ? categoryTitle
       : 'Our'
 
   const description = searchQuery.trim()
     ? `Results matching "${searchQuery}".`
     : categorie
-      ? `Explore our selection from ${categorie}.`
+      ? `Explore our selection from ${categoryTitle}.`
       : 'Discover carefully selected products for everyday life.'
 
   function handleFavoriteClick(product) {
@@ -310,11 +343,10 @@ function ProductsPage() {
           )
         : p.image
 
+    const translatedCategory = displayCategory(p.categorie)
+
     return (
-      <article
-        className="dz-product-card"
-        key={p._id}
-      >
+      <article className="dz-product-card" key={p._id}>
         <div className="dz-product-image">
           <Link
             className="dz-product-image-link"
@@ -335,7 +367,7 @@ function ProductsPage() {
             )}
 
             <span className="dz-product-category">
-              {p.categorie}
+              {translatedCategory}
             </span>
 
             {p.stock === 0 && (
@@ -370,16 +402,15 @@ function ProductsPage() {
         >
           <div className="dz-product-content">
             <span className="dz-product-type">
-              {p.categorie}
+              {translatedCategory}
             </span>
 
             <h2>{p.nom}</h2>
-
             <p>{p.description}</p>
 
             <div className="dz-product-meta">
               <strong>
-                {Number(p.prix || 0).toLocaleString('fr-FR')} DA
+                {Number(p.prix || 0).toLocaleString('en-US')} DA
               </strong>
 
               <span className={p.stock > 0 ? 'in-stock' : 'out-stock'}>
@@ -414,13 +445,6 @@ function ProductsPage() {
 
             <p>{description}</p>
           </div>
-
-          <div className="dz-products-count">
-            <strong>{produitsFiltres.length}</strong>
-            <span>
-              {searchQuery.trim() ? 'Results' : 'Products'}
-            </span>
-          </div>
         </div>
 
         {searchQuery.trim() && (
@@ -439,11 +463,6 @@ function ProductsPage() {
 
             {totalPages > 1 && (
               <div className="dz-products-pagination">
-                <p>
-                  Showing {startIndex + 1}–{endIndex} of{' '}
-                  {produitsFiltres.length} products
-                </p>
-
                 <div className="dz-products-pagination-controls">
                   <button
                     type="button"
@@ -475,7 +494,6 @@ function ProductsPage() {
         ) : (
           <div className="dz-products-empty">
             <FaShoppingBag />
-
             <h2>No products found</h2>
 
             <p>

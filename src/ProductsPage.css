@@ -1,3 +1,4 @@
+
 .dz-products-page {
   min-height: 100vh;
   padding: 55px 5% 100px;
@@ -9,6 +10,8 @@
   max-width: 1700px;
   margin: 0 auto;
 }
+
+/* Products header */
 
 .dz-products-header {
   min-height: 190px;
@@ -49,28 +52,7 @@
   line-height: 1.7;
 }
 
-.dz-products-count {
-  min-width: 110px;
-  padding: 17px 20px;
-  border-left: 2px solid #8b1e2d;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.dz-products-count strong {
-  color: #1c1c1e;
-  font-size: 1.6rem;
-  line-height: 1;
-}
-
-.dz-products-count span {
-  margin-top: 5px;
-  color: #858589;
-  font-size: 0.68rem;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-}
+/* Search information */
 
 .dz-products-search-info {
   width: fit-content;
@@ -383,13 +365,6 @@
   gap: 16px;
 }
 
-.dz-products-pagination p {
-  margin: 0;
-  color: #77777a;
-  font-size: 0.78rem;
-  text-align: center;
-}
-
 .dz-products-pagination-controls {
   width: 100%;
   display: flex;
@@ -538,12 +513,6 @@
     flex-direction: column;
   }
 
-  .dz-products-count {
-    border-left: none;
-    border-top: 2px solid #8b1e2d;
-    padding: 12px 0 0;
-  }
-
   .dz-products-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 18px;
@@ -554,20 +523,20 @@
   }
 }
 
-/* Mobile: same horizontal spacing as Favorites page */
+/* Mobile */
 
 @media (max-width: 700px) {
   .dz-products-page {
-    padding: 35px 5% 70px;
+    padding: 25px 5% 70px;
   }
 
   .dz-products-container {
     width: 100%;
   }
 
-  .dz-products-header h1 {
-    font-size: 2.6rem;
-    letter-spacing: -2px;
+  /* Hide the page heading on mobile only */
+  .dz-products-header {
+    display: none;
   }
 
   .dz-products-grid {
