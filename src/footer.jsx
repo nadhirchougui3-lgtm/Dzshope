@@ -10,9 +10,6 @@ import {
   FaMoneyBillWave
 } from 'react-icons/fa'
 
-// Le style du pied de page est écrit ICI, dans ce fichier : plus besoin de footer.css.
-// (Avant, la ligne  import './Footer.css'  cassait le site en ligne : le fichier
-// s'appelle footer.css, avec un f minuscule, et Netlify fait la différence.)
 const STYLE_FOOTER = `
 .dz-footer {
   width: 100%;
@@ -230,6 +227,10 @@ const STYLE_FOOTER = `
   letter-spacing: 0.08em;
   text-transform: uppercase;
   white-space: nowrap;
+  text-align: left;
+  align-self: center;
+  flex-shrink: 0;
+  line-height: 1.4;
 }
 
 .dz-payment-item {
@@ -397,33 +398,35 @@ const STYLE_FOOTER = `
 
 @media (max-width: 850px) {
   .dz-footer-main {
-    grid-template-columns: 1fr 1fr;
-    padding: 45px 7%;
-    gap: 40px 30px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 38px 6%;
+    gap: 32px 24px;
   }
 
   .dz-footer-brand {
-    grid-column: span 2;
+    grid-column: 1 / -1;
   }
 
   .dz-footer-contact {
-    grid-column: span 2;
+    grid-column: auto;
+    padding-left: 0;
   }
 
   .dz-footer-payment {
-    padding: 18px 7%;
+    padding: 18px 6%;
     flex-wrap: wrap;
     gap: 14px 22px;
   }
 
   .dz-payment-title {
-    width: 100%;
-    margin-right: 0;
+    width: auto;
+    margin: 0 6px 0 0;
+    text-align: left;
   }
 
   .dz-footer-bottom {
     min-height: auto;
-    padding: 20px 7%;
+    padding: 20px 6%;
     flex-wrap: wrap;
     justify-content: center;
     text-align: center;
@@ -431,14 +434,50 @@ const STYLE_FOOTER = `
 }
 
 @media (max-width: 500px) {
-  .dz-footer-main {
-    grid-template-columns: 1fr;
-    padding: 40px 7%;
+  .dz-footer {
+    margin-top: 40px;
   }
 
-  .dz-footer-brand,
+  .dz-footer-main {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 30px 6% 32px;
+    gap: 30px 18px;
+  }
+
+  .dz-footer-brand {
+    grid-column: 1 / -1;
+    min-width: 0;
+  }
+
+  .dz-footer-column {
+    grid-column: auto;
+    min-width: 0;
+    padding: 0;
+  }
+
+  .dz-footer-column h3 {
+    margin-bottom: 15px;
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    line-height: 1.5;
+  }
+
+  .dz-footer-column > a {
+    margin-bottom: 10px;
+    font-size: 10px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+  }
+
   .dz-footer-contact {
-    grid-column: span 1;
+    grid-column: auto;
+    padding-left: 0;
+    padding-top: 0;
+    border-top: none;
+  }
+
+  .dz-footer-logo {
+    margin-bottom: 14px;
   }
 
   .dz-footer-logo-mark {
@@ -456,28 +495,79 @@ const STYLE_FOOTER = `
     letter-spacing: 1.2px;
   }
 
+  .dz-footer-description {
+    max-width: 320px;
+    margin-bottom: 16px;
+    font-size: 11px;
+    line-height: 1.7;
+  }
+
+  .dz-footer-socials {
+    gap: 9px;
+  }
+
+  .dz-footer-socials a {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+    min-height: 34px;
+    max-width: 34px;
+    max-height: 34px;
+  }
+
+  .dz-contact-item {
+    align-items: flex-start;
+    gap: 7px;
+    margin-bottom: 13px;
+    font-size: 10px;
+    overflow-wrap: anywhere;
+  }
+
+  .dz-contact-item svg {
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .dz-contact-item a {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .dz-contact-note {
+    font-size: 9px;
+    line-height: 1.5;
+  }
+
   .dz-footer-payment {
-    padding: 18px 7%;
+    padding: 18px 6%;
+    justify-content: flex-start;
     align-items: center;
-    gap: 14px 18px;
+    gap: 14px 16px;
+  }
+
+  .dz-payment-title {
+    width: 100%;
+    flex-basis: 100%;
+    margin: 0;
+    text-align: left;
+    align-self: flex-start;
+    font-size: 10px;
   }
 
   .dz-payment-item {
     width: auto;
+    min-width: 0;
+    gap: 6px;
   }
 
   .dz-payment-name {
     font-size: 9px;
   }
 
-  .dz-payment-logo {
-    width: 38px;
-    height: 28px;
-  }
-
+  .dz-payment-logo,
   .dz-payment-visa-logo,
   .dz-payment-mastercard-logo {
-    width: 38px;
+    width: 36px;
     height: 28px;
   }
 
@@ -487,13 +577,64 @@ const STYLE_FOOTER = `
 
   .dz-footer-bottom {
     flex-direction: column;
-    gap: 14px;
+    gap: 12px;
+    padding: 20px 6%;
+  }
+
+  .dz-footer-bottom p {
+    line-height: 1.6;
+    text-align: center;
   }
 
   .dz-footer-bottom-links {
     flex-wrap: wrap;
     justify-content: center;
-    gap: 12px 18px;
+    gap: 10px 16px;
+  }
+}
+
+@media (max-width: 350px) {
+  .dz-footer-main {
+    column-gap: 12px;
+    padding-right: 5%;
+    padding-left: 5%;
+  }
+
+  .dz-footer-column h3 {
+    font-size: 9px;
+  }
+
+  .dz-footer-column > a {
+    font-size: 9px;
+  }
+
+  .dz-footer-contact .dz-contact-item {
+    font-size: 9px;
+  }
+
+  .dz-footer-payment {
+    column-gap: 10px;
+  }
+
+  .dz-payment-item {
+    gap: 4px;
+  }
+
+  .dz-payment-name {
+    font-size: 8px;
+  }
+}
+
+/* Desktop only: raise the Payment Methods title. */
+@media (min-width: 851px) {
+  .dz-footer-payment {
+    align-items: center;
+  }
+
+  .dz-footer-payment .dz-payment-title {
+    position: relative;
+    top: -14px;
+    margin-right: 6px;
   }
 }
 `
@@ -504,9 +645,7 @@ function Footer() {
       <style>{STYLE_FOOTER}</style>
 
       <div className="dz-footer-main">
-
         <div className="dz-footer-brand">
-
           <Link to="/" className="dz-footer-logo">
             <span className="dz-footer-logo-mark">DZ</span>
 
@@ -539,7 +678,6 @@ function Footer() {
               <FaTiktok />
             </a>
           </div>
-
         </div>
 
         <div className="dz-footer-column">
@@ -593,11 +731,9 @@ function Footer() {
             Available every day to help you
           </span>
         </div>
-
       </div>
 
       <div className="dz-footer-payment">
-
         <div className="dz-payment-title">
           Payment Methods
         </div>
@@ -646,11 +782,9 @@ function Footer() {
             Mastercard
           </span>
         </div>
-
       </div>
 
       <div className="dz-footer-bottom">
-
         <p>
           © {new Date().getFullYear()} DZShop. All rights reserved.
         </p>
@@ -664,9 +798,7 @@ function Footer() {
         <span className="dz-footer-country">
           🇩🇿 Algeria
         </span>
-
       </div>
-
     </footer>
   )
 }

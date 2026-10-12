@@ -1,7 +1,13 @@
 import { useState, useEffect } from 'react'
-import { Link, useSearchParams, useNavigate, useLocation } from 'react-router-dom'
+import {
+  Link,
+  useSearchParams,
+  useNavigate,
+  useLocation
+} from 'react-router-dom'
 import {
   FaArrowRight,
+  FaArrowLeft,
   FaShoppingBag,
   FaSearch,
   FaHeart
@@ -10,6 +16,8 @@ import { apiFetch, lireJson } from './api'
 import { useFavorites } from './FavoritesContext'
 import { useAuth } from './AuthContext'
 import './ProductsPage.css'
+
+const PRODUCTS_PER_PAGE = 40
 
 const aliases = {
   shoes: ['shoes', 'shoe', 'chaussures', 'chaussure', 'أحذية', 'حذاء', 'صباط'],
@@ -161,6 +169,8 @@ function getProductScore(product, query) {
 function ProductsPage() {
   const [products, setProducts] = useState([])
   const [chargement, setChargement] = useState(true)
+  const [currentPage, setCurrentPage] = useState(1)
+
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
   const location = useLocation()
@@ -200,6 +210,10 @@ function ProductsPage() {
     }
   }, [])
 
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [categorie, searchQuery])
+
   if (chargement) {
     return (
       <div className="dz-products-loading">
@@ -228,6 +242,37 @@ function ProductsPage() {
       )
   }
 
+  const totalPages = Math.ceil(
+    produitsFiltres.length / PRODUCTS_PER_PAGE
+  )
+
+  const safeCurrentPage = Math.min(
+    currentPage,
+    Math.max(totalPages, 1)
+  )
+
+  const startIndex = (safeCurrentPage - 1) * PRODUCTS_PER_PAGE
+  const endIndex = Math.min(
+    startIndex + PRODUCTS_PER_PAGE,
+    produitsFiltres.length
+  )
+
+  const produitsPage = produitsFiltres.slice(startIndex, endIndex)
+
+  function goToPreviousPage() {
+    if (safeCurrentPage <= 1) return
+
+    setCurrentPage((page) => Math.max(1, page - 1))
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  function goToNextPage() {
+    if (safeCurrentPage >= totalPages) return
+
+    setCurrentPage((page) => Math.min(totalPages, page + 1))
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
   const title = searchQuery.trim()
     ? 'Search results'
     : categorie
@@ -239,12 +284,6 @@ function ProductsPage() {
     : categorie
       ? `Explore our selection from ${categorie}.`
       : 'Discover carefully selected products for everyday life.'
-
-  const productRows = []
-
-  for (let i = 0; i < produitsFiltres.length; i += 10) {
-    productRows.push(produitsFiltres.slice(i, i + 10))
-  }
 
   function handleFavoriteClick(product) {
     if (!user) {
@@ -259,7 +298,7 @@ function ProductsPage() {
     toggleFavorite(product)
   }
 
-  function renderProductCard(p, duplicate = false) {
+  function renderProductCard(p) {
     const productUrl = `/produit/${p._id}`
     const favorite = isFavorite(p)
 
@@ -274,15 +313,12 @@ function ProductsPage() {
     return (
       <article
         className="dz-product-card"
-        key={`${duplicate ? 'duplicate-' : ''}${p._id}`}
-        aria-hidden={duplicate ? 'true' : undefined}
+        key={p._id}
       >
         <div className="dz-product-image">
           <Link
             className="dz-product-image-link"
             to={productUrl}
-            tabIndex={duplicate ? -1 : undefined}
-            aria-hidden={duplicate ? 'true' : undefined}
           >
             {imagePath ? (
               <img
@@ -322,8 +358,6 @@ function ProductsPage() {
                 : `Add ${p.nom} to favorites`
             }
             aria-pressed={favorite}
-            disabled={duplicate}
-            tabIndex={duplicate ? -1 : 0}
             title={favorite ? 'Remove from favorites' : 'Add to favorites'}
           >
             <FaHeart />
@@ -333,8 +367,6 @@ function ProductsPage() {
         <Link
           className="dz-product-card-link"
           to={productUrl}
-          tabIndex={duplicate ? -1 : undefined}
-          aria-hidden={duplicate ? 'true' : undefined}
         >
           <div className="dz-product-content">
             <span className="dz-product-type">
@@ -401,39 +433,44 @@ function ProductsPage() {
 
         {produitsFiltres.length > 0 ? (
           <>
-            <div className="dz-products-rows">
-              {productRows.map((row, rowIndex) => (
-                <div
-                  className="dz-products-row"
-                  key={`row-${rowIndex}`}
-                >
-                  <div
-                    className="dz-products-track"
-                    style={{
-                      '--dz-row-duration': `${Math.max(
-                        24,
-                        row.length * 4
-                      )}s`
-                    }}
-                  >
-                    <div className="dz-products-track-group">
-                      {row.map((p) => renderProductCard(p))}
-                    </div>
-
-                    <div
-                      className="dz-products-track-group"
-                      aria-hidden="true"
-                    >
-                      {row.map((p) => renderProductCard(p, true))}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
             <div className="dz-products-grid">
-              {produitsFiltres.map((p) => renderProductCard(p))}
+              {produitsPage.map(renderProductCard)}
             </div>
+
+            {totalPages > 1 && (
+              <div className="dz-products-pagination">
+                <p>
+                  Showing {startIndex + 1}–{endIndex} of{' '}
+                  {produitsFiltres.length} products
+                </p>
+
+                <div className="dz-products-pagination-controls">
+                  <button
+                    type="button"
+                    className="dz-products-page-button"
+                    onClick={goToPreviousPage}
+                    disabled={safeCurrentPage <= 1}
+                  >
+                    <FaArrowLeft />
+                    Previous
+                  </button>
+
+                  <span className="dz-products-page-indicator">
+                    Page {safeCurrentPage} of {totalPages}
+                  </span>
+
+                  <button
+                    type="button"
+                    className="dz-products-page-button"
+                    onClick={goToNextPage}
+                    disabled={safeCurrentPage >= totalPages}
+                  >
+                    Next
+                    <FaArrowRight />
+                  </button>
+                </div>
+              </div>
+            )}
           </>
         ) : (
           <div className="dz-products-empty">
@@ -455,4 +492,4 @@ function ProductsPage() {
   )
 }
 
-export default ProductsPage ;
+export default ProductsPage

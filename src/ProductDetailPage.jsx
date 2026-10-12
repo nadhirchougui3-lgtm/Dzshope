@@ -1,22 +1,37 @@
+
 import { useState, useEffect, useRef } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import {
+  useParams,
+  Link,
+  useNavigate,
+  useLocation
+} from 'react-router-dom'
 import {
   FaArrowLeft,
   FaArrowRight,
   FaCheck,
   FaMinus,
   FaPlus,
-  FaShoppingBag
+  FaShoppingBag,
+  FaHeart
 } from 'react-icons/fa'
 import { apiFetch } from './api'
 import { useCart } from './CartContext'
+import { useFavorites } from './FavoritesContext'
+import { useAuth } from './AuthContext'
+import './ProductsPage.css'
 import './ProductDetailPage.css'
 
 function ProductDetailPage() {
   const { id } = useParams()
+  const navigate = useNavigate()
+  const location = useLocation()
   const { addToCart } = useCart()
+  const { user } = useAuth()
+  const { isFavorite, toggleFavorite } = useFavorites()
 
   const [produit, setProduit] = useState(null)
+  const [produitsDisponibles, setProduitsDisponibles] = useState([])
   const [chargement, setChargement] = useState(true)
   const [quantity, setQuantity] = useState(1)
   const [taille, setTaille] = useState('')
@@ -26,7 +41,11 @@ function ProductDetailPage() {
   const addLocked = useRef(false)
 
   useEffect(function () {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
+
     setChargement(true)
+    setProduit(null)
+    setProduitsDisponibles([])
     setQuantity(1)
     setTaille('')
     setCouleur('')
@@ -53,7 +72,152 @@ function ProductDetailPage() {
       .catch(function () {
         setChargement(false)
       })
+
+    apiFetch('/api/products')
+      .then(function (res) {
+        return res.ok ? res.json() : []
+      })
+      .then(function (data) {
+        const liste = Array.isArray(data)
+          ? data
+          : Array.isArray(data.products)
+            ? data.products
+            : Array.isArray(data.produits)
+              ? data.produits
+              : []
+
+        setProduitsDisponibles(liste)
+      })
+      .catch(function () {
+        setProduitsDisponibles([])
+      })
   }, [id])
+
+  function handleFavoriteClick(product) {
+    if (!user) {
+      navigate('/login', {
+        state: {
+          from: `${location.pathname}${location.search}${location.hash}`
+        }
+      })
+
+      return
+    }
+
+    toggleFavorite(product)
+  }
+
+  function renderRelatedProductCard(p) {
+    const productId = p._id || p.id
+    const productUrl = `/produit/${productId}`
+    const favorite = isFavorite(p)
+
+    const imagePath =
+      p.categorie === 'Maquillage' && p.image
+        ? p.image.replace(
+            '/images/products/makeup/',
+            '/images/products/'
+          )
+        : p.image
+
+    return (
+      <article className="dz-product-card" key={productId}>
+        <div className="dz-product-image">
+          <Link
+            to={productUrl}
+            className="dz-product-image-link"
+            aria-label={`View ${p.nom || 'product'}`}
+          >
+            {imagePath ? (
+              <img
+                src={imagePath}
+                alt={p.nom || 'Product'}
+                loading="lazy"
+              />
+            ) : (
+              <div className="dz-product-no-image">
+                <FaShoppingBag />
+                <span>No image</span>
+              </div>
+            )}
+
+            {p.categorie && (
+              <span className="dz-product-category">
+                {p.categorie}
+              </span>
+            )}
+
+            {p.stock <= 0 && (
+              <span className="dz-product-soldout">
+                Sold Out
+              </span>
+            )}
+          </Link>
+
+          <button
+            type="button"
+            className={
+              'dz-product-favorite' +
+              (favorite ? ' is-favorite' : '')
+            }
+            onClick={function (event) {
+              event.preventDefault()
+              event.stopPropagation()
+              handleFavoriteClick(p)
+            }}
+            aria-label={
+              favorite
+                ? `Remove ${p.nom} from favorites`
+                : `Add ${p.nom} to favorites`
+            }
+            aria-pressed={favorite}
+            title={
+              favorite
+                ? 'Remove from favorites'
+                : 'Add to favorites'
+            }
+          >
+            <FaHeart />
+          </button>
+        </div>
+
+        <Link to={productUrl} className="dz-product-card-link">
+          <div className="dz-product-content">
+            <span className="dz-product-type">
+              {p.categorie || 'Product'}
+            </span>
+
+            <h2>{p.nom}</h2>
+
+            <p>{p.description}</p>
+
+            <div className="dz-product-meta">
+              <span className="dz-product-price">
+                {Number(p.prix || 0).toLocaleString('fr-FR')} DA
+              </span>
+
+              <span
+                className={
+                  p.stock > 0
+                    ? 'dz-product-stock available'
+                    : 'dz-product-stock unavailable'
+                }
+              >
+                {p.stock > 0
+                  ? `${p.stock} available`
+                  : 'Out of stock'}
+              </span>
+            </div>
+
+            <span className="dz-product-link">
+              View Product
+              <FaArrowRight />
+            </span>
+          </div>
+        </Link>
+      </article>
+    )
+  }
 
   if (chargement) {
     return (
@@ -177,12 +341,14 @@ function ProductDetailPage() {
     playButtonSound()
     setCouleur(option.nom)
     setAddedToBag(false)
+    addLocked.current = false
   }
 
   function choisirTaille(option) {
     playButtonSound()
     setTaille(option)
     setAddedToBag(false)
+    addLocked.current = false
   }
 
   function getImageProduit() {
@@ -264,25 +430,42 @@ function ProductDetailPage() {
       ? 'Shade'
       : 'Color'
 
+  const produitId = String(produit._id || produit.id || id)
+
+  const produitsMemeCategorie = produitsDisponibles.filter(
+    function (item) {
+      const itemId = String(item._id || item.id || '')
+
+      return (
+        itemId !== produitId &&
+        item.categorie === produit.categorie
+      )
+    }
+  )
+
+  const autresProduits = produitsDisponibles.filter(
+    function (item) {
+      const itemId = String(item._id || item.id || '')
+
+      return itemId !== produitId
+    }
+  )
+
+  const produitsSimilaires = (
+    produitsMemeCategorie.length > 0
+      ? produitsMemeCategorie
+      : autresProduits
+  ).slice(0, 10)
+
   return (
     <div className="dz-detail-page">
       <div className="dz-detail-container">
         <div className="dz-detail-breadcrumb">
-          <Link to="/">
-            Home
-          </Link>
-
+          <Link to="/">Home</Link>
           <span>/</span>
-
-          <Link to="/produits">
-            Products
-          </Link>
-
+          <Link to="/produits">Products</Link>
           <span>/</span>
-
-          <strong>
-            {produit.nom}
-          </strong>
+          <strong>{produit.nom}</strong>
         </div>
 
         <div className="dz-detail-card">
@@ -317,9 +500,7 @@ function ProductDetailPage() {
               Selected product
             </span>
 
-            <h1>
-              {produit.nom}
-            </h1>
+            <h1>{produit.nom}</h1>
 
             <p className="dz-detail-description">
               {produit.description}
@@ -362,16 +543,12 @@ function ProductDetailPage() {
                     <FaMinus />
                   </button>
 
-                  <strong>
-                    {quantity}
-                  </strong>
+                  <strong>{quantity}</strong>
 
                   <button
                     type="button"
                     onClick={augmenter}
-                    disabled={
-                      quantity >= produit.stock
-                    }
+                    disabled={quantity >= produit.stock}
                     aria-label="Increase quantity"
                   >
                     <FaPlus />
@@ -383,9 +560,7 @@ function ProductDetailPage() {
                 <div className="dz-option-section">
                   <div className="dz-option-heading">
                     <span>{colorLabel}</span>
-                    {couleur && (
-                      <strong>{couleur}</strong>
-                    )}
+                    {couleur && <strong>{couleur}</strong>}
                   </div>
 
                   <div className="dz-color-options">
@@ -395,9 +570,7 @@ function ProductDetailPage() {
                           key={option.nom}
                           type="button"
                           className={
-                            couleur === option.nom
-                              ? 'active'
-                              : ''
+                            couleur === option.nom ? 'active' : ''
                           }
                           onClick={function () {
                             choisirCouleur(option)
@@ -424,9 +597,7 @@ function ProductDetailPage() {
                         : 'Size'}
                     </span>
 
-                    {taille && (
-                      <strong>{taille}</strong>
-                    )}
+                    {taille && <strong>{taille}</strong>}
                   </div>
 
                   <div className="dz-size-options">
@@ -436,9 +607,7 @@ function ProductDetailPage() {
                           key={option}
                           type="button"
                           className={
-                            taille === option
-                              ? 'active'
-                              : ''
+                            taille === option ? 'active' : ''
                           }
                           onClick={function () {
                             choisirTaille(option)
@@ -484,9 +653,38 @@ function ProductDetailPage() {
             </Link>
           </div>
         </div>
+
+        {produitsSimilaires.length > 0 && (
+          <section className="dz-related-section">
+            <div className="dz-related-heading">
+              <div>
+                <span className="dz-related-eyebrow">
+                  DISCOVER MORE
+                </span>
+
+                <h2>Products You May Like</h2>
+
+                <p>
+                  Explore more products selected for you.
+                </p>
+              </div>
+
+              <Link
+                to="/produits"
+                className="dz-related-see-all"
+              >
+                See All <FaArrowRight />
+              </Link>
+            </div>
+
+            <div className="dz-related-grid">
+              {produitsSimilaires.map(renderRelatedProductCard)}
+            </div>
+          </section>
+        )}
       </div>
     </div>
   )
 }
 
-export default ProductDetailPage ;
+export default ProductDetailPage
