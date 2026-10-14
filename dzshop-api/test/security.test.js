@@ -86,3 +86,34 @@ test('Une origine non autorisée est refusée', async function () {
   assert.equal(response.status, 403)
   assert.equal(response.body.message, 'Origine non autorisée')
 })
+
+test('La modification du rôle utilisateur exige une authentification', async function () {
+  const response = await request(app)
+    .patch('/api/admin/users/507f1f77bcf86cd799439011/role')
+    .send({ role: 'admin' })
+
+  assert.equal(response.status, 401)
+})
+
+test('La modification du statut utilisateur exige une authentification', async function () {
+  const response = await request(app)
+    .patch('/api/admin/users/507f1f77bcf86cd799439011/statut')
+    .send({ actif: false })
+
+  assert.equal(response.status, 401)
+})
+
+test('La suppression utilisateur exige une authentification', async function () {
+  const response = await request(app)
+    .delete('/api/admin/users/507f1f77bcf86cd799439011')
+
+  assert.equal(response.status, 401)
+})
+
+test('La modification du statut de commande exige une authentification', async function () {
+  const response = await request(app)
+    .patch('/api/orders/507f1f77bcf86cd799439011/statut')
+    .send({ statut: 'livree' })
+
+  assert.equal(response.status, 401)
+})
