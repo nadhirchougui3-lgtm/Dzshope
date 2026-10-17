@@ -38,6 +38,7 @@ router.get('/', async function (req, res) {
           nom: user.nom,
           telephone: user.telephone,
           email: user.email,
+          provider: user.provider,
           role: user.role,
           actif: user.actif,
           nbCommandes: commandes.length,
@@ -95,7 +96,11 @@ router.patch('/:id/statut', async function (req, res) {
 
     return res.json(user.versPublic())
   } catch (erreur) {
-    return traiterErreur(res, erreur, 'Erreur modification statut utilisateur :')
+    return traiterErreur(
+      res,
+      erreur,
+      'Erreur modification statut utilisateur :'
+    )
   }
 })
 
@@ -141,7 +146,79 @@ router.patch('/:id/role', async function (req, res) {
 
     return res.json(user.versPublic())
   } catch (erreur) {
-    return traiterErreur(res, erreur, 'Erreur modification rôle utilisateur :')
+    return traiterErreur(
+      res,
+      erreur,
+      'Erreur modification rôle utilisateur :'
+    )
+  }
+})
+
+// Réinitialisation du mot de passe par un administrateur
+router.patch('/:id/password', async function (req, res) {
+  if (!mongoose.isValidObjectId(req.params.id)) {
+    return res.status(404).json({
+      message: 'Utilisateur introuvable'
+    })
+  }
+
+  if (String(req.params.id) === String(req.user._id)) {
+    return res.status(400).json({
+      message: 'Utilise la procédure de connexion pour gérer ton propre compte'
+    })
+  }
+
+  if (
+    !req.body ||
+    typeof req.body !== 'object' ||
+    Array.isArray(req.body) ||
+    typeof req.body.nouveauMotDePasse !== 'string'
+  ) {
+    return res.status(400).json({
+      message: 'Mot de passe invalide'
+    })
+  }
+
+  const nouveauMotDePasse = req.body.nouveauMotDePasse
+
+  if (
+    nouveauMotDePasse.length < 8 ||
+    nouveauMotDePasse.length > 128
+  ) {
+    return res.status(400).json({
+      message: 'Le mot de passe doit contenir entre 8 et 128 caractères'
+    })
+  }
+
+  try {
+    const user = await User.findById(req.params.id)
+
+    if (!user) {
+      return res.status(404).json({
+        message: 'Utilisateur introuvable'
+      })
+    }
+
+    if (user.provider !== 'local') {
+      return res.status(400).json({
+        message: 'La réinitialisation est réservée aux comptes locaux'
+      })
+    }
+
+    user.password = nouveauMotDePasse
+
+    // User.save() déclenche le hook qui chiffre le mot de passe avec bcrypt.
+    await user.save()
+
+    return res.json({
+      message: 'Mot de passe réinitialisé avec succès'
+    })
+  } catch (erreur) {
+    return traiterErreur(
+      res,
+      erreur,
+      'Erreur réinitialisation mot de passe :'
+    )
   }
 })
 

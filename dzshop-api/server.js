@@ -1,14 +1,17 @@
+
 import express from 'express'
 import cors from 'cors'
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 import helmet from 'helmet'
+import dns from 'node:dns'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import productRoutes from './routes/products.js'
 import orderRoutes from './routes/orders.js'
 import authRoutes from './routes/auth.js'
+import passkeyRoutes from './routes/passkey.js'
 import uploadRoutes from './routes/upload.js'
 import adminRoutes from './routes/admin.js'
 import adminUsersRoutes from './routes/adminUsers.js'
@@ -23,7 +26,7 @@ app.use(helmet())
 
 const origines = [
   'http://localhost:5173',
-  'http://192.168.1.2:5173',
+  'http://192.168.1.8:5173',
   process.env.FRONTEND_URL
 ].filter(Boolean)
 
@@ -46,6 +49,7 @@ app.get('/', function (req, res) {
 app.use('/api/products', productRoutes)
 app.use('/api/orders', orderRoutes)
 app.use('/api/auth', authRoutes)
+app.use('/api/passkey', passkeyRoutes)
 app.use('/api/upload', uploadRoutes)
 app.use('/api/admin', adminRoutes)
 app.use('/api/admin/users', adminUsersRoutes)
@@ -96,13 +100,19 @@ async function startServer() {
   }
 
   try {
+    if (process.env.NODE_ENV !== 'production') {
+      dns.setServers(['8.8.8.8', '8.8.4.4'])
+    }
+
     await mongoose.connect(process.env.MONGODB_URI)
+
+    console.log('MongoDB connecté avec succès')
 
     app.listen(PORT, '0.0.0.0', function () {
       console.log('Serveur DZShop démarré sur le port ' + PORT)
     })
   } catch (err) {
-    console.error('Connexion MongoDB impossible :', err.message)
+    console.error('Connexion ou démarrage impossible :', err.message)
     process.exitCode = 1
   }
 }

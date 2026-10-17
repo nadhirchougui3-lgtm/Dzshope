@@ -1,4 +1,3 @@
-
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { CartProvider } from './CartContext'
 import { AuthProvider } from './AuthContext'
@@ -15,8 +14,10 @@ import CheckoutPage from './CheckoutPage'
 import OrderSuccessPage from './OrderSuccessPage'
 import SignUp from './SignUp'
 import LoginPage from './LoginPage'
+import ForgotPasswordPage from './ForgotPasswordPage'
 import ContactPage from './ContactPage'
 import FavoritesPage from './FavoritesPage'
+import AccountPage from './AccountPage'
 import PrivateRoute from './PrivateRoute'
 
 import AdminLayout from './components/admin/AdminLayout'
@@ -106,6 +107,17 @@ function App() {
               />
 
               <Route
+                path="/compte"
+                element={
+                  <PrivateRoute>
+                    <StoreLayout>
+                      <AccountPage />
+                    </StoreLayout>
+                  </PrivateRoute>
+                }
+              />
+
+              <Route
                 path="/panier"
                 element={
                   <StoreLayout>
@@ -150,6 +162,15 @@ function App() {
                 element={
                   <StoreLayout>
                     <LoginPage />
+                  </StoreLayout>
+                }
+              />
+
+              <Route
+                path="/forgot-password"
+                element={
+                  <StoreLayout>
+                    <ForgotPasswordPage />
                   </StoreLayout>
                 }
               />

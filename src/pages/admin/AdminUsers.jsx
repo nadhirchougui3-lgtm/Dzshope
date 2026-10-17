@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react'
 import { apiFetch, lireJson } from '../../api'
 import Chargement from '../../components/Chargement'
@@ -10,6 +11,13 @@ function AdminUsers() {
   const [recherche, setRecherche] = useState('')
   const [filtreStatut, setFiltreStatut] = useState('tous')
   const [filtreRole, setFiltreRole] = useState('tous')
+
+  const [utilisateurMotDePasse, setUtilisateurMotDePasse] = useState(null)
+  const [nouveauMotDePasse, setNouveauMotDePasse] = useState('')
+  const [confirmationMotDePasse, setConfirmationMotDePasse] = useState('')
+  const [chargementMotDePasse, setChargementMotDePasse] = useState(false)
+  const [erreurMotDePasse, setErreurMotDePasse] = useState('')
+  const [messageMotDePasse, setMessageMotDePasse] = useState('')
 
   function charger() {
     setChargement(true)
@@ -81,6 +89,81 @@ function AdminUsers() {
       correspondRole
     )
   })
+
+  function ouvrirReinitialisation(user) {
+    if (user._id === monId || user.provider !== 'local') return
+
+    setUtilisateurMotDePasse(user)
+    setNouveauMotDePasse('')
+    setConfirmationMotDePasse('')
+    setErreurMotDePasse('')
+    setMessageMotDePasse('')
+  }
+
+  function fermerReinitialisation() {
+    if (chargementMotDePasse) return
+
+    setUtilisateurMotDePasse(null)
+    setNouveauMotDePasse('')
+    setConfirmationMotDePasse('')
+    setErreurMotDePasse('')
+    setMessageMotDePasse('')
+  }
+
+  async function confirmerReinitialisation(event) {
+    event.preventDefault()
+    setErreurMotDePasse('')
+    setMessageMotDePasse('')
+
+    if (!utilisateurMotDePasse) return
+
+    if (
+      nouveauMotDePasse.length < 8 ||
+      nouveauMotDePasse.length > 128
+    ) {
+      setErreurMotDePasse(
+        'Le mot de passe doit contenir entre 8 et 128 caractères.'
+      )
+      return
+    }
+
+    if (nouveauMotDePasse !== confirmationMotDePasse) {
+      setErreurMotDePasse(
+        'Les deux mots de passe ne correspondent pas.'
+      )
+      return
+    }
+
+    setChargementMotDePasse(true)
+
+    try {
+      const reponse = await apiFetch(
+        '/api/admin/users/' +
+          utilisateurMotDePasse._id +
+          '/password',
+        {
+          method: 'PATCH',
+          body: JSON.stringify({
+            nouveauMotDePasse,
+          }),
+        }
+      )
+
+      const resultat = await lireJson(reponse)
+
+      setMessageMotDePasse(
+        resultat.message || 'Mot de passe réinitialisé avec succès.'
+      )
+      setNouveauMotDePasse('')
+      setConfirmationMotDePasse('')
+    } catch (err) {
+      setErreurMotDePasse(
+        err.message || 'Impossible de réinitialiser le mot de passe.'
+      )
+    } finally {
+      setChargementMotDePasse(false)
+    }
+  }
 
   async function changerStatut(user) {
     const nouveauStatut = !user.actif
@@ -551,6 +634,18 @@ function AdminUsers() {
                                 : 'Rendre admin'}
                             </button>
 
+                            {u.provider === 'local' && !cestMoi && (
+                              <button
+                                type="button"
+                                className="admin-button admin-button-small admin-button-secondary"
+                                onClick={function () {
+                                  ouvrirReinitialisation(u)
+                                }}
+                              >
+                                Reset Password
+                              </button>
+                            )}
+
                             <button
                               type="button"
                               className="admin-button admin-button-small admin-button-danger"
@@ -579,6 +674,277 @@ function AdminUsers() {
           </div>
         )}
       </section>
+
+      {utilisateurMotDePasse && (
+        <div
+          onMouseDown={function (event) {
+            if (
+              event.target === event.currentTarget &&
+              !chargementMotDePasse
+            ) {
+              fermerReinitialisation()
+            }
+          }}
+          onKeyDown={function (event) {
+            if (event.key === 'Escape' && !chargementMotDePasse) {
+              fermerReinitialisation()
+            }
+          }}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 1000,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '16px',
+            background: 'rgba(28, 28, 30, 0.58)',
+            overflowY: 'auto',
+          }}
+        >
+          <section
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="reset-password-title"
+            style={{
+              width: '100%',
+              maxWidth: '440px',
+              padding: '28px',
+              background: '#FFFFFF',
+              border: '1px solid #E9E8E6',
+              borderRadius: '12px',
+              boxShadow: '0 18px 60px rgba(0, 0, 0, 0.18)',
+              boxSizing: 'border-box',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'flex-start',
+                gap: '16px',
+                marginBottom: '20px',
+              }}
+            >
+              <div>
+                <span
+                  style={{
+                    color: '#8B1E2D',
+                    fontSize: '11px',
+                    fontWeight: 700,
+                    letterSpacing: '1.5px',
+                  }}
+                >
+                  SÉCURITÉ DU COMPTE
+                </span>
+
+                <h2
+                  id="reset-password-title"
+                  style={{
+                    margin: '8px 0',
+                    color: '#1C1C1E',
+                    fontSize: '23px',
+                  }}
+                >
+                  Reset Password
+                </h2>
+
+                <p
+                  style={{
+                    margin: 0,
+                    color: '#666666',
+                    fontSize: '14px',
+                    lineHeight: 1.6,
+                    overflowWrap: 'anywhere',
+                  }}
+                >
+                  Compte : {utilisateurMotDePasse.nom || 'Utilisateur'}
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={fermerReinitialisation}
+                disabled={chargementMotDePasse}
+                aria-label="Fermer la fenêtre"
+                style={{
+                  border: 'none',
+                  background: 'transparent',
+                  color: '#666666',
+                  fontSize: '25px',
+                  cursor: chargementMotDePasse ? 'not-allowed' : 'pointer',
+                }}
+              >
+                ×
+              </button>
+            </div>
+
+            {messageMotDePasse ? (
+              <div>
+                <p
+                  role="status"
+                  style={{
+                    padding: '14px',
+                    background: '#F1F8F2',
+                    border: '1px solid #CDE7D1',
+                    borderRadius: '8px',
+                    color: '#245B32',
+                    fontSize: '14px',
+                    lineHeight: 1.6,
+                  }}
+                >
+                  {messageMotDePasse}
+                </p>
+
+                <button
+                  type="button"
+                  className="admin-button admin-button-primary"
+                  onClick={fermerReinitialisation}
+                  style={{ width: '100%', marginTop: '12px' }}
+                >
+                  Fermer
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={confirmerReinitialisation}>
+                <p
+                  style={{
+                    margin: '0 0 20px',
+                    color: '#666666',
+                    fontSize: '13px',
+                    lineHeight: 1.7,
+                  }}
+                >
+                  Vérifie l’identité du client avant de modifier son mot de
+                  passe. La nouvelle valeur doit contenir entre 8 et 128
+                  caractères.
+                </p>
+
+                <label
+                  htmlFor="nouveau-mot-de-passe"
+                  style={{
+                    display: 'block',
+                    marginBottom: '7px',
+                    color: '#1C1C1E',
+                    fontSize: '13px',
+                    fontWeight: 600,
+                  }}
+                >
+                  Nouveau mot de passe
+                </label>
+
+                <input
+                  id="nouveau-mot-de-passe"
+                  type="password"
+                  autoComplete="new-password"
+                  minLength={8}
+                  maxLength={128}
+                  required
+                  value={nouveauMotDePasse}
+                  onChange={function (event) {
+                    setNouveauMotDePasse(event.target.value)
+                  }}
+                  disabled={chargementMotDePasse}
+                  style={{
+                    width: '100%',
+                    minHeight: '46px',
+                    padding: '11px 12px',
+                    marginBottom: '16px',
+                    border: '1px solid #D8D6D3',
+                    borderRadius: '7px',
+                    boxSizing: 'border-box',
+                    fontSize: '14px',
+                  }}
+                />
+
+                <label
+                  htmlFor="confirmation-mot-de-passe"
+                  style={{
+                    display: 'block',
+                    marginBottom: '7px',
+                    color: '#1C1C1E',
+                    fontSize: '13px',
+                    fontWeight: 600,
+                  }}
+                >
+                  Confirmer le mot de passe
+                </label>
+
+                <input
+                  id="confirmation-mot-de-passe"
+                  type="password"
+                  autoComplete="new-password"
+                  minLength={8}
+                  maxLength={128}
+                  required
+                  value={confirmationMotDePasse}
+                  onChange={function (event) {
+                    setConfirmationMotDePasse(event.target.value)
+                  }}
+                  disabled={chargementMotDePasse}
+                  style={{
+                    width: '100%',
+                    minHeight: '46px',
+                    padding: '11px 12px',
+                    marginBottom: '16px',
+                    border: '1px solid #D8D6D3',
+                    borderRadius: '7px',
+                    boxSizing: 'border-box',
+                    fontSize: '14px',
+                  }}
+                />
+
+                {erreurMotDePasse && (
+                  <p
+                    role="alert"
+                    style={{
+                      margin: '0 0 16px',
+                      padding: '12px',
+                      border: '1px solid #E8CACA',
+                      borderRadius: '7px',
+                      background: '#FFF5F5',
+                      color: '#8B1E2D',
+                      fontSize: '13px',
+                      lineHeight: 1.6,
+                    }}
+                  >
+                    {erreurMotDePasse}
+                  </p>
+                )}
+
+                <div
+                  style={{
+                    display: 'flex',
+                    gap: '10px',
+                    marginTop: '8px',
+                  }}
+                >
+                  <button
+                    type="button"
+                    className="admin-button admin-button-secondary"
+                    onClick={fermerReinitialisation}
+                    disabled={chargementMotDePasse}
+                    style={{ flex: 1, justifyContent: 'center' }}
+                  >
+                    Annuler
+                  </button>
+
+                  <button
+                    type="submit"
+                    className="admin-button admin-button-primary"
+                    disabled={chargementMotDePasse}
+                    style={{ flex: 1, justifyContent: 'center' }}
+                  >
+                    {chargementMotDePasse
+                      ? 'Modification...'
+                      : 'Confirmer'}
+                  </button>
+                </div>
+              </form>
+            )}
+          </section>
+        </div>
+      )}
     </section>
   )
 }

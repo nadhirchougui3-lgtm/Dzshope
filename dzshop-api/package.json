@@ -15,6 +15,7 @@
   "license": "ISC",
   "dependencies": {
     "@mudbill/duckduckgo-images-api": "^2.0.1",
+    "@simplewebauthn/server": "^13.3.3",
     "bcryptjs": "^3.0.3",
     "cloudinary": "^2.11.0",
     "cors": "^2.8.6",

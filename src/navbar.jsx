@@ -1,3 +1,4 @@
+
 import { useEffect, useRef, useState } from 'react'
 import {
   NavLink,
@@ -17,7 +18,6 @@ import {
   FaTrash,
   FaSignOutAlt,
   FaTools,
-  FaThLarge,
   FaHeart
 } from 'react-icons/fa'
 import { useCart } from './CartContext'
@@ -55,85 +55,41 @@ const categories = [
 
 const aliases = {
   shoes: [
-    'shoes',
-    'shoe',
-    'chaussures',
-    'chaussure',
-    'أحذية',
-    'حذاء',
-    'صباط'
+    'shoes', 'shoe', 'chaussures', 'chaussure',
+    'أحذية', 'حذاء', 'صباط'
   ],
   clothes: [
-    'clothes',
-    'clothing',
-    'vêtements',
-    'vetements',
-    'ملابس',
-    'لباس'
+    'clothes', 'clothing', 'vêtements',
+    'vetements', 'ملابس', 'لباس'
   ],
   makeup: [
-    'makeup',
-    'maquillage',
-    'مكياج',
-    'make up'
+    'makeup', 'maquillage', 'مكياج', 'make up'
   ],
   bags: [
-    'bags',
-    'bag',
-    'sacs',
-    'sac',
-    'حقائب',
-    'حقيبة'
+    'bags', 'bag', 'sacs', 'sac', 'حقائب', 'حقيبة'
   ],
   watches: [
-    'watches',
-    'watch',
-    'montres',
-    'montre',
-    'ساعات',
-    'ساعة'
+    'watches', 'watch', 'montres', 'montre',
+    'ساعات', 'ساعة'
   ],
   accessories: [
-    'accessories',
-    'accessory',
-    'accessoires',
-    'إكسسوارات',
-    'اكسسوارات'
+    'accessories', 'accessory', 'accessoires',
+    'إكسسوارات', 'اكسسوارات'
   ],
   office: [
-    'office',
-    'bureau',
-    'مكتب',
-    'مستلزمات مكتبية'
+    'office', 'bureau', 'مكتب', 'مستلزمات مكتبية'
   ],
   books: [
-    'books',
-    'book',
-    'livres',
-    'livre',
-    'كتب',
-    'كتاب'
+    'books', 'book', 'livres', 'livre', 'كتب', 'كتاب'
   ],
   home: [
-    'home',
-    'maison',
-    'منزل',
-    'ديكور',
-    'decoration'
+    'home', 'maison', 'منزل', 'ديكور', 'decoration'
   ],
   skincare: [
-    'skincare',
-    'soins',
-    'soin',
-    'عناية',
-    'العناية'
+    'skincare', 'soins', 'soin', 'عناية', 'العناية'
   ],
   camping: [
-    'camping',
-    'outdoor',
-    'plein air',
-    'تخييم',
-    'رحلات'
+    'camping', 'outdoor', 'plein air', 'تخييم', 'رحلات'
   ]
 }
 
@@ -290,6 +246,8 @@ function Navbar() {
   const [searchOpen, setSearchOpen] = useState(false)
 
   const searchRef = useRef(null)
+
+  const isAdmin = user?.role === 'admin'
 
   const cartCount = cartItems.reduce(
     (total, item) => total + item.quantity,
@@ -754,7 +712,7 @@ function Navbar() {
               <span>Bag</span>
             </NavLink>
 
-            {user && user.role === 'admin' && (
+            {isAdmin && (
               <NavLink
                 to="/admin"
                 className={({ isActive }) =>
@@ -768,10 +726,16 @@ function Navbar() {
 
             {user ? (
               <>
-                <span className="dz-nav-link dz-account-link">
+                <NavLink
+                  to="/compte"
+                  className={({ isActive }) =>
+                    'dz-nav-link dz-account-link ' +
+                    (isActive ? 'active' : '')
+                  }
+                >
                   <FaUser />
                   <span>Account</span>
-                </span>
+                </NavLink>
 
                 <button
                   type="button"
@@ -810,8 +774,8 @@ function Navbar() {
         </div>
       </nav>
 
-      {/* Mobile bottom navigation moved outside the main nav */}
-      <div className="dz-mobile-nav">
+      {/* Mobile bottom navigation */}
+      <nav className="dz-mobile-nav" aria-label="Mobile navigation">
         <NavLink
           to="/"
           end
@@ -861,16 +825,6 @@ function Navbar() {
         </NavLink>
 
         <NavLink
-          to="/categories"
-          className={({ isActive }) =>
-            'dz-mobile-nav-link ' + (isActive ? 'active' : '')
-          }
-        >
-          <FaThLarge />
-          <span>Categories</span>
-        </NavLink>
-
-        <NavLink
           to="/panier"
           className={({ isActive }) =>
             'dz-mobile-nav-link ' + (isActive ? 'active' : '')
@@ -891,39 +845,45 @@ function Navbar() {
           <span>Bag</span>
         </NavLink>
 
-        <NavLink
-          to="/contact"
-          className={({ isActive }) =>
-            'dz-mobile-nav-link ' + (isActive ? 'active' : '')
-          }
-        >
-          <FaPhone />
-          <span>Contact</span>
-        </NavLink>
-
-        {user && user.role === 'admin' && (
-          <NavLink
-            to="/admin"
-            className={({ isActive }) =>
-              'dz-mobile-nav-link ' + (isActive ? 'active' : '')
-            }
-          >
-            <FaTools />
-            <span>Admin</span>
-          </NavLink>
-        )}
-
         {user ? (
-          <button
-            type="button"
-            className="dz-mobile-nav-link dz-mobile-account"
-            onClick={logout}
-            aria-label="Sign out"
-            title="Sign out"
-          >
-            <FaSignOutAlt />
-            <span>Sign Out</span>
-          </button>
+          <>
+            {isAdmin ? (
+              <NavLink
+                to="/admin"
+                className={({ isActive }) =>
+                  'dz-mobile-nav-link ' +
+                  (isActive ? 'active' : '')
+                }
+              >
+                <FaTools />
+                <span>Admin</span>
+              </NavLink>
+            ) : (
+              <NavLink
+                to="/contact"
+                className={({ isActive }) =>
+                  'dz-mobile-nav-link ' +
+                  (isActive ? 'active' : '')
+                }
+              >
+                <FaPhone />
+                <span>Contact</span>
+              </NavLink>
+            )}
+
+            <NavLink
+              to="/compte"
+              className={({ isActive }) =>
+                'dz-mobile-nav-link dz-mobile-account ' +
+                (isActive ? 'active' : '')
+              }
+              aria-label="My account"
+              title="My account"
+            >
+              <FaUser />
+              <span>Account</span>
+            </NavLink>
+          </>
         ) : (
           <>
             <NavLink
@@ -949,7 +909,7 @@ function Navbar() {
             </NavLink>
           </>
         )}
-      </div>
+      </nav>
     </>
   )
 }
