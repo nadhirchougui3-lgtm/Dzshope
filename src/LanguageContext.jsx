@@ -58,21 +58,7 @@ const translations = {
     needHelp: 'Need Help?',
     contactDZShop: 'Contact DZShop',
     accountSecurity: 'ACCOUNT SECURITY',
-    passkeys: 'Passkeys',
-    addPasskey: 'Add Passkey',
-    passkeyDescription:
-      'Sign in securely without entering your password, using a supported device or security key.',
-    loadingPasskeys: 'Loading passkeys...',
-    noPasskeys: 'No passkeys yet',
-    addPasskeyHint: 'Add a passkey to make signing in to your account easier.',
-    removePasskey: 'Remove passkey',
     added: 'Added',
-    passkeyAdded: 'Your passkey has been added successfully.',
-    passkeyRemoved: 'Passkey removed successfully.',
-    addPasskeyError: 'Unable to register this passkey.',
-    loadPasskeysError: 'Unable to load your passkeys.',
-    removePasskeyError: 'Unable to remove this passkey.',
-    confirmRemovePasskey: 'Are you sure you want to remove this passkey?',
     yourActivity: 'YOUR ACTIVITY',
     myOrders: 'My Orders',
     orders: 'order(s)',
@@ -153,21 +139,7 @@ const translations = {
     needHelp: 'Besoin d’aide ?',
     contactDZShop: 'Contacter DZShop',
     accountSecurity: 'SÉCURITÉ DU COMPTE',
-    passkeys: 'Clés d’accès',
-    addPasskey: 'Ajouter une clé',
-    passkeyDescription:
-      'Connectez-vous sans mot de passe avec un appareil compatible ou une clé de sécurité.',
-    loadingPasskeys: 'Chargement des clés...',
-    noPasskeys: 'Aucune clé d’accès',
-    addPasskeyHint: 'Ajoutez une clé pour simplifier la connexion à votre compte.',
-    removePasskey: 'Supprimer la clé',
     added: 'Ajoutée le',
-    passkeyAdded: 'Votre clé a été ajoutée.',
-    passkeyRemoved: 'Clé supprimée.',
-    addPasskeyError: 'Impossible d’enregistrer cette clé.',
-    loadPasskeysError: 'Impossible de charger vos clés.',
-    removePasskeyError: 'Impossible de supprimer cette clé.',
-    confirmRemovePasskey: 'Voulez-vous vraiment supprimer cette clé ?',
     yourActivity: 'VOTRE ACTIVITÉ',
     myOrders: 'Mes commandes',
     orders: 'commande(s)',
@@ -248,21 +220,7 @@ const translations = {
     needHelp: 'تحتاج مساعدة؟',
     contactDZShop: 'تواصل مع DZShop',
     accountSecurity: 'أمان الحساب',
-    passkeys: 'مفاتيح المرور',
-    addPasskey: 'إضافة مفتاح مرور',
-    passkeyDescription:
-      'سجّل الدخول بأمان دون كلمة مرور باستخدام جهاز متوافق أو مفتاح أمان.',
-    loadingPasskeys: 'جارٍ تحميل مفاتيح المرور...',
-    noPasskeys: 'لا توجد مفاتيح مرور',
-    addPasskeyHint: 'أضف مفتاح مرور لتسهيل تسجيل الدخول إلى حسابك.',
-    removePasskey: 'حذف مفتاح المرور',
     added: 'تاريخ الإضافة',
-    passkeyAdded: 'تمت إضافة مفتاح المرور بنجاح.',
-    passkeyRemoved: 'تم حذف مفتاح المرور بنجاح.',
-    addPasskeyError: 'تعذّر تسجيل مفتاح المرور.',
-    loadPasskeysError: 'تعذّر تحميل مفاتيح المرور.',
-    removePasskeyError: 'تعذّر حذف مفتاح المرور.',
-    confirmRemovePasskey: 'هل تريد فعلًا حذف مفتاح المرور هذا؟',
     yourActivity: 'نشاطك',
     myOrders: 'طلباتي',
     orders: 'طلب',
@@ -337,6 +295,7 @@ export function LanguageProvider({ children }) {
   )
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useLanguage() {
   const context = useContext(LanguageContext)
 

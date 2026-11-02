@@ -197,19 +197,31 @@ function getProductScore(product, query) {
 }
 
 function ProductsPage() {
+  const [searchParams] = useSearchParams()
+  const categorie = searchParams.get('categorie') || ''
+  const searchQuery = searchParams.get('search') || ''
+
+  const pageKey = `${categorie}\u0000${searchQuery}`
+
+  return (
+    <ProductsPageContent
+      key={pageKey}
+      categorie={categorie}
+      searchQuery={searchQuery}
+    />
+  )
+}
+
+function ProductsPageContent({ categorie, searchQuery }) {
   const [products, setProducts] = useState([])
   const [chargement, setChargement] = useState(true)
   const [currentPage, setCurrentPage] = useState(1)
 
-  const [searchParams] = useSearchParams()
   const navigate = useNavigate()
   const location = useLocation()
 
   const { user } = useAuth()
   const { isFavorite, toggleFavorite } = useFavorites()
-
-  const categorie = searchParams.get('categorie') || ''
-  const searchQuery = searchParams.get('search') || ''
 
   useEffect(() => {
     let actif = true
@@ -239,10 +251,6 @@ function ProductsPage() {
       actif = false
     }
   }, [])
-
-  useEffect(() => {
-    setCurrentPage(1)
-  }, [categorie, searchQuery])
 
   if (chargement) {
     return (

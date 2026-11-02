@@ -1,4 +1,4 @@
-import express from 'express'
+﻿import express from 'express'
 import Product from '../models/Product.js'
 import Order from '../models/Order.js'
 import User from '../models/User.js'
@@ -6,12 +6,12 @@ import { protect, isAdmin } from '../middleware/auth.js'
 
 const router = express.Router()
 
-// TOUTES les routes de ce fichier sont réservées à l'admin : on le dit UNE fois ici.
+// TOUTES les routes de ce fichier sont rÃ©servÃ©es Ã  l'admin : on le dit UNE fois ici.
 router.use(protect, isAdmin)
 
-const JOURS = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam']
+const JOURS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
-// STATISTIQUES  →  GET /api/admin/stats
+// STATISTIQUES  â†’  GET /api/admin/stats
 router.get('/stats', async function (req, res) {
   try {
     const [nbUsers, nbProduits, commandes, produitsStockFaible] = await Promise.all([
@@ -21,8 +21,8 @@ router.get('/stats', async function (req, res) {
       Product.find({ stock: { $lte: 5 } }).select('nom stock').sort({ stock: 1 }),
     ])
 
-    // Règle de gestion : le chiffre d'affaires ne compte que les commandes LIVRÉES
-    // (statut 'livree', sans accent, comme dans ton modèle Order)
+    // RÃ¨gle de gestion : le chiffre d'affaires ne compte que les commandes LIVRÃ‰ES
+    // (statut 'livree', sans accent, comme dans ton modÃ¨le Order)
     const livrees = commandes.filter(function (c) {
       return c.statut === 'livree'
     })
@@ -50,7 +50,7 @@ router.get('/stats', async function (req, res) {
       ventes7j.push({ jour: JOURS[debut.getDay()], ventes: ventes })
     }
 
-    // Les produits les plus vendus (parmi les commandes livrées)
+    // Les produits les plus vendus (parmi les commandes livrÃ©es)
     const parProduit = {}
     livrees.forEach(function (commande) {
       commande.produits.forEach(function (ligne) {

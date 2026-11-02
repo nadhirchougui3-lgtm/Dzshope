@@ -1,78 +1,88 @@
+
 import jwt from 'jsonwebtoken'
 import mongoose from 'mongoose'
 import User from '../models/User.js'
 
-// Vérifie l'identité de l'utilisateur
+const JWT_ALGORITHM = 'HS256'
+
+function unauthorized(res, message = 'Connexion requise') {
+  return res.status(401).json({ message })
+}
+
+// Verify the user's identity and current account status.
 export async function protect(req, res, next) {
-  const entete = req.headers.authorization || ''
-  const token = entete.startsWith('Bearer ')
-    ? entete.slice(7).trim()
-    : null
+  const authorization = req.headers.authorization || ''
 
-  if (!token) {
-    return res.status(401).json({
-      message: 'Connexion requise'
-    })
+  if (!authorization.startsWith('Bearer ')) {
+    return unauthorized(res)
   }
 
-  let contenu
+  const token = authorization.slice(7).trim()
+
+  if (!token || token.length > 8192) {
+    return unauthorized(res, 'Token invalide ou expiré')
+  }
+
+  let payload
 
   try {
-    contenu = jwt.verify(token, process.env.JWT_SECRET, {
-      algorithms: ['HS256']
-    })
-  } catch {
-    return res.status(401).json({
-      message: 'Token invalide ou expiré'
-    })
-  }
+    const secret = process.env.JWT_SECRET
 
-  if (
-    !contenu ||
-    typeof contenu !== 'object' ||
-    typeof contenu.id !== 'string' ||
-    !mongoose.isValidObjectId(contenu.id)
-  ) {
-    return res.status(401).json({
-      message: 'Token invalide ou expiré'
-    })
-  }
-
-  try {
-    // Vérifie l'utilisateur et son rôle actuel en base de données.
-    const user = await User.findById(contenu.id)
-
-    if (!user) {
-      return res.status(401).json({
-        message: 'Compte introuvable'
+    if (!secret || secret.length < 32) {
+      console.error('JWT_SECRET is missing or too short.')
+      return res.status(500).json({
+        message: 'Authentication service is not configured correctly.',
       })
     }
 
-    // Bloque les comptes explicitement désactivés.
+    payload = jwt.verify(token, secret, {
+      algorithms: [JWT_ALGORITHM],
+    })
+  } catch {
+    return unauthorized(res, 'Token invalide ou expiré')
+  }
+
+  if (
+    !payload ||
+    typeof payload !== 'object' ||
+    typeof payload.id !== 'string' ||
+    !mongoose.isValidObjectId(payload.id)
+  ) {
+    return unauthorized(res, 'Token invalide ou expiré')
+  }
+
+  try {
+    const user = await User.findById(payload.id)
+
+    if (!user) {
+      return unauthorized(res, 'Token invalide ou expiré')
+    }
+
     if (user.actif === false) {
       return res.status(403).json({
-        message: 'Ce compte a été bloqué'
+        message: 'This account has been disabled.',
       })
     }
 
     req.user = user
+
     return next()
-  } catch (erreur) {
-    return next(erreur)
+  } catch (error) {
+    return next(error)
   }
 }
 
-// Vérifie les autorisations administrateur
+// Authorize administrators using the current database role.
 export function isAdmin(req, res, next) {
   if (!req.user) {
     return res.status(401).json({
-      message: 'Connexion requise'
+      message: 'Connexion requise',
     })
   }
 
   if (req.user.role !== 'admin') {
     return res.status(403).json({
-      message: "Accès réservé à l'admin"
+      message: 'Administrator access is required.',
     })
   }
 

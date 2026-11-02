@@ -1,5 +1,4 @@
-
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { apiFetch, lireJson } from '../../api'
 import Chargement from '../../components/Chargement'
 import { formatDate, formatPrix } from '../../utils/format'
@@ -19,24 +18,30 @@ function AdminUsers() {
   const [erreurMotDePasse, setErreurMotDePasse] = useState('')
   const [messageMotDePasse, setMessageMotDePasse] = useState('')
 
-  function charger() {
+  const charger = useCallback(async function () {
     setChargement(true)
     setErreur('')
 
-    apiFetch('/api/admin/users')
-      .then(lireJson)
-      .then(setUtilisateurs)
-      .catch(function () {
-        setErreur('Impossible de charger les utilisateurs')
-      })
-      .finally(function () {
-        setChargement(false)
-      })
-  }
+    try {
+      const reponse = await apiFetch('/api/admin/users')
+      const data = await lireJson(reponse)
+      setUtilisateurs(data)
+    } catch {
+      setErreur('Impossible de charger les utilisateurs')
+    } finally {
+      setChargement(false)
+    }
+  }, [])
 
   useEffect(function () {
-    charger()
-  }, [])
+    const timer = window.setTimeout(function () {
+      charger()
+    }, 0)
+
+    return function () {
+      window.clearTimeout(timer)
+    }
+  }, [charger])
 
   function obtenirMonId() {
     try {

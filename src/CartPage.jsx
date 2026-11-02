@@ -32,7 +32,6 @@ function CartPage() {
 
   return (
     <div className="dz-cart-page">
-
       <div className="dz-cart-header">
         <div>
           <span className="dz-cart-label">DZSHOP</span>
@@ -44,16 +43,19 @@ function CartPage() {
       </div>
 
       <div className="dz-cart-layout">
-
         <div className="dz-cart-products">
-
           {cartItems.map(function (item) {
+            const itemKey = [
+              item._id,
+              item.taille || '',
+              item.couleur || ''
+            ].join('-')
+
             return (
               <div
-                key={item._id + '-' + item.taille}
+                key={itemKey}
                 className="dz-cart-product"
               >
-
                 <img
                   src={item.image || null}
                   alt={item.nom}
@@ -61,7 +63,6 @@ function CartPage() {
                 />
 
                 <div className="dz-cart-product-info">
-
                   <h3>{item.nom}</h3>
 
                   {item.taille && (
@@ -72,22 +73,30 @@ function CartPage() {
                     </div>
                   )}
 
+                  {item.couleur && (
+                    <div className="dz-cart-size">
+                      Color: <strong>{item.couleur}</strong>
+                    </div>
+                  )}
+
                   <span className="dz-cart-price">
-                    {item.prix.toLocaleString('fr-FR')} DA
+                    {Number(item.prix || 0).toLocaleString('fr-FR')} DA
                   </span>
 
                   <div className="dz-cart-actions">
-
                     <div className="dz-cart-quantity">
-
                       <button
+                        type="button"
+                        disabled={item.quantity <= 1}
                         onClick={function () {
                           updateQuantity(
                             item._id,
                             Math.max(1, item.quantity - 1),
-                            item.taille
+                            item.taille || '',
+                            item.couleur || ''
                           )
                         }}
+                        aria-label="Decrease quantity"
                       >
                         −
                       </button>
@@ -95,17 +104,20 @@ function CartPage() {
                       <strong>{item.quantity}</strong>
 
                       <button
+                        type="button"
+                        disabled={item.quantity >= item.stock}
                         onClick={function () {
                           updateQuantity(
                             item._id,
                             item.quantity + 1,
-                            item.taille
+                            item.taille || '',
+                            item.couleur || ''
                           )
                         }}
+                        aria-label="Increase quantity"
                       >
                         +
                       </button>
-
                     </div>
 
                     <Link
@@ -116,33 +128,35 @@ function CartPage() {
                     </Link>
 
                     <button
+                      type="button"
                       className="dz-delete-btn"
                       onClick={function () {
-                        removeFromCart(item._id, item.taille)
+                        removeFromCart(
+                          item._id,
+                          item.taille || '',
+                          item.couleur || ''
+                        )
                       }}
                     >
                       <FaTrash />
                       Delete
                     </button>
-
                   </div>
-
                 </div>
 
                 <strong className="dz-product-total">
-                  {(item.prix * item.quantity).toLocaleString('fr-FR')} DA
+                  {(
+                    Number(item.prix || 0) *
+                    Number(item.quantity || 0)
+                  ).toLocaleString('fr-FR')} DA
                 </strong>
-
               </div>
             )
           })}
-
         </div>
 
         <div className="dz-cart-summary">
-
           <div className="dz-summary-card">
-
             <h2>Summary</h2>
 
             <div className="dz-summary-line">
@@ -172,11 +186,9 @@ function CartPage() {
             >
               Checkout
             </Link>
-
           </div>
 
           <div className="dz-benefits">
-
             <div>
               <FaTruck />
               <span>Fast Delivery</span>
@@ -191,15 +203,11 @@ function CartPage() {
               <FaUndo />
               <span>Easy Returns</span>
             </div>
-
           </div>
-
         </div>
-
       </div>
-
     </div>
   )
 }
 
-export default CartPage ;
+export default CartPage

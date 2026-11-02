@@ -1,4 +1,3 @@
-
 import { createContext, useContext, useState, useEffect } from 'react'
 import { apiFetch, lireJson } from './api'
 
@@ -9,7 +8,7 @@ export function AuthProvider({ children }) {
     try {
       const sauvegarde = localStorage.getItem('user')
       return sauvegarde ? JSON.parse(sauvegarde) : null
-    } catch (erreur) {
+    } catch {
       localStorage.removeItem('user')
       return null
     }
@@ -72,20 +71,6 @@ export function AuthProvider({ children }) {
     return data.user
   }
 
-  async function loginPasskey(response, challengeId) {
-    const reponse = await apiFetch('/api/passkey/authentication/verify', {
-      method: 'POST',
-      body: JSON.stringify({
-        response: response,
-        challengeId: challengeId
-      })
-    })
-
-    const data = await lireJson(reponse)
-    sauvegarder(data)
-    return data.user
-  }
-
   async function register(nom, telephone, password) {
     const reponse = await apiFetch('/api/auth/register', {
       method: 'POST',
@@ -107,7 +92,6 @@ export function AuthProvider({ children }) {
         user,
         login,
         loginGoogle,
-        loginPasskey,
         register,
         logout
       }}
@@ -117,6 +101,7 @@ export function AuthProvider({ children }) {
   )
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useAuth() {
   return useContext(AuthContext)
 }

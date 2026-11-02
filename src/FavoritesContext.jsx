@@ -38,9 +38,6 @@ export function FavoritesProvider({ children }) {
 
   useEffect(() => {
     if (!userKey) {
-      setFavorites([])
-      setLoadedUserKey(null)
-
       try {
         localStorage.removeItem(LEGACY_FAVORITES_KEY)
       } catch {
@@ -50,8 +47,18 @@ export function FavoritesProvider({ children }) {
       return
     }
 
-    setFavorites(readFavorites(userKey))
-    setLoadedUserKey(userKey)
+    let active = true
+
+    Promise.resolve().then(() => {
+      if (!active) return
+
+      setFavorites(readFavorites(userKey))
+      setLoadedUserKey(userKey)
+    })
+
+    return () => {
+      active = false
+    }
   }, [userKey])
 
   useEffect(() => {
@@ -113,6 +120,7 @@ export function FavoritesProvider({ children }) {
   )
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useFavorites() {
   const context = useContext(FavoritesContext)
 

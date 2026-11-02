@@ -1,3 +1,4 @@
+
 import { useEffect, useRef, useState } from 'react'
 
 const ADRESSE_SCRIPT = 'https://accounts.google.com/gsi/client'
@@ -12,10 +13,12 @@ function GoogleSignInButton({
   const conteneur = useRef(null)
   const [pret, setPret] = useState(false)
 
-  dernierCallback.current = onCredential
-  dernierErreur.current = onError
-
   const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID
+
+  useEffect(() => {
+    dernierCallback.current = onCredential
+    dernierErreur.current = onError
+  }, [onCredential, onError])
 
   useEffect(
     function () {
@@ -25,11 +28,14 @@ function GoogleSignInButton({
 
       let actif = true
 
-      window.__dzshopGoogleCredentialHandler = function (credential) {
+      const gestionnaireCredential = function (credential) {
         if (credential) {
           dernierCallback.current(credential)
         }
       }
+
+      window.__dzshopGoogleCredentialHandler =
+        gestionnaireCredential
 
       function initialiserGoogle() {
         if (!actif) {
@@ -74,6 +80,12 @@ function GoogleSignInButton({
         setPret(true)
       }
 
+      function traiterErreurScript() {
+        dernierErreur.current?.(
+          new Error('Unable to load Google Sign-In script')
+        )
+      }
+
       if (window.google?.accounts?.id) {
         initialiserGoogle()
 
@@ -82,7 +94,7 @@ function GoogleSignInButton({
 
           if (
             window.__dzshopGoogleCredentialHandler ===
-            dernierCallback.current
+            gestionnaireCredential
           ) {
             delete window.__dzshopGoogleCredentialHandler
           }
@@ -102,10 +114,19 @@ function GoogleSignInButton({
       }
 
       script.addEventListener('load', initialiserGoogle)
+      script.addEventListener('error', traiterErreurScript)
 
       return function () {
         actif = false
         script.removeEventListener('load', initialiserGoogle)
+        script.removeEventListener('error', traiterErreurScript)
+
+        if (
+          window.__dzshopGoogleCredentialHandler ===
+          gestionnaireCredential
+        ) {
+          delete window.__dzshopGoogleCredentialHandler
+        }
       }
     },
     [clientId]
@@ -131,4 +152,4 @@ function GoogleSignInButton({
   )
 }
 
-export default GoogleSignInButton ;
+export default GoogleSignInButton

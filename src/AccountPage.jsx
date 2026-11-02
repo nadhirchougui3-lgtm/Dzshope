@@ -1,5 +1,4 @@
-
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import {
   FaUser,
@@ -15,11 +14,7 @@ import {
   FaTruck,
   FaTimesCircle,
   FaSpinner,
-  FaKey,
-  FaPlus,
-  FaTrash,
 } from 'react-icons/fa'
-import { startRegistration } from '@simplewebauthn/browser'
 
 import { useAuth } from './AuthContext'
 import { useCart } from './CartContext'
@@ -98,12 +93,6 @@ function AccountPage() {
   const [loadingOrders, setLoadingOrders] = useState(true)
   const [ordersError, setOrdersError] = useState('')
 
-  const [passkeys, setPasskeys] = useState([])
-  const [loadingPasskeys, setLoadingPasskeys] = useState(true)
-  const [passkeyBusy, setPasskeyBusy] = useState(false)
-  const [passkeyError, setPasskeyError] = useState('')
-  const [passkeyMessage, setPasskeyMessage] = useState('')
-
   const name =
     user?.nom ||
     user?.name ||
@@ -148,92 +137,6 @@ function AccountPage() {
       active = false
     }
   }, [])
-
-  const loadPasskeys = useCallback(async () => {
-    setLoadingPasskeys(true)
-    setPasskeyError('')
-
-    try {
-      const data = await requestJson('/api/passkey/me')
-      setPasskeys(Array.isArray(data) ? data : data.passkeys || [])
-    } catch (error) {
-      setPasskeyError(
-        error.message || 'Unable to load your passkeys.'
-      )
-    } finally {
-      setLoadingPasskeys(false)
-    }
-  }, [])
-
-  useEffect(() => {
-    loadPasskeys()
-  }, [loadPasskeys])
-
-  async function addPasskey() {
-    setPasskeyError('')
-    setPasskeyMessage('')
-    setPasskeyBusy(true)
-
-    try {
-      const data = await requestJson(
-        '/api/passkey/registration/options',
-        {
-          method: 'POST',
-          body: JSON.stringify({}),
-        }
-      )
-
-      const registrationResponse = await startRegistration({
-        optionsJSON: data.options,
-      })
-
-      await requestJson('/api/passkey/registration/verify', {
-        method: 'POST',
-        body: JSON.stringify({
-          response: registrationResponse,
-          challengeId: data.challengeId,
-        }),
-      })
-
-      setPasskeyMessage('Your passkey has been added successfully.')
-      await loadPasskeys()
-    } catch (error) {
-      setPasskeyError(
-        error.message || 'Unable to register this passkey.'
-      )
-    } finally {
-      setPasskeyBusy(false)
-    }
-  }
-
-  async function deletePasskey(id) {
-    if (!id || passkeyBusy) return
-
-    const confirmed = window.confirm(
-      'Are you sure you want to remove this passkey?'
-    )
-
-    if (!confirmed) return
-
-    setPasskeyError('')
-    setPasskeyMessage('')
-    setPasskeyBusy(true)
-
-    try {
-      await requestJson(`/api/passkey/${encodeURIComponent(id)}`, {
-        method: 'DELETE',
-      })
-
-      setPasskeyMessage('Passkey removed successfully.')
-      await loadPasskeys()
-    } catch (error) {
-      setPasskeyError(
-        error.message || 'Unable to remove this passkey.'
-      )
-    } finally {
-      setPasskeyBusy(false)
-    }
-  }
 
   function handleLogout() {
     logout()
@@ -328,100 +231,6 @@ function AccountPage() {
             </span>
             <FaArrowRight className="dz-account-shortcut-arrow" />
           </Link>
-        </section>
-
-        <section className="dz-account-passkeys">
-          <div className="dz-account-section-heading">
-            <div>
-              <span className="dz-account-eyebrow">
-                ACCOUNT SECURITY
-              </span>
-              <h2>Passkeys</h2>
-            </div>
-
-            <button
-              type="button"
-              className="dz-account-passkey-add"
-              onClick={addPasskey}
-              disabled={passkeyBusy}
-            >
-              {passkeyBusy ? (
-                <FaSpinner className="dz-account-spinner" />
-              ) : (
-                <FaPlus />
-              )}
-              <span>Add Passkey</span>
-            </button>
-          </div>
-
-          <p className="dz-account-passkey-description">
-            Sign in securely without entering your password, using a
-            supported device or security key.
-          </p>
-
-          {passkeyError && (
-            <div className="dz-account-passkey-message error" role="alert">
-              {passkeyError}
-            </div>
-          )}
-
-          {passkeyMessage && (
-            <div className="dz-account-passkey-message success" role="status">
-              {passkeyMessage}
-            </div>
-          )}
-
-          {loadingPasskeys ? (
-            <div className="dz-account-state">
-              <FaSpinner className="dz-account-spinner" />
-              <span>Loading passkeys...</span>
-            </div>
-          ) : passkeys.length === 0 ? (
-            <div className="dz-account-empty">
-              <span className="dz-account-empty-icon">
-                <FaKey />
-              </span>
-              <h3>No passkeys yet</h3>
-              <p>
-                Add a passkey to make signing in to your account easier.
-              </p>
-            </div>
-          ) : (
-            <div className="dz-account-passkey-list">
-              {passkeys.map((passkey) => {
-                const id = passkey._id || passkey.id
-
-                return (
-                  <article
-                    className="dz-account-passkey-item"
-                    key={id || passkey.credentialId}
-                  >
-                    <span className="dz-account-shortcut-icon">
-                      <FaKey />
-                    </span>
-
-                    <div className="dz-account-passkey-info">
-                      <strong>Passkey</strong>
-                      <small>
-                        Added {formatDate(passkey.createdAt)}
-                      </small>
-                    </div>
-
-                    <button
-                      type="button"
-                      className="dz-account-passkey-delete"
-                      onClick={() => deletePasskey(id)}
-                      disabled={passkeyBusy || !id}
-                      aria-label="Remove passkey"
-                      title="Remove passkey"
-                    >
-                      <FaTrash />
-                    </button>
-                  </article>
-                )
-              })}
-            </div>
-          )}
         </section>
 
         <section className="dz-account-orders">

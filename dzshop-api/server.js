@@ -11,7 +11,6 @@ import { fileURLToPath } from 'node:url'
 import productRoutes from './routes/products.js'
 import orderRoutes from './routes/orders.js'
 import authRoutes from './routes/auth.js'
-import passkeyRoutes from './routes/passkey.js'
 import uploadRoutes from './routes/upload.js'
 import adminRoutes from './routes/admin.js'
 import adminUsersRoutes from './routes/adminUsers.js'
@@ -49,7 +48,6 @@ app.get('/', function (req, res) {
 app.use('/api/products', productRoutes)
 app.use('/api/orders', orderRoutes)
 app.use('/api/auth', authRoutes)
-app.use('/api/passkey', passkeyRoutes)
 app.use('/api/upload', uploadRoutes)
 app.use('/api/admin', adminRoutes)
 app.use('/api/admin/users', adminUsersRoutes)

@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react'
 import {
   useParams,
@@ -24,6 +23,11 @@ import './ProductDetailPage.css'
 
 function ProductDetailPage() {
   const { id } = useParams()
+
+  return <ProductDetailContent key={id} id={id} />
+}
+
+function ProductDetailContent({ id }) {
   const navigate = useNavigate()
   const location = useLocation()
   const { addToCart } = useCart()
@@ -41,22 +45,17 @@ function ProductDetailPage() {
   const addLocked = useRef(false)
 
   useEffect(function () {
-    window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
+    let active = true
 
-    setChargement(true)
-    setProduit(null)
-    setProduitsDisponibles([])
-    setQuantity(1)
-    setTaille('')
-    setCouleur('')
-    setAddedToBag(false)
-    addLocked.current = false
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
 
     apiFetch('/api/products/' + id)
       .then(function (res) {
         return res.ok ? res.json() : null
       })
       .then(function (data) {
+        if (!active) return
+
         setProduit(data)
 
         if (
@@ -70,7 +69,9 @@ function ProductDetailPage() {
         setChargement(false)
       })
       .catch(function () {
-        setChargement(false)
+        if (active) {
+          setChargement(false)
+        }
       })
 
     apiFetch('/api/products')
@@ -78,6 +79,8 @@ function ProductDetailPage() {
         return res.ok ? res.json() : []
       })
       .then(function (data) {
+        if (!active) return
+
         const liste = Array.isArray(data)
           ? data
           : Array.isArray(data.products)
@@ -89,8 +92,14 @@ function ProductDetailPage() {
         setProduitsDisponibles(liste)
       })
       .catch(function () {
-        setProduitsDisponibles([])
+        if (active) {
+          setProduitsDisponibles([])
+        }
       })
+
+    return function () {
+      active = false
+    }
   }, [id])
 
   function handleFavoriteClick(product) {
@@ -277,7 +286,8 @@ function ProductDetailPage() {
 
       oscillator.start()
       oscillator.stop(context.currentTime + 0.08)
-    } catch (error) {
+    } catch {
+      // Ignore audio playback errors.
     }
   }
 
@@ -317,7 +327,8 @@ function ProductDetailPage() {
 
       oscillator.start()
       oscillator.stop(context.currentTime + 0.22)
-    } catch (error) {
+    } catch {
+      // Ignore audio playback errors.
     }
   }
 
@@ -376,6 +387,16 @@ function ProductDetailPage() {
       return
     }
 
+    if (!user) {
+      navigate('/login', {
+        state: {
+          from: `${location.pathname}${location.search}${location.hash}`
+        }
+      })
+
+      return
+    }
+
     if (produit.stock <= 0) {
       return
     }
@@ -396,17 +417,22 @@ function ProductDetailPage() {
     addLocked.current = true
 
     try {
-      addToCart(
+      const added = addToCart(
         produit,
         safeQuantity,
         taille,
         couleur
       )
 
+      if (added === false) {
+        addLocked.current = false
+        return
+      }
+
       setQuantity(safeQuantity)
       setAddedToBag(true)
       playSuccessSound()
-    } catch (error) {
+    } catch {
       addLocked.current = false
     }
   }

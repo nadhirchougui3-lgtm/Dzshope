@@ -1,4 +1,3 @@
-
 import { useEffect, useRef, useState } from 'react'
 import {
   NavLink,
@@ -242,7 +241,23 @@ function Navbar() {
 
   const [products, setProducts] = useState([])
   const [search, setSearch] = useState('')
-  const [history, setHistory] = useState([])
+  const [history, setHistory] = useState(() => {
+    try {
+      const savedHistory = localStorage.getItem(HISTORY_KEY)
+      const parsed = savedHistory ? JSON.parse(savedHistory) : []
+
+      return Array.isArray(parsed)
+        ? parsed
+            .filter(
+              (item) =>
+                typeof item === 'string' && item.trim()
+            )
+            .slice(0, MAX_HISTORY)
+        : []
+    } catch {
+      return []
+    }
+  })
   const [searchOpen, setSearchOpen] = useState(false)
 
   const searchRef = useRef(null)
@@ -273,29 +288,6 @@ function Navbar() {
       `/produits?categorie=${encodeURIComponent(category.value)}`
     )
   }
-
-  useEffect(() => {
-    try {
-      const savedHistory = localStorage.getItem(HISTORY_KEY)
-
-      if (savedHistory) {
-        const parsed = JSON.parse(savedHistory)
-
-        if (Array.isArray(parsed)) {
-          setHistory(
-            parsed
-              .filter(
-                (item) =>
-                  typeof item === 'string' && item.trim()
-              )
-              .slice(0, MAX_HISTORY)
-          )
-        }
-      }
-    } catch {
-      setHistory([])
-    }
-  }, [])
 
   useEffect(() => {
     async function loadProducts() {

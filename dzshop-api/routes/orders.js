@@ -1,44 +1,64 @@
 import express from 'express'
 import mongoose from 'mongoose'
+
 import Order from '../models/Order.js'
 import Product from '../models/Product.js'
 import { protect, isAdmin } from '../middleware/auth.js'
 
 const router = express.Router()
 
-const STATUTS_VALIDES = [
+const VALID_STATUSES = [
   'en attente',
   'confirmee',
   'expediee',
   'livree',
-  'annulee'
+  'annulee',
 ]
 
-function erreurClient(message) {
-  const erreur = new Error(message)
-  erreur.status = 400
-  return erreur
+const MAX_PRODUCTS_PER_ORDER = 50
+const MAX_QUANTITY_PER_PRODUCT = 99
+const MAX_ORDER_TOTAL = 1_000_000_000
+
+function clientError(message) {
+  const error = new Error(message)
+  error.status = 400
+  return error
 }
 
-function traiterErreur(res, erreur, operation) {
-  if (erreur.status === 400) {
-    return res.status(400).json({ message: erreur.message })
+function handleError(res, error, operation) {
+  if (error.status === 400) {
+    return res.status(400).json({ message: error.message })
   }
 
   if (
-    erreur instanceof mongoose.Error.ValidationError ||
-    erreur instanceof mongoose.Error.CastError
+    error instanceof mongoose.Error.ValidationError ||
+    error instanceof mongoose.Error.CastError
   ) {
     return res.status(400).json({
-      message: 'Données de commande invalides'
+      message: 'Invalid order data.',
     })
   }
 
-  console.error(operation, erreur.message)
+  console.error(operation, error.message)
 
   return res.status(500).json({
-    message: 'Une erreur interne est survenue'
+    message: 'An internal server error occurred.',
   })
+}
+
+function isNonEmptyString(value, minLength, maxLength) {
+  return (
+    typeof value === 'string' &&
+    value.trim().length >= minLength &&
+    value.trim().length <= maxLength
+  )
+}
+
+function isValidOption(value, maxLength) {
+  return (
+    value === undefined ||
+    (typeof value === 'string' && value.trim().length <= maxLength)
+  )
 }
 
 router.post('/', protect, async function (req, res) {
@@ -49,7 +69,7 @@ router.post('/', protect, async function (req, res) {
       Array.isArray(req.body)
     ) {
       return res.status(400).json({
-        message: 'Données de commande invalides'
+        message: 'Invalid order data.',
       })
     }
 
@@ -61,30 +81,24 @@ router.post('/', protect, async function (req, res) {
       adresse,
       livraison,
       paiement,
-      produits
+      produits,
     } = req.body
 
-    const champsLivraison = [
-      nom,
-      telephone,
-      wilaya,
-      commune,
-      adresse
-    ]
-
     if (
-      !champsLivraison.every(
-        valeur => typeof valeur === 'string' && valeur.trim() !== ''
-      )
+      !isNonEmptyString(nom, 2, 80) ||
+      !isNonEmptyString(telephone, 5, 30) ||
+      !isNonEmptyString(wilaya, 2, 100) ||
+      !isNonEmptyString(commune, 2, 100) ||
+      !isNonEmptyString(adresse, 3, 300)
     ) {
       return res.status(400).json({
-        message: 'Toutes les informations de livraison sont obligatoires'
+        message: 'Invalid or incomplete delivery information.',
       })
     }
 
     if (!['domicile', 'bureau'].includes(livraison)) {
       return res.status(400).json({
-        message: 'Mode de livraison invalide'
+        message: 'Invalid delivery method.',
       })
     }
 
@@ -93,178 +107,200 @@ router.post('/', protect, async function (req, res) {
       paiement !== 'cash_on_delivery'
     ) {
       return res.status(400).json({
-        message: 'Méthode de paiement invalide'
+        message: 'Invalid payment method.',
       })
     }
 
-    if (!Array.isArray(produits) || produits.length === 0) {
+    if (
+      !Array.isArray(produits) ||
+      produits.length < 1 ||
+      produits.length > MAX_PRODUCTS_PER_ORDER
+    ) {
       return res.status(400).json({
-        message: 'Le panier est vide'
+        message: `An order must contain between 1 and ${MAX_PRODUCTS_PER_ORDER} products.`,
       })
     }
 
-    const lignesValides = []
+    const validatedLines = []
 
-    for (const ligne of produits) {
+    for (const line of produits) {
       if (
-        !ligne ||
-        typeof ligne !== 'object' ||
-        Array.isArray(ligne) ||
-        typeof ligne.productId !== 'string' ||
-        !mongoose.isValidObjectId(ligne.productId)
+        !line ||
+        typeof line !== 'object' ||
+        Array.isArray(line) ||
+        typeof line.productId !== 'string' ||
+        !mongoose.isValidObjectId(line.productId)
       ) {
         return res.status(400).json({
-          message: 'Produit invalide'
-        })
-      }
-
-      if (
-        !['number', 'string'].includes(typeof ligne.quantity) ||
-        String(ligne.quantity).trim() === ''
-      ) {
-        return res.status(400).json({
-          message: 'Quantité invalide'
-        })
-      }
-
-      const quantity = Number(ligne.quantity)
-
-      if (!Number.isSafeInteger(quantity) || quantity < 1 || quantity > 99) {
-        return res.status(400).json({
-          message: 'Quantité invalide'
+          message: 'Invalid product.',
         })
       }
 
       if (
-        (ligne.taille !== undefined &&
-          typeof ligne.taille !== 'string') ||
-        (ligne.couleur !== undefined &&
-          typeof ligne.couleur !== 'string')
+        !['number', 'string'].includes(typeof line.quantity) ||
+        String(line.quantity).trim() === ''
       ) {
         return res.status(400).json({
-          message: 'Options du produit invalides'
+          message: 'Invalid product quantity.',
         })
       }
 
-      lignesValides.push({
-        productId: ligne.productId,
+      const quantity = Number(line.quantity)
+
+      if (
+        !Number.isSafeInteger(quantity) ||
+        quantity < 1 ||
+        quantity > MAX_QUANTITY_PER_PRODUCT
+      ) {
+        return res.status(400).json({
+          message: 'Product quantity must be between 1 and 99.',
+        })
+      }
+
+      if (
+        !isValidOption(line.taille, 50) ||
+        !isValidOption(line.couleur, 100)
+      ) {
+        return res.status(400).json({
+          message: 'Invalid product options.',
+        })
+      }
+
+      validatedLines.push({
+        productId: line.productId,
         quantity,
-        taille: typeof ligne.taille === 'string'
-          ? ligne.taille.trim()
+        taille: typeof line.taille === 'string'
+          ? line.taille.trim()
           : '',
-        couleur: typeof ligne.couleur === 'string'
-          ? ligne.couleur.trim()
-          : ''
+        couleur: typeof line.couleur === 'string'
+          ? line.couleur.trim()
+          : '',
       })
     }
 
-    const ids = lignesValides.map(ligne => ligne.productId)
-    const idsUniques = [...new Set(ids)]
+    const productIds = validatedLines.map(line => line.productId)
+    const uniqueProductIds = [...new Set(productIds)]
 
-    if (idsUniques.length !== ids.length) {
+    if (uniqueProductIds.length !== productIds.length) {
       return res.status(400).json({
-        message: 'Produit répété dans le panier'
+        message: 'Duplicate products are not allowed in an order.',
       })
     }
 
-    const produitsEnBase = await Product.find({
-      _id: { $in: idsUniques }
+    const databaseProducts = await Product.find({
+      _id: { $in: uniqueProductIds },
     })
 
-    if (produitsEnBase.length !== idsUniques.length) {
+    if (databaseProducts.length !== uniqueProductIds.length) {
       return res.status(400).json({
-        message: 'Un ou plusieurs produits sont introuvables'
+        message: 'One or more products could not be found.',
       })
     }
 
+    const orderLines = []
     let total = 0
-    const lignes = []
 
-    for (const ligne of lignesValides) {
-      const produit = produitsEnBase.find(
-        item => String(item._id) === ligne.productId
+    for (const line of validatedLines) {
+      const product = databaseProducts.find(
+        item => String(item._id) === line.productId
       )
 
-      if (!produit) {
+      if (!product) {
         return res.status(400).json({
-          message: 'Produit introuvable'
+          message: 'Product not found.',
         })
       }
 
       if (
-        !Number.isSafeInteger(produit.stock) ||
-        produit.stock < 0 ||
-        ligne.quantity > produit.stock
+        !Number.isSafeInteger(product.stock) ||
+        product.stock < 0 ||
+        line.quantity > product.stock
       ) {
         return res.status(400).json({
-          message: 'Stock insuffisant pour ' + produit.nom
+          message: `Insufficient stock for ${product.nom}.`,
         })
       }
 
       if (
-        ligne.taille &&
-        Array.isArray(produit.tailles) &&
-        produit.tailles.length > 0 &&
-        !produit.tailles.includes(ligne.taille)
+        line.taille &&
+        Array.isArray(product.tailles) &&
+        product.tailles.length > 0 &&
+        !product.tailles.includes(line.taille)
       ) {
         return res.status(400).json({
-          message: 'Taille invalide pour ' + produit.nom
+          message: `Invalid size for ${product.nom}.`,
         })
       }
 
       if (
-        ligne.couleur &&
-        Array.isArray(produit.couleurs) &&
-        produit.couleurs.length > 0 &&
-        !produit.couleurs.some(
-          couleur => couleur.nom === ligne.couleur
+        line.couleur &&
+        Array.isArray(product.couleurs) &&
+        product.couleurs.length > 0 &&
+        !product.couleurs.some(
+          color => color.nom === line.couleur
         )
       ) {
         return res.status(400).json({
-          message: 'Couleur invalide pour ' + produit.nom
+          message: `Invalid color for ${product.nom}.`,
         })
       }
 
-      const sousTotal = produit.prix * ligne.quantity
+      if (
+        typeof product.prix !== 'number' ||
+        !Number.isFinite(product.prix) ||
+        product.prix < 0
+      ) {
+        console.error('Invalid product price:', String(product._id))
 
-      if (!Number.isFinite(sousTotal) || !Number.isFinite(total + sousTotal)) {
+        return res.status(500).json({
+          message: 'Unable to process this order.',
+        })
+      }
+
+      const subtotal = product.prix * line.quantity
+
+      if (
+        !Number.isFinite(subtotal) ||
+        !Number.isFinite(total + subtotal) ||
+        total + subtotal > MAX_ORDER_TOTAL
+      ) {
         return res.status(400).json({
-          message: 'Montant de commande invalide'
+          message: 'Order total exceeds the permitted limit.',
         })
       }
 
-      total += sousTotal
+      total += subtotal
 
-      lignes.push({
-        productId: produit._id,
-        nom: produit.nom,
-        prix: produit.prix,
-        quantity: ligne.quantity,
-        image: produit.image,
-        taille: ligne.taille,
-        couleur: ligne.couleur
+      orderLines.push({
+        productId: product._id,
+        nom: product.nom,
+        prix: product.prix,
+        quantity: line.quantity,
+        image: product.image,
+        taille: line.taille,
+        couleur: line.couleur,
       })
     }
 
-    const stockModifie = []
+    const modifiedStock = []
 
     try {
-      for (const ligne of lignes) {
-        const modification = await Product.updateOne(
+      for (const line of orderLines) {
+        const result = await Product.updateOne(
           {
-            _id: ligne.productId,
-            stock: { $gte: ligne.quantity }
+            _id: line.productId,
+            stock: { $gte: line.quantity },
           },
           {
-            $inc: { stock: -ligne.quantity }
+            $inc: { stock: -line.quantity },
           }
         )
 
-        if (modification.modifiedCount !== 1) {
-          throw erreurClient('Stock insuffisant pour ' + ligne.nom)
+        if (result.modifiedCount !== 1) {
+          throw clientError(`Insufficient stock for ${line.nom}.`)
         }
 
-        stockModifie.push(ligne)
+        modifiedStock.push(line)
       }
 
       const order = await Order.create({
@@ -276,130 +312,134 @@ router.post('/', protect, async function (req, res) {
         adresse: adresse.trim(),
         livraison,
         paiement: paiement || 'cash_on_delivery',
-        produits: lignes,
-        total
+        produits: orderLines,
+        total,
       })
 
       return res.status(201).json({
-        message: 'Commande créée avec succès',
-        order
+        message: 'Order created successfully.',
+        order,
       })
-    } catch (erreur) {
-      for (const ligne of stockModifie) {
+    } catch (error) {
+      for (const line of modifiedStock) {
         try {
-          const restauration = await Product.updateOne(
-            { _id: ligne.productId },
-            { $inc: { stock: ligne.quantity } }
+          const restoration = await Product.updateOne(
+            { _id: line.productId },
+            { $inc: { stock: line.quantity } }
           )
 
-          if (restauration.modifiedCount !== 1) {
+          if (restoration.modifiedCount !== 1) {
             console.error(
-              'Restauration du stock non confirmée pour le produit :',
-              String(ligne.productId)
+              'Stock restoration was not confirmed:',
+              String(line.productId)
             )
           }
-        } catch (erreurRestauration) {
+        } catch (restorationError) {
           console.error(
-            'Échec de restauration du stock :',
-            String(ligne.productId),
-            erreurRestauration.message
+            'Stock restoration failed:',
+            String(line.productId),
+            restorationError.message
           )
         }
       }
 
-      throw erreur
+      throw error
     }
-  } catch (erreur) {
-    return traiterErreur(res, erreur, 'Erreur création commande :')
+  } catch (error) {
+    return handleError(res, error, 'Order creation failed:')
   }
 })
 
+// Return only orders belonging to the authenticated user.
 router.get('/my', protect, async function (req, res) {
   try {
-    const commandes = await Order.find({
-      user: req.user._id
+    const orders = await Order.find({
+      user: req.user._id,
     }).sort({ createdAt: -1 })
 
-    return res.json(commandes)
-  } catch (erreur) {
-    return traiterErreur(res, erreur, 'Erreur lecture commandes :')
+    return res.json(orders)
+  } catch (error) {
+    return handleError(res, error, 'Order retrieval failed:')
   }
 })
 
+// Return one order only if it belongs to the authenticated user.
 router.get('/:id', protect, async function (req, res) {
   if (!mongoose.isValidObjectId(req.params.id)) {
     return res.status(400).json({
-      message: 'Commande invalide'
+      message: 'Invalid order ID.',
     })
   }
 
   try {
-    const commande = await Order.findOne({
+    const order = await Order.findOne({
       _id: req.params.id,
-      user: req.user._id
+      user: req.user._id,
     })
 
-    if (!commande) {
+    if (!order) {
       return res.status(404).json({
-        message: 'Commande introuvable'
+        message: 'Order not found.',
       })
     }
 
-    return res.json(commande)
-  } catch (erreur) {
-    return traiterErreur(res, erreur, 'Erreur lecture commande :')
+    return res.json(order)
+  } catch (error) {
+    return handleError(res, error, 'Order retrieval failed:')
   }
 })
 
+// Administrators can view all orders.
 router.get('/', protect, isAdmin, async function (req, res) {
   try {
-    const commandes = await Order.find().sort({
-      createdAt: -1
+    const orders = await Order.find().sort({
+      createdAt: -1,
     })
 
-    return res.json(commandes)
-  } catch (erreur) {
-    return traiterErreur(res, erreur, 'Erreur lecture commandes admin :')
+    return res.json(orders)
+  } catch (error) {
+    return handleError(res, error, 'Admin order retrieval failed:')
   }
 })
 
+// Only administrators can update order statuses.
 router.patch('/:id/statut', protect, isAdmin, async function (req, res) {
   if (
     !req.body ||
     typeof req.body !== 'object' ||
     Array.isArray(req.body) ||
-    !STATUTS_VALIDES.includes(req.body.statut)
+    !VALID_STATUSES.includes(req.body.statut)
   ) {
     return res.status(400).json({
-      message: 'Statut invalide'
+      message: 'Invalid order status.',
     })
   }
 
   if (!mongoose.isValidObjectId(req.params.id)) {
-    return res.status(404).json({
-      message: 'Commande introuvable'
+    return res.status(400).json({
+      message: 'Invalid order ID.',
     })
   }
 
   try {
-    const commande = await Order.findByIdAndUpdate(
+    const order = await Order.findByIdAndUpdate(
       req.params.id,
       { statut: req.body.statut },
       {
         returnDocument: 'after',
-        runValidators: true
+        runValidators: true,
       }
     )
 
-    if (!commande) {
+    if (!order) {
       return res.status(404).json({
-        message: 'Commande introuvable'
+        message: 'Order not found.',
       })
     }
 
-    return res.json(commande)
-  } catch (erreur) {
-    return traiterErreur(res, erreur, 'Erreur modification statut commande :')
+    return res.json(order)
+  } catch (error) {
+    return handleError(res, error, 'Order status update failed:')
   }
 })
 

@@ -1,14 +1,19 @@
 import mongoose from 'mongoose'
 import bcrypt from 'bcryptjs'
 
-// Ton formulaire d'inscription demande un nom, un téléphone et un mot de passe :
-// on se connecte avec le NUMÉRO DE TÉLÉPHONE pour un compte "local". Un compte
-// créé avec Google, lui, n'a ni téléphone ni mot de passe au départ (Google ne
-// donne que le nom et l'email) : ces deux champs ne sont obligatoires QUE pour
-// les comptes "local".
+const MIN_PASSWORD_LENGTH = 8
+const MAX_PASSWORD_LENGTH = 128
+const BCRYPT_ROUNDS = 12
+
 const userSchema = new mongoose.Schema(
   {
-    nom: { type: String, required: [true, 'Le nom est obligatoire'], trim: true },
+    nom: {
+      type: String,
+      required: [true, 'Name is required'],
+      trim: true,
+      minlength: [2, 'Name must contain at least 2 characters'],
+      maxlength: [80, 'Name cannot exceed 80 characters'],
+    },
 
     telephone: {
       type: String,
@@ -16,55 +21,96 @@ const userSchema = new mongoose.Schema(
         return this.provider === 'local'
       },
       unique: true,
-      sparse: true, // permet plusieurs comptes SANS téléphone (les comptes Google)
+      sparse: true,
       trim: true,
+      minlength: [5, 'Telephone number is too short'],
+      maxlength: [30, 'Telephone number is too long'],
     },
 
     email: {
       type: String,
       unique: true,
-      sparse: true, // permet plusieurs comptes SANS email (les comptes locaux qui n'en ont pas donné)
+      sparse: true,
       lowercase: true,
       trim: true,
+      maxlength: [254, 'Email address is too long'],
+      match: [
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+        'Please provide a valid email address',
+      ],
     },
 
-    // select: false = la requête NE renvoie PAS le mot de passe, sauf si on le demande exprès
     password: {
       type: String,
       required: function () {
         return this.provider === 'local'
       },
-      minlength: [6, 'Le mot de passe doit faire au moins 6 caractères'],
+      minlength: [
+        MIN_PASSWORD_LENGTH,
+        `Password must contain at least ${MIN_PASSWORD_LENGTH} characters`,
+      ],
+      maxlength: [
+        MAX_PASSWORD_LENGTH,
+        `Password cannot exceed ${MAX_PASSWORD_LENGTH} characters`,
+      ],
       select: false,
     },
 
-    // Comment ce compte a été créé : "local" (téléphone + mot de passe) ou "google"
-    provider: { type: String, enum: ['local', 'google'], default: 'local' },
-    googleId: { type: String, default: null },
+    provider: {
+      type: String,
+      enum: ['local', 'google'],
+      default: 'local',
+      required: true,
+    },
 
-    // "client" par défaut. On ne devient admin que dans la base (guide « espace admin »)
-    role: { type: String, enum: ['client', 'admin'], default: 'client' },
+    googleId: {
+      type: String,
+      default: null,
+      maxlength: 255,
+    },
 
-    // Un compte bloqué (actif: false) ne peut plus se connecter
-    actif: { type: Boolean, default: true },
+    role: {
+      type: String,
+      enum: ['client', 'admin'],
+      default: 'client',
+      required: true,
+    },
+
+    actif: {
+      type: Boolean,
+      default: true,
+      required: true,
+    },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+  }
 )
 
-// AVANT chaque sauvegarde : on remplace le mot de passe par son "hash"
+// Hash passwords before saving changes to them.
 userSchema.pre('save', async function () {
-  if (!this.isModified('password') || !this.password) return
-  this.password = await bcrypt.hash(this.password, 10)
+  if (!this.isModified('password') || !this.password) {
+    return
+  }
+
+  this.password = await bcrypt.hash(this.password, BCRYPT_ROUNDS)
 })
 
-// Compare le mot de passe tapé avec l'empreinte enregistrée
+// Compare a supplied password with the stored hash.
 userSchema.methods.verifierMotDePasse = function (motDePasse) {
-  // Compte Google : pas de mot de passe en base, donc jamais valide (et pas de plantage)
-  if (!this.password) return false
+  if (
+    typeof motDePasse !== 'string' ||
+    !this.password ||
+    motDePasse.length === 0 ||
+    motDePasse.length > MAX_PASSWORD_LENGTH
+  ) {
+    return false
+  }
+
   return bcrypt.compare(motDePasse, this.password)
 }
 
-// Ce qu'on a le droit de renvoyer au navigateur : JAMAIS le mot de passe
+// Return only fields that are safe to expose to the client.
 userSchema.methods.versPublic = function () {
   return {
     id: this._id,
@@ -72,7 +118,7 @@ userSchema.methods.versPublic = function () {
     telephone: this.telephone,
     email: this.email,
     role: this.role,
-    actif: this.actif
+    actif: this.actif,
   }
 }
 
