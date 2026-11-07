@@ -26,6 +26,7 @@ app.use(helmet())
 const origines = [
   'http://localhost:5173',
   'http://192.168.1.8:5173',
+  'https://candid-squirrel-f50aa5.netlify.app',
   process.env.FRONTEND_URL
 ].filter(Boolean)
 

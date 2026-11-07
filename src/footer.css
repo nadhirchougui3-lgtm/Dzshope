@@ -1,3 +1,4 @@
+
 .dz-footer {
   width: 100%;
   margin-top: 70px;
@@ -194,139 +195,6 @@
   font-size: 9px;
 }
 
-.dz-footer-payment {
-  width: 100%;
-  min-height: 68px;
-  padding: 14px 6%;
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  background: #242426;
-  border-top: 1px solid rgba(250, 249, 247, 0.06);
-  border-bottom: 1px solid rgba(250, 249, 247, 0.06);
-}
-
-.dz-payment-title {
-  margin-right: 6px;
-  color: rgba(250, 249, 247, 0.72);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-
-.dz-payment-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  min-height: 40px;
-}
-
-.dz-payment-logo {
-  width: 40px;
-  height: 30px;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(250, 249, 247, 0.1);
-  border-radius: 7px;
-  background: #1c1c1e;
-  text-decoration: none;
-  transition:
-    transform 0.2s ease,
-    border-color 0.2s ease,
-    background 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.dz-payment-logo:hover {
-  transform: translateY(-2px);
-  border-color: rgba(250, 249, 247, 0.28);
-  background: #202022;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.18);
-}
-
-.dz-payment-logo:active {
-  transform: translateY(0);
-}
-
-.dz-payment-cash-logo {
-  color: #c9364c;
-}
-
-.dz-payment-cash-logo svg {
-  display: block;
-  font-size: 17px;
-}
-
-.dz-payment-visa-logo {
-  width: 40px;
-  height: 30px;
-  padding: 0;
-  background: transparent;
-  border-color: transparent;
-}
-
-.dz-payment-visa-logo:hover {
-  background: transparent;
-  border-color: transparent;
-  box-shadow: none;
-}
-
-.dz-payment-visa-logo svg {
-  display: block;
-  color: #1a1f71;
-  font-size: 24px;
-}
-
-.dz-payment-mastercard-logo {
-  width: 40px;
-  height: 30px;
-  background: transparent;
-  border-color: transparent;
-}
-
-.dz-payment-mastercard-logo:hover {
-  background: transparent;
-  border-color: transparent;
-  box-shadow: none;
-}
-
-.dz-mastercard-mark {
-  position: relative;
-  width: 28px;
-  height: 19px;
-  display: block;
-}
-
-.dz-mastercard-circle {
-  position: absolute;
-  top: 0;
-  width: 19px;
-  height: 19px;
-  border-radius: 50%;
-}
-
-.dz-mastercard-red {
-  left: 0;
-  background: #eb001b;
-}
-
-.dz-mastercard-yellow {
-  right: 0;
-  background: #f79e1b;
-}
-
-.dz-payment-name {
-  color: rgba(250, 249, 247, 0.68);
-  font-size: 10px;
-  font-weight: 600;
-  line-height: 1;
-  white-space: nowrap;
-}
-
 .dz-footer-bottom {
   width: 100%;
   min-height: 58px;
@@ -394,17 +262,6 @@
     grid-column: span 2;
   }
 
-  .dz-footer-payment {
-    padding: 18px 7%;
-    flex-wrap: wrap;
-    gap: 14px 22px;
-  }
-
-  .dz-payment-title {
-    width: 100%;
-    margin-right: 0;
-  }
-
   .dz-footer-bottom {
     min-height: auto;
     padding: 20px 7%;
@@ -438,35 +295,6 @@
   .dz-footer-tagline {
     font-size: 6.5px;
     letter-spacing: 1.2px;
-  }
-
-  .dz-footer-payment {
-    padding: 18px 7%;
-    align-items: center;
-    gap: 14px 18px;
-  }
-
-  .dz-payment-item {
-    width: auto;
-  }
-
-  .dz-payment-name {
-    font-size: 9px;
-  }
-
-  .dz-payment-logo {
-    width: 38px;
-    height: 28px;
-  }
-
-  .dz-payment-visa-logo,
-  .dz-payment-mastercard-logo {
-    width: 38px;
-    height: 28px;
-  }
-
-  .dz-payment-visa-logo svg {
-    font-size: 22px;
   }
 
   .dz-footer-bottom {

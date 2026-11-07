@@ -24,8 +24,7 @@ import { useAuth } from './AuthContext'
 import { useFavorites } from './FavoritesContext'
 import './navbar.css'
 
-const API_URL =
-  import.meta.env.VITE_API_URL || 'http://localhost:5000'
+import { API_URL } from './api'
 
 const HISTORY_KEY = 'dzshop_search_history'
 const MAX_HISTORY = 12

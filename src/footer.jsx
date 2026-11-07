@@ -1,3 +1,4 @@
+
 import { Link } from 'react-router-dom'
 import {
   FaFacebookF,
@@ -5,9 +6,7 @@ import {
   FaTiktok,
   FaMapMarkerAlt,
   FaPhone,
-  FaEnvelope,
-  FaCcVisa,
-  FaMoneyBillWave
+  FaEnvelope
 } from 'react-icons/fa'
 
 const STYLE_FOOTER = `
@@ -207,143 +206,6 @@ const STYLE_FOOTER = `
   font-size: 9px;
 }
 
-.dz-footer-payment {
-  width: 100%;
-  min-height: 68px;
-  padding: 14px 6%;
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  background: #242426;
-  border-top: 1px solid rgba(250, 249, 247, 0.06);
-  border-bottom: 1px solid rgba(250, 249, 247, 0.06);
-}
-
-.dz-payment-title {
-  margin-right: 6px;
-  color: rgba(250, 249, 247, 0.72);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  text-align: left;
-  align-self: center;
-  flex-shrink: 0;
-  line-height: 1.4;
-}
-
-.dz-payment-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  min-height: 40px;
-}
-
-.dz-payment-logo {
-  width: 40px;
-  height: 30px;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(250, 249, 247, 0.1);
-  border-radius: 7px;
-  background: #1c1c1e;
-  text-decoration: none;
-  transition:
-    transform 0.2s ease,
-    border-color 0.2s ease,
-    background 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.dz-payment-logo:hover {
-  transform: translateY(-2px);
-  border-color: rgba(250, 249, 247, 0.28);
-  background: #202022;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.18);
-}
-
-.dz-payment-logo:active {
-  transform: translateY(0);
-}
-
-.dz-payment-cash-logo {
-  color: #c9364c;
-}
-
-.dz-payment-cash-logo svg {
-  display: block;
-  font-size: 17px;
-}
-
-.dz-payment-visa-logo {
-  width: 40px;
-  height: 30px;
-  padding: 0;
-  background: transparent;
-  border-color: transparent;
-}
-
-.dz-payment-visa-logo:hover {
-  background: transparent;
-  border-color: transparent;
-  box-shadow: none;
-}
-
-.dz-payment-visa-logo svg {
-  display: block;
-  color: #1a1f71;
-  font-size: 24px;
-}
-
-.dz-payment-mastercard-logo {
-  width: 40px;
-  height: 30px;
-  background: transparent;
-  border-color: transparent;
-}
-
-.dz-payment-mastercard-logo:hover {
-  background: transparent;
-  border-color: transparent;
-  box-shadow: none;
-}
-
-.dz-mastercard-mark {
-  position: relative;
-  width: 28px;
-  height: 19px;
-  display: block;
-}
-
-.dz-mastercard-circle {
-  position: absolute;
-  top: 0;
-  width: 19px;
-  height: 19px;
-  border-radius: 50%;
-}
-
-.dz-mastercard-red {
-  left: 0;
-  background: #eb001b;
-}
-
-.dz-mastercard-yellow {
-  right: 0;
-  background: #f79e1b;
-}
-
-.dz-payment-name {
-  color: rgba(250, 249, 247, 0.68);
-  font-size: 10px;
-  font-weight: 600;
-  line-height: 1;
-  white-space: nowrap;
-}
-
 .dz-footer-bottom {
   width: 100%;
   min-height: 58px;
@@ -410,18 +272,6 @@ const STYLE_FOOTER = `
   .dz-footer-contact {
     grid-column: auto;
     padding-left: 0;
-  }
-
-  .dz-footer-payment {
-    padding: 18px 6%;
-    flex-wrap: wrap;
-    gap: 14px 22px;
-  }
-
-  .dz-payment-title {
-    width: auto;
-    margin: 0 6px 0 0;
-    text-align: left;
   }
 
   .dz-footer-bottom {
@@ -538,43 +388,6 @@ const STYLE_FOOTER = `
     line-height: 1.5;
   }
 
-  .dz-footer-payment {
-    padding: 18px 6%;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 14px 16px;
-  }
-
-  .dz-payment-title {
-    width: 100%;
-    flex-basis: 100%;
-    margin: 0;
-    text-align: left;
-    align-self: flex-start;
-    font-size: 10px;
-  }
-
-  .dz-payment-item {
-    width: auto;
-    min-width: 0;
-    gap: 6px;
-  }
-
-  .dz-payment-name {
-    font-size: 9px;
-  }
-
-  .dz-payment-logo,
-  .dz-payment-visa-logo,
-  .dz-payment-mastercard-logo {
-    width: 36px;
-    height: 28px;
-  }
-
-  .dz-payment-visa-logo svg {
-    font-size: 22px;
-  }
-
   .dz-footer-bottom {
     flex-direction: column;
     gap: 12px;
@@ -610,31 +423,6 @@ const STYLE_FOOTER = `
 
   .dz-footer-contact .dz-contact-item {
     font-size: 9px;
-  }
-
-  .dz-footer-payment {
-    column-gap: 10px;
-  }
-
-  .dz-payment-item {
-    gap: 4px;
-  }
-
-  .dz-payment-name {
-    font-size: 8px;
-  }
-}
-
-/* Desktop only: raise the Payment Methods title. */
-@media (min-width: 851px) {
-  .dz-footer-payment {
-    align-items: center;
-  }
-
-  .dz-footer-payment .dz-payment-title {
-    position: relative;
-    top: -14px;
-    margin-right: 6px;
   }
 }
 
@@ -736,57 +524,6 @@ function Footer() {
 
           <span className="dz-contact-note">
             Available every day to help you
-          </span>
-        </div>
-      </div>
-
-      <div className="dz-footer-payment">
-        <div className="dz-payment-title">
-          Payment Methods
-        </div>
-
-        <div className="dz-payment-item">
-          <a
-            href=""
-            className="dz-payment-logo dz-payment-cash-logo"
-            aria-label="Cash on Delivery"
-          >
-            <FaMoneyBillWave />
-          </a>
-
-          <span className="dz-payment-name">
-            Cash on Delivery
-          </span>
-        </div>
-
-        <div className="dz-payment-item">
-          <a
-            href=""
-            className="dz-payment-logo dz-payment-visa-logo"
-            aria-label="Visa"
-          >
-            <FaCcVisa />
-          </a>
-
-          <span className="dz-payment-name">
-            Visa
-          </span>
-        </div>
-
-        <div className="dz-payment-item">
-          <a
-            href=""
-            className="dz-payment-logo dz-payment-mastercard-logo"
-            aria-label="Mastercard"
-          >
-            <span className="dz-mastercard-mark" aria-hidden="true">
-              <span className="dz-mastercard-circle dz-mastercard-red"></span>
-              <span className="dz-mastercard-circle dz-mastercard-yellow"></span>
-            </span>
-          </a>
-
-          <span className="dz-payment-name">
-            Mastercard
           </span>
         </div>
       </div>
